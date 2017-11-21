@@ -34,8 +34,6 @@ Despite the wealth of data produced by academic institutions, research labs, hos
 
 DDASH allows network administrators to quickly create, maintain, and grow private Ethereum networks. Data can be uploaded to a blockchain and downloaded from a blockchain with a single command. DDASH also interfaces with IPFS to allow network administrators to host resources on IPFS and use the Ethereum blockchain as a permissions manager. No longer confined to a single machine, data hosted on the IPFS network flows perputually through network nodes, rendering it persistent and rapidly accessible. Permissions are managed via PGP keypair encryption and stored on the Ethereum blockchain. 
 
-DDASH allows organizations to more effectively incentivize generation and dissemination of knowledge by hosting any shared resource on an Etheruem blockchain.
-
 Our goals are to:
 
 1. Eliminate barriers to information exchange within and among organizations.
@@ -47,10 +45,10 @@ Our goals are to:
 ---
 This project is built on awesome work by the [IPFS](https://github.com/ipfs/ipfs), [Ethereum](https://www.ethereum.org), [OpenPGP](https://www.openpgp.org), [web3.py](https://github.com/pipermerriam/web3.py), and [py-ipfs](https://github.com/ipfs/py-ipfs-api) communities. 
 
-The DDASH Installer, which currently supports Ubuntu 16.04, installs all dependencies (including the Go-Ethereum client, IPFS, the Python IPFS API, and gnupg).
+The DDASH Installer, which currently supports Ubuntu 16.04, installs all dependencies (including the Go Ethereum client, IPFS, the Python IPFS API, and gnupg).
 
 ## Precautions
-The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is being developed for academic purposes, is still in development, and has not been audited for security. Be very careful when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
+The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development and has not been audited for security. Be very careful when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
 
 ## Quickstart 
 DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04. 
@@ -61,7 +59,7 @@ Before you start, be sure you're running these scripts with appropriate permissi
 chmod u+x installer.sh deploy.sh manager.sh
 ```
 
-Navigate to the directory where you want to install DDASH and type in:
+Navigate to the directory where you want to install DDASH and run:
 ```
 ./ installer.sh
 ```
@@ -147,7 +145,6 @@ The above commands:
 Data on the IPFS network cannot be removed and can be accessed by anyone who has your content hash. DDASH utilizes PGP keypair encryption to control permissions. The above examples demonstrated how to share data at IPFS address *QmRmE1vnc7mbEiqQv5SjrW3ctAmXXt4MQqbykenJmSqPuk*. If I only want Steven to be able to view the contents of this file, I'll encrypt the file using Steven's public key and upload it IPFS. The resulting IPFS hash, a description of the file, the owner, and the recipient's pubkey fingerprint (or "public") are saved on the blockchain.
 
 ## Contribute
----
 ### Use cases
 If you or your organization use DDASH to do something that would otherwise be impossible using a centralized system, please share your experience!
 
