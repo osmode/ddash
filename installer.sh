@@ -89,6 +89,13 @@ Your choice> " choice
 	    mkdir -p $pwd/ddash/source;
 	fi
 
+	echo "Resetting static-nodes.json"
+	if [ -f $PWD/ddash/data/static-nodes.json ];then
+		rm $PWD/ddash/data/static-nodes.json
+	fi
+	echo "[" >> $PWD/ddash/data/static-nodes.json
+	echo "]" >> $PWD/ddash/data/static-nodes.json
+
 	read -p "Please specify chainId (do not use 0 or 1): " chainId
 	read -p "Please specify mining difficulty (or leave blank for default): " diff
 	read -p "Please specify nonce (or leave blank for random): " nonce

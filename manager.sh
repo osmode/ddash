@@ -94,6 +94,35 @@ do
 
     fi
 
+    if [[ "$choice" = 7 ]]; then
+	#read -p "Enter your network id (or leave blank for default value 4828): " networkId
+	#read -p "Enter port (or leave blank for default value 30303): " port
+	#read -p "Enter rpc port (or leave blank for default value 8545): " rpcport
+	read -p "Enter enode address (without quotes). Example:  enode://... " enode
+
+	num_lines=`cat $PWD/ddash/data/static-nodes.json | wc -l`
+	i=0
+
+	while IFS= read -r line 
+	do
+	    if [[ $num_lines -gt 2 ]] && [[ $i -eq $[num_lines-2] ]]; then
+	        echo add comma
+		echo "$line", >> $PWD/ddash/data/static-nodes2.json
+	    else
+		echo "$line" >> $PWD/ddash/data/static-nodes2.json
+	    fi
+
+	    if [ $i = $[$num_lines-2] ]; then
+	        echo "$enode" >> $PWD/ddash/data/static-nodes2.json
+	    fi
+	    i=$[i+1]
+
+	done < "$PWD/ddash/data/static-nodes.json"
+
+	mv $PWD/ddash/data/static-nodes2.json $PWD/ddash/data/static-nodes.json
+
+    fi
+
     if [[ "$choice" = 10 ]] || [[ "$choice" == "exit" ]] || [[ "$choice" == "quit" ]]; then
         finished=true
     fi
