@@ -15,7 +15,11 @@ do
 3: Start mining
 4: Compile and deploy contract
 5: Start DDASH
-6: Exit
+6: Show network settings
+7: Add peer
+8: Launch private network
+9: Connect to another network
+10: Exit
 
 > " choice
 
@@ -58,8 +62,41 @@ do
 	python $PWD/ddash/main.py
     fi
 
-    if [[ "$choice" = 6 ]] || [[ "$choice" == "exit" ]] || [[ "$choice" == "quit" ]]; then
+    if [[ "$choice" = 6 ]]; then
+
+	output="$(geth --datadir=$PWD/ddash/data console <<< $'admin.nodeInfo')"
+	echo ""
+	echo ""
+	echo ""
+	if [[ "$output" =~ \"enode[^,]* ]]; then
+    		echo "your enode is:  ${BASH_REMATCH[0]}"
+	fi
+
+	genesis=`cat $PWD/ddash/genesis.json`
+
+	if [[ "$genesis" =~ difficulty[^,]* ]]; then
+		diff=${BASH_REMATCH[0]:15:6}
+		echo difficulty: "$diff"
+	fi
+
+	if [[ "$genesis" =~ nonce[^,]* ]]; then
+		nonce=${BASH_REMATCH[0]:15}
+		echo nonce: \""$nonce"
+	fi
+
+	if [[ "$genesis" =~ chainId[^,]* ]]; then
+		chainId=${BASH_REMATCH[0]:9:6}
+		echo chainId: "$chainId"
+	fi
+	echo ""
+	echo ""
+	echo ""
+
+    fi
+
+    if [[ "$choice" = 10 ]] || [[ "$choice" == "exit" ]] || [[ "$choice" == "quit" ]]; then
         finished=true
     fi
+
 done
 exit 0

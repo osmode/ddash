@@ -93,6 +93,10 @@ Your choice> " choice
 	read -p "Please specify mining difficulty (or leave blank for default): " diff
 	read -p "Please specify nonce (or leave blank for random): " nonce
 
+	if [ -f $PWD/ddash/genesis.json ]; then
+	    rm $PWD/ddash/genesis.json
+	fi
+
 	echo "{" >> $pwd/ddash/genesis.json
 	echo "  \"config\":  {" >> $pwd/ddash/genesis.json
 	echo "        \"chainId\": $chainId, " >> $pwd/ddash/genesis.json
@@ -105,16 +109,18 @@ Your choice> " choice
 	echo "  \"coinbase\"   : \"0x0000000000000000000000000000000000000000\", " >> $pwd/ddash/genesis.json
 
 	# if no difficulty is specified, use default
-	if [ ! -z $diff ]; then
+	if [ -z $diff ]; then
+	    echo "No difficulty specified. Using default..."
 	    echo "  \"difficulty\" : \"0xF4240\", " >> $pwd/ddash/genesis.json
 	else
+	    echo User-defined difficulty: "$diff"
 	    echo "  \"difficulty\" : \"$diff\", " >> $pwd/ddash/genesis.json
 
 	fi
 
 	echo "  \"extraData\"  : \"\", " >> $pwd/ddash/genesis.json
 	echo "  \"gasLimit\"   : \"0x2fefd8\", " >> $pwd/ddash/genesis.json
-	if [ ! -z $nonce ]; then
+	if [ -z $nonce ]; then
 	    echo "  \"nonce\"      : \"0x000000$RANDOM\", " >> $pwd/ddash/genesis.json
 	else
 	    echo "  \"nonce\"      : \"0x000000$nonce\", " >> $pwd/ddash/genesis.json
