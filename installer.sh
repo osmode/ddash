@@ -13,7 +13,7 @@ do
 	read -p "
 Welcome to the DDASH Installer. What would you like to do?
 1: Install DDASH and DDASH Network Utility
-2: Reset chain data
+2: Reset chain data and delete all Ethereum accounts
 3: Exit
 
 Your choice> " choice
@@ -142,9 +142,11 @@ Your choice> " choice
     fi
 
     if [ "$choice" = 2 ]; then
-	rm -r $pwd/ddash/data/geth
+	rm -r $PWD/ddash/data/geth
+	rm -r $PWD/ddash/keystore
+	rm $PWD/ddash/data/history
 	rm $pwd/ddash/genesis.json
-	echo Chain data cleared from $pwd/ddash/data/geth. Genesis file deleted.
+	echo Chain and account data cleared from $pwd/ddash/data/geth. Genesis file deleted.
     fi
 
     if [[ "$choice" = 3 ]] || [[ "$choice" == "exit" ]] || [[ "$choice" == "quit" ]]; then
