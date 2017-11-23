@@ -84,7 +84,7 @@ The directory structure is important because DDASH and the DDASH Networking Util
         /data
 	    static-nodes.json
 
-     /source
+        /source
 ```
 Save Ethereum contracts in the *source* directory with the .sol extension.
 
