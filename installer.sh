@@ -145,13 +145,17 @@ Your choice> " choice
 	echo "}" >> $pwd/ddash/genesis.json
 
 	geth --datadir=$pwd/ddash/data init $pwd/ddash/genesis.json
-    fi
+
+	# save enode information
+	./log_nodeInfo.sh
+    fi  # end if [ "$choice" =1 ]
 
     if [ "$choice" = 2 ]; then
 	rm -r $PWD/ddash/data/geth
 	rm -r $PWD/ddash/keystore
 	rm $PWD/ddash/data/history
 	rm $pwd/ddash/genesis.json
+	rm $PWD/ddash/nodeInfo.ds
 	echo Chain and account data cleared from $pwd/ddash/data/geth. Genesis file deleted.
     fi
 

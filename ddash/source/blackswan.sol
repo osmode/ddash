@@ -1,5 +1,5 @@
 pragma solidity ^0.4.0;
-contract BlackSwan {
+contract blackswan {
 
 	struct EntityStruct {
 
@@ -10,24 +10,24 @@ contract BlackSwan {
 	mapping(address => EntityStruct) public entityStructs;
 	address[] public entityList;
 	
-	function isEntity(address entityAddress) public constant returns(bool isIndeed) {
+	function is_entity(address entityAddress) public constant returns(bool isIndeed) {
 		return entityStructs[entityAddress].isEntity;
 	   }
 
-	function getEntityCount() public constant returns(uint entityCount) {
+	function get_entity_count() public constant returns(uint entityCount) {
 		return entityList.length;
 	}
 
-	function newEntity(address entityAddress, string enode) public returns(uint rowNumber) {
+	function new_entity(address entityAddress, string enode) public returns(uint rowNumber) {
 
-		if(isEntity(entityAddress)) revert();
+		if(is_entity(entityAddress)) revert();
 		entityStructs[entityAddress].enode = enode;
 		entityStructs[entityAddress].isEntity = true;
 		return entityList.push(entityAddress) -1;
 	}
 
-	function updateEntity(address entityAddress, string enode) public returns(bool success) {
-		if(!isEntity(entityAddress)) revert();
+	function update_entity(address entityAddress, string enode) public returns(bool success) {
+		if(!is_entity(entityAddress)) revert();
 		entityStructs[entityAddress].enode = enode;
 		return true;
 	}
@@ -35,7 +35,7 @@ contract BlackSwan {
 	address public owner;
 	string[6] greetings;
 
-	function BlackSwan()  {
+	function blackswan() payable  {
 		owner = msg.sender;
         
 		greetings[0] = "Hi, my name is Omar Metwally.";
@@ -56,10 +56,10 @@ contract BlackSwan {
 	);
 
     function add_entity(string enode) public returns(uint rowNumber) {
-	if (isEntity(msg.sender)) {
-		updateEntity(msg.sender, enode);
+	if (is_entity(msg.sender)) {
+		update_entity(msg.sender, enode);
 	} else {
-		newEntity(msg.sender, enode);
+		new_entity(msg.sender, enode);
 	}
     }
 
@@ -68,8 +68,10 @@ contract BlackSwan {
 	// shared_by_fingerprint and shared_with_fingerprint
 	function get_enode() public returns (string _enode) {
 
-	    if (isEntity(msg.sender)) {
-		return entityStructs[msg.sender].enode;
+	    if (is_entity(msg.sender)) {
+		//return entityStructs[msg.sender].enode;
+		return entityStructs[entityList[0]].enode;
+
 	    } 
 
 	    return "null";

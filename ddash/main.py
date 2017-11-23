@@ -30,7 +30,7 @@ print intro
 i = Interface()
 u = PGPUser()
 u.load_profile()
-i.load_contract()
+i.load_contract('blackswan')
 
 while 1:
     result = raw_input("ddash> ")

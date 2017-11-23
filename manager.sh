@@ -9,7 +9,8 @@ fi
 while [ $finished = false ]
 do
 
- read -p "Welcome to the DDASH Network Utility. What would you like to do?
+ read -p "
+Welcome to the DDASH Network Utility. What would you like to do?
 1: Create new Ethereum account
 2: Show existing Ethereum accounts
 3: Start mining

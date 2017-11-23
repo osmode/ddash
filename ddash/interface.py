@@ -18,7 +18,10 @@ class Interface:
     def __init__(self,host='localhost',port=5001):
         self.last_hash_added = None
         self.api = ipfsapi.connect(host='127.0.0.1',port=8080)
-        self.web3 = Web3(HTTPProvider('http://localhost:8545'))
+        # self.web3 = Web3(HTTPProvider('http://localhost:8545'))
+	ipc_path = os.path.dirname(os.path.realpath(__file__))+'/data/geth.ipc'
+	print "IPCProvider path: ",ipc_path
+	self.web3 = Web3(IPCProvider(ipc_path))
         self.blockNumber = self.web3.eth.blockNumber
         self.eth_accounts = self.web3.personal.listAccounts
 	self.account_index = 0
