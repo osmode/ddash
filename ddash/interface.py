@@ -27,18 +27,27 @@ class Interface:
 
         print "Welcome to the DDASH interface manager."
 
-    def load_contract(self,abi=None,sender_address="0xe4b9bec3a1f1c8b9075f078dff51eb1359e9e516",contract_address="0xe63e99006e2bfd737f410694beaf5a7d8d412069"):
+    # contract_name is without the sol extension
+    def load_contract(self,contract_name=None,sender_address="0xe4b9bec3a1f1c8b9075f078dff51eb1359e9e516",contract_address="0xe63e99006e2bfd737f410694beaf5a7d8d412069"):
 
         self.tx['to'] = contract_address
         self.tx['from'] = sender_address
+	abi = ''
+	contract_name_lower = contract_name.lower()+'.abi'
+	abi_path = os.path.dirname(os.path.realpath(__file__))+'/source/'+contract_name_lower
+	
+	print "Loading contract "+contract_name_lower
+	print "from directory: "+abi_path
+	print "Sender address: "+sender_address
+	print "Contract address: "+contract_address
+	print abi_path
+	with open(abi_path,'r') as myfile:
+		abi+=myfile.read()
 
-        if not abi:
-	    t = r"""[{"constant":false,"inputs":[],"name":"die","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"seed","type":"uint256"}],"name":"randomGen","outputs":[{"name":"randomNumber","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_ipfs_hash","type":"string"},{"name":"_description","type":"string"},{"name":"_shared_with_fingerprint","type":"string"},{"name":"_shared_by_fingerprint","type":"string"}],"name":"add_record","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_ipfs_hash","type":"string"}],"name":"get_record","outputs":[{"name":"_id","type":"uint256"},{"name":"_hash","type":"string"},{"name":"_description","type":"string"},{"name":"_shared_by_fingerprint","type":"string"},{"name":"_shared_with_fingerprint","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_i","type":"uint256"}],"name":"greet_omar","outputs":[{"name":"greeting","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_id","type":"uint256"},{"indexed":false,"name":"_ipfs_hash","type":"string"},{"indexed":false,"name":"_description","type":"string"},{"indexed":false,"name":"_shared_with_fingerprint","type":"string"},{"indexed":false,"name":"_shared_by_fingerprint","type":"string"}],"name":"RecordCreated","type":"event"}]"""
-
-            json_abi = json.loads(t)
-            self.contract = self.web3.eth.contract(abi=json_abi,address=contract_address)
-            if self.contract: 
-                print "You are now interfacing with contract at address "+contract_address
+        json_abi = json.loads(abi)
+        self.contract = self.web3.eth.contract(abi=json_abi,address=contract_address)
+        if self.contract: 
+            print "You are now interfacing with contract at address "+contract_address
 
 
 
