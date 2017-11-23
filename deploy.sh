@@ -12,27 +12,18 @@ if [ ! $1 ]; then
 
 else
     contract_name=$1
-
-    read -p "Please enter the amount of gas for deployment (e.g. 1000000): " gas
 fi
+
+read -p "Please enter the amount of gas for deployment (e.g. 1000000): " gas
 
 echo "$contract_name"
-echo Compiling $PWD/ddash/source/"$contract_name".sol
+echo Deleting old ABIs and data...
 
-if [ -f $PWD/ddash/source/"$contract_name".bin ]; then
-    rm $PWD/ddash/source/"$contract_name".bin
-fi
-if [ -f $PWD/ddash/source/"$contract_name".abi ]; then
-    rm $PWD/ddash/source/"$contract_name".abi
-fi
+echo Compiling $PWD/ddash/source/"$contract_name".sol
+rm $PWD/ddash/source/*.abi
+rm $PWD/ddash/source/*/bin
 
 solc --bin --abi -o $PWD/ddash/source $PWD/ddash/source/"$contract_name".sol
-
-if [ ! -f $PWD/ddash/source/"$contract_name".abi ]; then
-    echo Checking for $PWD/ddash/source/"$contract_name".abi
-
-    echo "I'm sorry, your contract did not compile properly. Please review compiler errors."
-fi
 
 if [ -f $PWD/ddash/source/"$contract_name".js ]; then
     rm $PWD/ddash/source/"$contract_name".js
@@ -43,6 +34,11 @@ data_dir=$PWD/ddash/data
 
 contract_abi=$(<$PWD/ddash/source/"$contract_name".abi)
 data=$(<$PWD/ddash/source/"$contract_name".bin)
+echo ""
+echo contract_abi: "$contract_abi"
+echo ""
+echo data: "$data"
+echo ""
 echo var contract_abi=web3.eth.contract\("$contract_abi"\)\; >> "$output_file"
 echo "" >> "$output_file"
 
