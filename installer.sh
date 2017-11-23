@@ -99,6 +99,7 @@ Your choice> " choice
 	read -p "Please specify chainId (do not use 0 or 1): " chainId
 	read -p "Please specify mining difficulty (or leave blank for default): " diff
 	read -p "Please specify nonce (or leave blank for random): " nonce
+	read -p "Please specify a gas limit (leave leave blank for 0x5FDFB0): " gaslimit
 
 	if [ -f $PWD/ddash/genesis.json ]; then
 	    rm $PWD/ddash/genesis.json
@@ -122,11 +123,16 @@ Your choice> " choice
 	else
 	    echo User-defined difficulty: "$diff"
 	    echo "  \"difficulty\" : \"$diff\", " >> $pwd/ddash/genesis.json
-
+	fi
+	echo "  \"extraData\"  : \"\", " >> $pwd/ddash/genesis.json
+	if [ -z $gaslimit ]; then
+	    echo "No gas limit specified. Using default..."
+	    echo "  \"gasLimit\"   : \"0x5FDFB0\", " >> $pwd/ddash/genesis.json
+	else 
+	    echo User-defined gas limit: "$gaslimit"	
+	    echo "  \"gasLimit\"   : \""$gaslimit"\", " >> $pwd/ddash/genesis.json
 	fi
 
-	echo "  \"extraData\"  : \"\", " >> $pwd/ddash/genesis.json
-	echo "  \"gasLimit\"   : \"0x2fefd8\", " >> $pwd/ddash/genesis.json
 	if [ -z $nonce ]; then
 	    echo "  \"nonce\"      : \"0x000000$RANDOM\", " >> $pwd/ddash/genesis.json
 	else
