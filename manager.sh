@@ -95,9 +95,6 @@ do
     fi
 
     if [[ "$choice" = 7 ]]; then
-	#read -p "Enter your network id (or leave blank for default value 4828): " networkId
-	#read -p "Enter port (or leave blank for default value 30303): " port
-	#read -p "Enter rpc port (or leave blank for default value 8545): " rpcport
 	read -p "Enter enode address (without quotes). Example:  enode://... " enode
 
 	num_lines=`cat $PWD/ddash/data/static-nodes.json | wc -l`
@@ -122,6 +119,23 @@ do
 	mv $PWD/ddash/data/static-nodes2.json $PWD/ddash/data/static-nodes.json
 
     fi
+
+    if [[ "$choice" = 8 ]]; then
+ 	read -p "Enter your network id (or leave blank for default value 4828): " networkId
+	read -p "Enter port (or leave blank for default value 30303): " port
+	read -p "Enter rpc port (or leave blank for default value 8545): " rpcport
+
+	if [ -z "$networkId" ]; then
+	    networkId=4828
+	fi
+	if [ -z "$port" ]; then
+	    port=30303
+	fi
+	if [ -z "$rpcport" ]; then
+	    rpcport=8545
+	fi
+       geth --verbosity 2 --datadir=$PWD/ddash/data --networkid "$networkId" --port "$port" --rpc --rpcport "$rpcport" console
+   fi
 
     if [[ "$choice" = 10 ]] || [[ "$choice" == "exit" ]] || [[ "$choice" == "quit" ]]; then
         finished=true
