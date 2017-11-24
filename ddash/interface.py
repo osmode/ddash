@@ -28,10 +28,13 @@ class Interface:
         
         self.tx = {}
 
-        print "Welcome to the DDASH interface manager."
+        print "Initializing a DDASH Interface object."
 
     # contract_name is without the sol extension
-    def load_contract(self,contract_name=None,sender_address="0xe4b9bec3a1f1c8b9075f078dff51eb1359e9e516",contract_address="0xe63e99006e2bfd737f410694beaf5a7d8d412069"):
+    def load_contract(self,contract_name,sender_address=None,contract_address="0x535a338d14df9513909ec4d010ad3d2946da4014"):
+
+	if not sender_address:
+		sender_address = self.eth_accounts[0]
 
         self.tx['to'] = contract_address
         self.tx['from'] = sender_address
@@ -163,7 +166,6 @@ class Interface:
 		print "Invalid index."
 	else:
 		self.account_index = index
-		self.load_contract(sender_address=self.eth_accounts[self.account_index])
+		#self.load_contract(sender_address=self.eth_accounts[self.account_index])
 		
-
 

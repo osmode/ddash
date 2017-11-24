@@ -26,8 +26,8 @@ rm $PWD/ddash/source/*/bin
 solc --bin --abi -o $PWD/ddash/source $PWD/ddash/source/"$contract_name".sol
 
 # need to convert all *abi and *bin files to lowercase to prevent errors
-for file in *.abi; do mv $file "$(echo $file | tr '[:upper:]' '[:lower:]')"; done
-for file in *.bin; do mv $file "$(echo $file | tr '[:upper:]' '[:lower:]')"; done
+for file in $PWD/ddash/source/*.abi; do mv $file $PWD/ddash/source/"$(basename $file | tr '[:upper:]' '[:lower:]')"; done
+for file in $PWD/ddash/source/*.bin; do mv $file $PWD/ddash/source/"$(basename $file | tr '[:upper:]' '[:lower:]')"; done
 
 
 if [ -f $PWD/ddash/source/"$contract_name".js ]; then

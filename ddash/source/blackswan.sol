@@ -1,5 +1,5 @@
 pragma solidity ^0.4.0;
-contract blackswan {
+contract BlackSwan {
 
 	struct EntityStruct {
 
@@ -20,7 +20,7 @@ contract blackswan {
 
 	function new_entity(address entityAddress, string enode) public returns(uint rowNumber) {
 
-		if(is_entity(entityAddress)) revert();
+		//if(isEntity(entityAddress)) revert();
 		entityStructs[entityAddress].enode = enode;
 		entityStructs[entityAddress].isEntity = true;
 		return entityList.push(entityAddress) -1;
@@ -33,9 +33,9 @@ contract blackswan {
 	}
 
 	address public owner;
-	string[6] greetings;
+	string[5] greetings;
 
-	function blackswan() payable  {
+	function BlackSwan() payable {
 		owner = msg.sender;
         
 		greetings[0] = "Hi, my name is Omar Metwally.";
@@ -66,16 +66,27 @@ contract blackswan {
 	// retrieve record using IPFS hash (input)
 	// returns Record elements, namely id, ipfs hash, description, 
 	// shared_by_fingerprint and shared_with_fingerprint
-	function get_enode() public returns (string _enode) {
+	function sender_enode() public returns (string _enode) {
 
-	    if (is_entity(msg.sender)) {
-		//return entityStructs[msg.sender].enode;
-		return entityStructs[entityList[0]].enode;
+	    //if (isEntity(msg.sender)) {
+		//return entityStructs[entityList[0]].enode;
+		_enode = entityStructs[entityList[0]].enode;
+	    //return entityList[0];
+	    //} 
 
-	    } 
-
-	    return "null";
+	    //return "null";
 	}
+	
+	function get_enode_by_row(uint row) public returns (string _enode) {
+
+	    //if (isEntity(msg.sender)) {
+		//return entityStructs[entityList[0]].enode;
+		_enode = entityStructs[entityList[row]].enode;
+	    //return entityList[0];
+	    //} 
+
+	    //return "null";
+	}	
 	  
 	function greet_omar(uint _i) public returns (string greeting) {
 		require(_i>=0);
@@ -84,4 +95,5 @@ contract blackswan {
 	}
 
 }		
+
 

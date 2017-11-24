@@ -1,5 +1,8 @@
 from crypto import PGPUser
 from interface import Interface
+from getpass import getpass
+
+ethereum_acc_pass = None
 
 intro = r"""
     _____  _____           _____ _    _ 
@@ -31,6 +34,8 @@ i = Interface()
 u = PGPUser()
 u.load_profile()
 i.load_contract('blackswan')
+
+loop_counter = 0
 
 while 1:
     result = raw_input("ddash> ")
@@ -114,4 +119,38 @@ while 1:
 	ipfs_hash = get_value_from_index(result,1,convert_to="string")
 	print "Looking for this IPFS hash on the blockchain:",ipfs_hash
 	i.get_record(ipfs_hash)
+
+    elif ('broadcast' in result):
+	enode = 'myenode123' # my_enode()
+	print "Broadcasting enode "+enode+" to the blackswan network."
+	if not ethereum_acc_pass:
+		print "Enter password for account "+i.eth_accounts[0]+":"
+		ethereum_acc_pass=getpass() 
+	i.unlock_account(ethereum_acc_pass)
+	print i.contract.transact(i.tx).add_entity(enode)
+
+    elif ('listen' in result):
+	if not ethereum_acc_pass:
+		print "Enter password for account "+i.eth_accounts[0]+":"
+		ethereum_acc_pass=getpass() 
+
+	print "Downloading peer list from blockchain."
+	i.unlock_account(ethereum_acc_pass)
+	peers = []
+	num_peers = i.contract.call().get_entity_count()
+	if num_peers == 0:
+		print "No peers found on chain."
+	else:
+		print str(num_peers)+" peers found on chain."
+
+	y=0
+	while y<num_peers:
+		p = i.contract.call().get_enode_by_row(y)
+		print "Adding to list of peers:"
+		print p
+		peers.append(p)
+		#add_static_node(p)
+		y+=1
+
+    loop_counter+=1
 
