@@ -1,8 +1,14 @@
 from crypto import PGPUser
 from interface import Interface
 from getpass import getpass
+from dynamic import *
 
 ethereum_acc_pass = None
+
+# Flags to instruct DDASH to broadcast enode address to blockchain
+# and query blockchain for peer enodes
+BROADCAST=True
+LISTEN=True
 
 intro = r"""
     _____  _____           _____ _    _ 
@@ -39,6 +45,9 @@ loop_counter = 0
 
 while 1:
     result = raw_input("ddash> ")
+    BROADCAST=True
+    LISTEN=True
+
     if 'quit' in result or 'exit' in result: break
 
     elif 'sanity check' in result:
@@ -120,16 +129,17 @@ while 1:
 	print "Looking for this IPFS hash on the blockchain:",ipfs_hash
 	i.get_record(ipfs_hash)
 
-    elif ('broadcast' in result):
-	enode = 'myenode123' # my_enode()
+    elif ( ('broadcast' in result) or BROADCAST):
+	enode = my_enode()  #'myenode123' # my_enode()
 	print "Broadcasting enode "+enode+" to the blackswan network."
 	if not ethereum_acc_pass:
 		print "Enter password for account "+i.eth_accounts[0]+":"
 		ethereum_acc_pass=getpass() 
 	i.unlock_account(ethereum_acc_pass)
 	print i.contract.transact(i.tx).add_entity(enode)
+	BROADCAST=False
 
-    elif ('listen' in result):
+    elif ( ('listen' in result) or LISTEN):
 	if not ethereum_acc_pass:
 		print "Enter password for account "+i.eth_accounts[0]+":"
 		ethereum_acc_pass=getpass() 
@@ -149,8 +159,9 @@ while 1:
 		print "Adding to list of peers:"
 		print p
 		peers.append(p)
-		#add_static_node(p)
+		update_static_nodes(p)
 		y+=1
+	LISTEN=False
 
     loop_counter+=1
 
