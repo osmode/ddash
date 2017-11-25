@@ -11,8 +11,8 @@ def my_enode():
 	with open(fname) as f:
 	    content=f.readlines()
 
-	enode = content[0].replace('"','').replace('\n','')
-	ip = content[1].replace('\n','')
+	enode = content[0].strip().replace('"','').replace('\n','')
+	ip = content[1].strip().replace('\n','')
 
 	print enode
 	print ip

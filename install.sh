@@ -19,6 +19,8 @@ Welcome to the DDASH Installer. What would you like to do?
 Your choice> " choice
 
     if [ "$choice" = 1 ]; then
+	tmux kill-session -t geth
+	tmux kill-session -t ipfs
 	echo Installing dependencies...
 	echo ""
 	os="$(uname -s)"
