@@ -114,7 +114,8 @@ Welcome to the DDASH Network Utility. What would you like to do?
     fi
 
     if [[ "$choice" = 7 ]]; then
-	read -p "Enter enode address (without quotes). Example:  enode://... " enode
+	read -p "Enter enode address (without quotes). Example:  enode://... 
+" enode
 
 	num_lines=`cat $PWD/ddash/data/static-nodes.json | wc -l`
 	i=0
@@ -129,7 +130,7 @@ Welcome to the DDASH Network Utility. What would you like to do?
 	    fi
 
 	    if [ $i = $[$num_lines-2] ]; then
-	        echo "$enode" >> $PWD/ddash/data/static-nodes2.json
+	        echo \""$enode"\" >> $PWD/ddash/data/static-nodes2.json
 	    fi
 	    i=$[i+1]
 

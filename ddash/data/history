@@ -1,11 +1,11 @@
 
 admin.nodeInfo
 eth.accounts
-miner.start()
-loadScript('/root/ddash/data/blackswan.js')
-loadScript('/root/ddash/source/blackswan.js')
+admin
 eth.accounts
-miner.start()
-eth.accounts
-loadScript('/root/ddash/source/blackswan.sol')
 loadScript('/root/ddash/source/blackswan.js')
+admin
+loadScript('/root/ddash/source/blackswan.js')
+admin
+exigt
+admin.nodeInfo

@@ -18,4 +18,4 @@ output="$(ifconfig)"
 
 result=$(echo "$output" | grep -oE '(((inet addr:)1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5][^\s]) ')
 echo your ip address is: ${result:10} 
-echo \"${result:10}\" >> $PWD/ddash/nodeInfo.ds
+echo \""${result:10}"\" >> $PWD/ddash/nodeInfo.ds

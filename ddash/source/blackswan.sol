@@ -20,7 +20,7 @@ contract BlackSwan {
 
 	function new_entity(address entityAddress, string enode) public returns(uint rowNumber) {
 
-		//if(isEntity(entityAddress)) revert();
+		if(is_entity(entityAddress)) revert();
 		entityStructs[entityAddress].enode = enode;
 		entityStructs[entityAddress].isEntity = true;
 		return entityList.push(entityAddress) -1;
