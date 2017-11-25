@@ -171,6 +171,9 @@ Welcome to the DDASH Network Utility. What would you like to do?
    fi
 
     if [[ "$choice" = 9 ]] || [[ "$choice" == "exit" ]] || [[ "$choice" == "quit" ]]; then
+	tmux kill-session -t geth
+	tmux kill-session -t ipfs
+
         finished=true
     fi
 

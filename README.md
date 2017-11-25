@@ -15,9 +15,11 @@
 ---
 DDASH is a command line utility for Ethereum networking and blockchain application development. DDASH allows you to:
 
-* Rapidly and automatically create private Ethereum networks
+* One-click Ethereum coinification of any digital resource
 
-* Easily deploy Ethereum contracts to any Ethereum blockchain with a single command
+* One-click creation of self-propagating Ethereum networks (no need for manual enode entry)
+
+* One-click compilation and deployment of Ethereum contracts to any Ethereum blockchain 
 
 * Allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
