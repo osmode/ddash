@@ -57,7 +57,7 @@ Your choice> " choice
 		fi
 
 	    fi
-	if [ os = 'Linux' ]; then
+	if [ "$os" = 'Linux' ]; then
 		echo "Installing Ubuntu dependencies..."
 		apt-get update
 		apt-get install unzip

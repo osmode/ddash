@@ -56,54 +56,54 @@ loop_counter = 0
 
 while 1:
     result = raw_input("ddash> ")
-    BROADCAST=True
-    LISTEN=True
+    BROADCAST=False
+    LISTEN=False
 
     if 'quit' in result or 'exit' in result: break
 
-    elif 'sanity check' in result:
+    if 'sanity check' in result:
         i.sanity_check()
 
-    elif ('check key' in result) or ('show key' in result) or ('list key' in result):
+    if ('check key' in result) or ('show key' in result) or ('list key' in result):
         u.check_keys()
 
-    elif ('set key' in result) or ('use key' in result):
+    if ('set key' in result) or ('use key' in result):
         value = get_value_from_index(result,2)
         u.set_key(value)
 
-    elif ('delete key' in result) or ('del key' in result):
+    if ('delete key' in result) or ('del key' in result):
         value = get_value_from_index(result,2) 
         u.delete_key(value)
 	u.save_user()
 	u.load_profile()
 
-    elif ('new key' in result):
+    if ('new key' in result):
         u.new_keypair()
         u.save_user()
         u.load_profile() 
 
-    elif ('set recipient' in result):
+    if ('set recipient' in result):
         recipient = get_value_from_index(result,2,convert_to='string')
         u.set_recipient(recipient)
 
-    elif ('who recipient' in result):
+    if ('who recipient' in result):
         u.get_recipient()
 
-    elif ('set file' in result) or ('use file' in result):
+    if ('set file' in result) or ('use file' in result):
         value = get_value_from_index(result, 2,convert_to="string")
         u.set_file(value)
 
-    elif ('which file' in result) or ('get file' in result):
+    if ('which file' in result) or ('get file' in result):
         u.get_current_file()
 
-    elif ('which key' in result):
+    if ('which key' in result):
         u.get_current_key() 
 
-    elif ('encrypt' in result):
+    if ('encrypt' in result):
         recipient_pubkey_fingerprint = get_value_from_index(result,1)
         u.encrypt_with_key(recipient_pubkey_fingerprint)
 
-    elif ('upload' in result):
+    if ('upload' in result):
         if not u.file_to_upload: 
             print "No file selected. Please select file using method PGPUser.set_file(filepath)."
         else:
@@ -117,12 +117,12 @@ while 1:
 
             i.push_ipfs_hash_to_chain(filehash,(filename or description),u.keys[u.key_index]['fingerprint'],u.get_recipient()) 
 
-    elif ('set directory'  in result):
+    if ('set directory'  in result):
 	workdir = get_value_from_index(result,2,convert_to="string")
 	print "Setting directory to", workdir
 	u.set_directory(workdir)
 
-    elif ('show account' in result):
+    if ('show account' in result):
 	i.show_eth_accounts()
 
     elif ('use account' in result) or ('set account' in result):
@@ -130,17 +130,17 @@ while 1:
 	print "Extracted index ",account_index
 	i.set_account(account_index)
 
-    elif ('unlock' in result):
+    if ('unlock' in result):
 	password = get_value_from_index(result,2,convert_to="string")
 	print "Attempting to unlock account..."
 	i.unlock_account(password)
 
-    elif ('checkout' in result):
+    if ('checkout' in result):
 	ipfs_hash = get_value_from_index(result,1,convert_to="string")
 	print "Looking for this IPFS hash on the blockchain:",ipfs_hash
 	i.get_record(ipfs_hash)
 
-    elif ( ('broadcast' in result) or BROADCAST):
+    if ( ('broadcast' in result) or BROADCAST):
 	enode = my_enode()  #'myenode123' # my_enode()
 	print "Broadcasting enode "+enode+" to the blackswan network."
 	if not ethereum_acc_pass:
@@ -150,7 +150,7 @@ while 1:
 	print i.contract.transact(i.tx).add_entity(enode)
 	BROADCAST=False
 
-    elif ( ('listen' in result) or LISTEN):
+    if ( ('listen' in result) or LISTEN):
 	if not ethereum_acc_pass:
 		print "Enter password for account "+i.eth_accounts[0]+":"
 		ethereum_acc_pass=getpass() 
@@ -183,6 +183,9 @@ while 1:
 	    contract_name = args[1].strip()
 	    contract_address = args[2].strip()
 	    i.load_contract(contract_name=contract_name, contract_address=contract_address)
+
+    if 'friend count' in result:
+	i.friend_count()
 
     loop_counter+=1
 

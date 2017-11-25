@@ -169,3 +169,9 @@ class Interface:
 		#self.load_contract(sender_address=self.eth_accounts[self.account_index])
 		
 
+    # get number of enodes on the blockchain
+    def friend_count(self):
+	print "called friend count"
+	print str(self.contract.call().get_entity_count())+" enodes found on the blockchain."
+	return 0
+
