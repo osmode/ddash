@@ -72,7 +72,15 @@ Welcome to the DDASH Network Utility. What would you like to do?
  	read -p "Enter your network id (or leave blank for default value 4828): " networkId
 	read -p "Enter port (or leave blank for default value 30303): " port
 	read -p "Enter rpc port (or leave blank for default value 8545): " rpcport
-
+	if [ -z "$networkId" ]; then
+	    networkId=4828
+	fi
+	if [ -z "$port" ]; then
+	    port=30303
+	fi
+	if [ -z "$rpcport" ]; then
+	    rpcport=8545
+	fi
 	# create geth.ipc file
        echo "exit" | geth --verbosity 2 --datadir=$PWD/ddash/data --networkid "$networkId" --port "$port" --rpc --rpcport "$rpcport" console		
 	# before starting DDASH, need to start IPFS and geth daemons
