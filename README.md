@@ -13,7 +13,7 @@
 
 ## What is DDASH?
 ---
-DDASH is a command line utility for Ethereum networking and blockchain application development. DDASH allows you to:
+DDASH a tool for Ethereum blockchain development and networking, and an emerging protocol for exchange of distributed data in blockchain networks.
 
 * One-click Ethereum coinification of any digital resource
 
@@ -158,6 +158,6 @@ You can submit bug reports using the [GitHub issue tracker](https://github.com/o
 ### Pull requests
 Pull requests are welcome.
 
-## License
+## Authors
 MIT License (see *LICENSE* file for details).
 
