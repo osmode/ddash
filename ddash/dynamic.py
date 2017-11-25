@@ -48,15 +48,15 @@ def update_static_nodes(enode):
 	with open(fname_path) as f:
 		for line in f:
 			if (num_lines > 2) and line_number == (num_lines-2) : 
-				print "line number: "+str(line_number)+". printing: "+line.strip()
+				#print "line number: "+str(line_number)+". printing: "+line.strip()
 			
 				temp_file.write(line.strip()+",\n")
 			else:
-				print "line number: "+str(line_number)+". printing: "+line
+				#print "line number: "+str(line_number)+". printing: "+line
 				temp_file.write(line.strip()+"\n")
 		
 			if (line_number == (num_lines-2)):
-				print "printing enode: "+enode+"\n"
+				#print "printing enode: "+enode+"\n"
 				temp_file.write('"'+enode.strip()+'"\n')
 
 			line_number+=1

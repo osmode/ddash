@@ -36,11 +36,22 @@ def get_value_from_index(input_phrase,index,convert_to='integer'):
 
 
 print intro
+
+def get_contract_name_and_address():
+	contract_name=raw_input("Enter your contract name (leave blank for blackswan)> ")
+	while 1:
+	    contract_address=raw_input("Enter your contract address> ")
+	    if contract_address: break
+
+	if not contract_name: contract_name='blackswan' 
+
+	return contract_name, contract_address
+
 i = Interface()
 u = PGPUser()
 u.load_profile()
-i.load_contract('blackswan')
-
+contract_name, contract_address = get_contract_name_and_address()
+i.load_contract(contract_name=contract_name, contract_address=contract_address)
 loop_counter = 0
 
 while 1:
@@ -162,6 +173,16 @@ while 1:
 		update_static_nodes(p)
 		y+=1
 	LISTEN=False
+
+    # format:  contract blackswan 0x...
+    elif 'contract' in result:
+	args = result.split()
+	if len(args) != 3:
+    	    print "Example of correct usage:  contract blackswan 0x535a338d14df9513909ec4d010ad3d2946da4014"	
+	else:
+	    contract_name = args[1].strip()
+	    contract_address = args[2].strip()
+	    i.load_contract(contract_name=contract_name, contract_address=contract_address)
 
     loop_counter+=1
 
