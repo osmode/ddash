@@ -71,8 +71,10 @@ Welcome to the DDASH Network Utility. What would you like to do?
     if [ "$choice" = 5 ]; then
 	
 	# before starting DDASH, need to start IPFS and geth daemons
-	tmux new-session -d -s geth "geth --verbosity 2 --datadir=$PWD/ddash/data --networkid 4828 --port 30303 --rpcapi=\"db,eth,net,personal,web3\" --rpc --rpcport 8545 console"
-	
+	#tmux new-session -d -s geth "geth --verbosity 2 --datadir=$PWD/ddash/data --networkid 4828 --port 30303 --rpcapi=\"db,eth,net,personal,web3\" --rpc --rpcport 8545 console"
+
+        tmux new-session -d -s geth "geth --verbosity 3 --datadir=$PWD/ddash/data --networkid $networkId --port $port  --rpcapi=\"db,eth,net,personal,web3\" --rpc --rpcport $rpcport --mine --minerthreads=1 console"
+ 
 	tmux new-session -d -s ipfs 'ipfs daemon'
 	sleep 5
 
