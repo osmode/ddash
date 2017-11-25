@@ -15,7 +15,7 @@ output="$(ifconfig)"
 #fi
 
 #echo "$output" | grep -oE '(((inet addr:)1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5]) '  >> $PWD/ddash/nodeInfo.ds
+result=$(echo "$output" | (grep -oE "\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b" | head -1))
 
-result=$(echo "$output" | grep -oE '(((inet addr:)1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5][^\s]) ')
-echo your ip address is: ${result:10} 
-echo "${result:10}" >> $PWD/ddash/nodeInfo.ds
+echo your ip address is: ${result} 
+echo "${result}" >> $PWD/ddash/nodeInfo.ds
