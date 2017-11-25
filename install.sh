@@ -3,7 +3,7 @@
 # Author: Omar N. Metwally, MD
 # omar.metwally@gmail.com
 # https://github.com/osmode/ddash
-# USAGE:  ./installer.sh 
+# USAGE:  ./install.sh 
 
 finished=false
 pwd=$(pwd)
@@ -58,6 +58,7 @@ Your choice> " choice
 
 	    fi
 	if [ os = 'Linux' ]; then
+		echo "Installing Ubuntu dependencies..."
 		apt-get update
 		apt-get install unzip
 		apt-get install zip
