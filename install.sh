@@ -80,6 +80,7 @@ Your choice> " choice
 	    rm go-ipfs_v0.4.10_linux-386.tar.gz
 	fi
 
+	apt-get update
 	ipfs init
 	pip install web3
 	pip install ipfsapi
@@ -165,6 +166,7 @@ Your choice> " choice
 
         echo "exit" | geth --verbosity 2 --datadir=$PWD/ddash/data --networkid "$networkId" --port "$port" --rpc --rpcport "$rpcport" console
 
+	rm -r $PWD/go-ipfs
 	# save enode information
 	./log_nodeInfo.sh
     fi  # end if [ "$choice" =1 ]
