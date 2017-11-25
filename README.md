@@ -13,7 +13,7 @@
 
 ## What is DDASH?
 ---
-DDASH a tool for Ethereum blockchain development and networking, and an emerging protocol for exchange of distributed data in blockchain networks.
+DDASH a protocol for exchange of distributed data in blockchain networks.
 
 * One-click Ethereum coinification of any digital resource
 
