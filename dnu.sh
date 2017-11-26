@@ -69,6 +69,8 @@ Welcome to the DDASH Network Utility. What would you like to do?
 
     # start DDASH    
     if [ "$choice" = 5 ]; then
+	./log_nodeInfo.sh	
+
  	read -p "Enter your network id (or leave blank for default value 4828): " networkId
 	read -p "Enter port (or leave blank for default value 30303): " port
 	read -p "Enter rpc port (or leave blank for default value 8545): " rpcport
