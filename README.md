@@ -130,20 +130,35 @@ python main.py
 The above commands:
 
 [1]  check if IPFS daemon and Go Ethereum client are running
+
 [2]  returns number of enodes found on chain
+
 [3]  start interfacing with contract named 'blackswan' at given address
+
 [4]  specify working directory (need to have read/write permission)
+
 [5]  generate a new PGP keypair 
+
 [6]  list all PGP keypairs on your machine
+
 [7]  uses the first (index 0) keypair as your identity
+
 [8]  list Ethereum accounts
+
 [9]  specify index of Ethereum account to use for transactions
+
 [10]  specify an intended recipient's public key
+
 [11]  upload the file to IPFS and create transaction containing the hash, user id of the person who uploaded the file, and recipient's public key id (or "public" indicating that it's not encrypted).
+
 [12] encrypt file from step [9] using public key from step [8]
+
 [13] upload file from [9] to IPFS network
+
 [14] query blockchain using IPFS has as handle 
+
 [16] query blockchain for peer enodes
+
 [17] broadcast client enode to blockchain
 
 
