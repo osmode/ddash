@@ -54,6 +54,8 @@ The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs 
 ## Precautions
 The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development and has not been audited for security. Be very careful when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
 
+Different countries have different laws regulating token sales. Please abide by all laws that apply to your use case. 
+
 ## Quickstart 
 DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04. Support for Mac OSX coming soon.
 
