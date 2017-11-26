@@ -13,7 +13,7 @@
 
 ## What is DDASH?
 ---
-DDASH a protocol for exchange of distributed data in blockchain networks.
+DDASH is a protocol for exchange of distributed data in blockchain networks.
 
 * One-click Ethereum coinification of any digital resource
 
