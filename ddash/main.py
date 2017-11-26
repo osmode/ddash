@@ -189,7 +189,7 @@ while 1:
     if 'contract' in result:
 	args = result.split()
 	if len(args) != 3:
-    	    print "Example of correct usage:  contract blackswan 0x535a338d14df9513909ec4d010ad3d2946da4014"	
+    	    print "Example of correct usage:  contract blackswan 0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"	
 	else:
 	    contract_name = args[1].strip()
 	    contract_address = args[2].strip()

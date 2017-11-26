@@ -31,7 +31,7 @@ class Interface:
         print "Initializing a DDASH Interface object."
 
     # contract_name is without the sol extension
-    def load_contract(self,contract_name,sender_address=None,contract_address="0x535a338d14df9513909ec4d010ad3d2946da4014"):
+    def load_contract(self,contract_name,sender_address=None,contract_address="0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"):
 
 	if not sender_address:
 		sender_address = self.eth_accounts[0]

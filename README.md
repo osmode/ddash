@@ -23,11 +23,13 @@ DDASH a protocol for exchange of distributed data in blockchain networks.
 
 * Allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
-* Upload and download data from commonly used formats (such as CSV) to an Etheruem blockchain, and vice versa
+* Upload and download data to/from an Etheruem blockchain with one click
 
+## DDASH Walkthrough 
+[![DDASH Walkthrough Video](https://s3-us-west-1.amazonaws.com/ddash/intro.png)](https://youtu.be/dV0Uel2M4kQ)
+ 
 
 ## Why DDASH?
----
 Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is an emerging blockchain networking protocol that interfaces between common data formats and the Ethereum blockchain, between the Ethereum blockchain and IPFS, and for private Ethereum networking.
 
 ### In its usual siloed state, data is a liability rather than an asset.
@@ -53,23 +55,25 @@ The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs 
 The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development and has not been audited for security. Be very careful when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
 
 ## Quickstart 
-DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04. 
+DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04. Support for Mac OSX coming soon.
 
-Before you start, be sure you're running these scripts with appropriate permissions (usually sudo on Unix systems) and change file permissions of the *installer.sh*, *deploy.sh*, and *manager.sh* bash scripts to allow execution:
+Use default settings to connect to the blackswan network.
+
+Before you start, be sure you're running these scripts with appropriate permissions (usually sudo on Unix systems) and change file permissions of the *install.sh*, *deploy.sh*, and *manager.sh* bash scripts to allow execution:
 
 ```
-chmod u+x installer.sh deploy.sh manager.sh
+chmod u+x install.sh deploy.sh dnu.sh
 ```
 
 Navigate to the directory where you want to install DDASH and run:
 ```
-./ installer.sh
+./install.sh
 ```
 This will install the Go Ethereum client, IPFS, and the necessary Python modules to allow DDASH to interface with these clients. 
 
 To start the DDASH Networking Utility, run:
 ```
-./ manager.sh
+./dnu.sh
 ```
 
 ## Directory structure
@@ -105,44 +109,42 @@ python main.py
     Welcome to the DDASH Command Line Interface.
 
 [1]   ddash> sanity check
-      IPFS and geth appear to be running.
-[2]   ddash> set directory /home/ucsf/ddash/gnupg
-[3]   ddash> new key
-[4]   ddash> show keys
-[5]   ddash> use key 0
-[6]   ddash> show accounts
-[7]   ddash> use account 0
-[8]   ddash> set recipient your_recipient's_pubkey_id 
-[9]   ddash> set file /path/to/clinical/trial/data.csv
-[10]  ddash> encrypt
-[11]  ddash> upload
-[12]  ddash> checkout QmUahy9JKE6Q5LSHArePowQ91fsXNR2yKafTYtC9xQqhwP
+[2]   ddash> peer count
+[3]   ddash> contract blackswan 0x40a4dcb3fdcbaa00848d2c14386abed56797bf61
+[4]   ddash> set directory /home/ucsf/ddash/gnupg
+[5]   ddash> new key
+[6]   ddash> show keys
+[7]   ddash> use key 0
+[8]   ddash> show accounts
+[9]   ddash> use account 0
+[10]  ddash> set recipient your_recipient's_pubkey_id 
+[11]  ddash> set file /path/to/clinical/trial/data.csv
+[12]  ddash> encrypt
+[13]  ddash> upload
+[14]  ddash> checkout QmUahy9JKE6Q5LSHArePowQ91fsXNR2yKafTYtC9xQqhwP
+[15]  ddash> heyo
+[16]  ddash> listen
+[17]  ddash> broadcast
+
 ```
 The above commands:
 
 [1]  check if IPFS daemon and Go Ethereum client are running
-
-[2]  specify working directory (need to have read/write permission)
-
-[3]  generate a new PGP keypair 
-
-[4]  list all PGP keypairs on your machine
-
-[5]  uses the first (index 0) keypair as your identity
-
-[6]  list Ethereum accounts
-
-[7]  specify index of Ethereum account to use for transactions
-
-[8]  specify an intended recipient's public key
-
-[9]  upload the file to IPFS and create transaction containing the hash, user id of the person who uploaded the file, and recipient's public key id (or "public" indicating that it's not encrypted).
-
-[10] encrypt file from step [9] using public key from step [8]
-
-[11] upload file from [9] to IPFS network
-
-[12] query blockchain using IPFS has as handle 
+[2]  returns number of enodes found on chain
+[3]  start interfacing with contract named 'blackswan' at given address
+[4]  specify working directory (need to have read/write permission)
+[5]  generate a new PGP keypair 
+[6]  list all PGP keypairs on your machine
+[7]  uses the first (index 0) keypair as your identity
+[8]  list Ethereum accounts
+[9]  specify index of Ethereum account to use for transactions
+[10]  specify an intended recipient's public key
+[11]  upload the file to IPFS and create transaction containing the hash, user id of the person who uploaded the file, and recipient's public key id (or "public" indicating that it's not encrypted).
+[12] encrypt file from step [9] using public key from step [8]
+[13] upload file from [9] to IPFS network
+[14] query blockchain using IPFS has as handle 
+[16] query blockchain for peer enodes
+[17] broadcast client enode to blockchain
 
 
 ## Permissions management 
