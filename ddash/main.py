@@ -38,12 +38,19 @@ def get_value_from_index(input_phrase,index,convert_to='integer'):
 print intro
 
 def get_contract_name_and_address():
+	contract_name=None
+	contract_address=None
+
 	contract_name=raw_input("Enter your contract name (leave blank for blackswan)> ")
 	while 1:
-	    contract_address=raw_input("Enter your contract address> ")
-	    if contract_address: break
+	    contract_address=raw_input("Enter your contract address (leave blank for blackswan)> ")
+	    if not contract_address: 
+		contract_address="0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"
 
-	if not contract_name: contract_name='blackswan' 
+	    if not contract_name: 
+		contract_name='blackswan' 
+
+	    if contract_address and contract_name: break
 
 	return contract_name, contract_address
 
@@ -188,7 +195,7 @@ while 1:
 	    contract_address = args[2].strip()
 	    i.load_contract(contract_name=contract_name, contract_address=contract_address)
 
-    if 'friend count' in result:
+    if ('friend count' in result) or ('peer count' in result):
 	i.friend_count()
 
     loop_counter+=1

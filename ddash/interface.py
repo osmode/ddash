@@ -171,7 +171,6 @@ class Interface:
 
     # get number of enodes on the blockchain
     def friend_count(self):
-	print "called friend count"
 	print str(self.contract.call().get_entity_count())+" enodes found on the blockchain."
 	return 0
 
