@@ -25,7 +25,7 @@ Your choice> " choice
 	echo ""
 	os="$(uname -s)"
 	if [ "$os" = 'Darwin' ]; then
-		echo "It appears you're installing DDASH on a Mac."
+		echo "It appears you're installing DDASH on a Mac. Mac Installer is still experimental."
 		read -p "Would you like to install Homebrew? Enter Y/n: " answer1
 
 		if [[ "$answer1" = 'Y' ]] || [[ "$answer1" = 'y' ]]; then
@@ -100,9 +100,15 @@ Your choice> " choice
 	#echo "[" >> $PWD/ddash/data/static-nodes.json
 	#echo "]" >> $PWD/ddash/data/static-nodes.json
 
-	read -p "Please specify chainId (do not use 0 or 1): " chainId
+	read -p "Please specify chainId (or leave blank for blackswan): " chainId
+	if [ -z $chainId ]; then
+		chainId=32
+	fi		
 	read -p "Please specify mining difficulty (or leave blank for default): " diff
-	read -p "Please specify nonce (or leave blank for random): " nonce
+	read -p "Please specify nonce (or leave blank for blackswan): " nonce
+	if [ -z $nonce ]; then
+		nonce=32
+	fi
 	read -p "Please specify a gas limit (leave leave blank for 0x5FDFB0): " gaslimit
 
 	if [ -f $PWD/ddash/genesis.json ]; then
