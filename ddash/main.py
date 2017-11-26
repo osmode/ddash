@@ -174,8 +174,12 @@ while 1:
 		y+=1
 	LISTEN=False
 
+    # greet omar
+    if 'greet omar' in result or 'omar' in result:
+	i.heyo()
+
     # format:  contract blackswan 0x...
-    elif 'contract' in result:
+    if 'contract' in result:
 	args = result.split()
 	if len(args) != 3:
     	    print "Example of correct usage:  contract blackswan 0x535a338d14df9513909ec4d010ad3d2946da4014"	
