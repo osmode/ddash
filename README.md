@@ -124,7 +124,7 @@ python main.py
 [12]  ddash> encrypt
 [13]  ddash> upload
 [14]  ddash> checkout QmUahy9JKE6Q5LSHArePowQ91fsXNR2yKafTYtC9xQqhwP
-[15]  ddash> heyo
+[15]  ddash> hello
 [16]  ddash> listen
 [17]  ddash> broadcast
 

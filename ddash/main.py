@@ -182,7 +182,7 @@ while 1:
 	LISTEN=False
 
     # greet omar
-    if 'greet omar' in result or 'omar' in result:
+    if ('greet omar' in result) or ('omar' in result) or ('hello' in result):
 	i.heyo()
 
     # format:  contract blackswan 0x...
