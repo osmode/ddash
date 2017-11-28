@@ -17,11 +17,18 @@ def my_enode():
 	print enode
 	print ip
 
+	# typically [::] is present when running on Ubuntu
+	# need to process the enode in this case
 	if '[::]' in enode:
 	    final_enode = enode.replace('[::]',ip).replace('\n','')
+	# typically the machine's actual ip address is already appended to enode
+	# on Mac OS X 
 	else:
 	    final_enode = enode
-
+	    start=enode.find('@')+1
+	    end=len(enode[enode.find('@'):])+start
+	    ip=enode[start:end]
+	    
 	print final_enode
 	return final_enode
 
