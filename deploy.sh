@@ -14,7 +14,10 @@ else
     contract_name=$1
 fi
 
-read -p "Please enter the amount of gas for deployment (e.g. 1000000): " gas
+read -p "Please enter the amount of gas for deployment (or leave blank for default): " gas
+if [ -z "$gas" ]; then
+gas=2000000
+fi
 
 echo "$contract_name"
 echo Deleting old ABIs and data...
@@ -23,12 +26,22 @@ echo Compiling $PWD/ddash/source/"$contract_name".sol
 rm $PWD/ddash/source/*.abi
 rm $PWD/ddash/source/*/bin
 
+# compilation on Ubuntu uses solc compiler
+# compilation on Mac OS X uses solcjs
+os="$(uname -s)"
+if [ "$os" = 'Darwin' ]; then
+echo Compiling "$contract_name".sol using solcjs...
+solcjs --bin --abi -o $PWD/ddash/source $PWD/ddash/source/"$contract_name".sol
+mv $PWD/ddash/source/*"$contract_name"*.abi $PWD/ddash/source/"$contract_name".abi
+mv $PWD/ddash/source/*"$contract_name"*.bin $PWD/ddash/source/"$contract_name".bin
+fi
+if [ "$os" = 'Linux' ]; then
 solc --bin --abi -o $PWD/ddash/source $PWD/ddash/source/"$contract_name".sol
+fi
 
 # need to convert all *abi and *bin files to lowercase to prevent errors
 for file in $PWD/ddash/source/*.abi; do mv $file $PWD/ddash/source/"$(basename $file | tr '[:upper:]' '[:lower:]')"; done
 for file in $PWD/ddash/source/*.bin; do mv $file $PWD/ddash/source/"$(basename $file | tr '[:upper:]' '[:lower:]')"; done
-
 
 if [ -f $PWD/ddash/source/"$contract_name".js ]; then
     rm $PWD/ddash/source/"$contract_name".js
