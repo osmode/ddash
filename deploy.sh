@@ -8,8 +8,10 @@
 pwd=$(pwd)
 # compile contract
 if [ ! $1 ]; then
-    read -p "Please specify a contract name (without the .sol extension): " contract_name
-
+    read -p "Please specify a contract name without the .sol extension (or leave blank for blackswan): " contract_name
+    if [ -z "$contract_name" ]; then
+        contract_name="blackswan"
+    fi
 else
     contract_name=$1
 fi
