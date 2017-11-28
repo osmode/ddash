@@ -57,7 +57,7 @@ The technologies used here are still in alpha. If you own cryptoassets such as B
 Different countries have different laws regulating token sales. Please abide by all laws that apply to your use case. 
 
 ## Quickstart 
-DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04. Support for Mac OSX coming soon.
+DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X.
 
 Use default settings to connect to the blackswan network.
 
