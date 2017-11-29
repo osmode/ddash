@@ -79,14 +79,14 @@ To start the DDASH Networking Utility, run:
 ## Directory structure
 The directory structure is important because DDASH and the DDASH Networking Utility look for certain files in certain directories. Your application will look something like this:
 ```
- /your_working_directory
- 	README.md
+/your_working_directory
+	README.md
 	install.sh
 	dnu.sh
 	deploy.sh
 	log_nodeInfo.sh
 
-    /ddash
+	/ddash
 		crypto.py
 		genesis.json
 		bcinterface.py
@@ -98,7 +98,7 @@ The directory structure is important because DDASH and the DDASH Networking Util
 		/upload
 		/download
         /source
-        /data
+		/data
 	    	static-nodes.json
 
 ```
@@ -117,14 +117,14 @@ Contents of the *upload* directory are uploaded using the DDASH command with the
 
     Welcome to the DDASH Command Line Interface.
 
-[1]   ddash> sanity check
-[2]   ddash> peer count
-[3]   ddash> upload
-[4]	  ddash> download
-[5]   ddash> hello
-[6]   ddash> listen
-[7]   ddash> broadcast
-[8]	  ddash> quit
+[1]		ddash> sanity check
+[2]		ddash> peer count
+[3]		ddash> upload
+[4]		ddash> download
+[5]		ddash> hello
+[6]		ddash> listen
+[7]		ddash> broadcast
+[8]		ddash> quit
 
 ```
 The above commands:
