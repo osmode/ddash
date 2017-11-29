@@ -25,8 +25,8 @@ echo "$contract_name"
 echo Deleting old ABIs and data...
 
 echo Compiling $PWD/ddash/source/"$contract_name".sol
-rm $PWD/ddash/source/*.abi
-rm $PWD/ddash/source/*/bin
+#rm $PWD/ddash/source/*.abi
+#rm $PWD/ddash/source/*/bin
 
 # compilation on Ubuntu uses solc compiler
 # compilation on Mac OS X uses solcjs

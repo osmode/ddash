@@ -119,21 +119,21 @@ class FSInterface:
 		print final_enode
 		return final_enode
 
-	def file_len(fname):
+	def file_len(self,fname):
 		with open(fname) as f:
 			for i, l in enumerate(f):
 				pass
 		return i + 1
 
 
-	def update_static_nodes(enode):
+	def update_static_nodes(self,enode):
 		fname_path=os.getcwd()+'/ddash/data/static-nodes.json'	   
 		# avoid duplicate enode entries
 		if enode in open(fname_path).read():
 			print "enode already exists!"
 			return 1
 
-		num_lines = file_len(fname_path)
+		num_lines = self.file_len(fname_path)
 		line_number = 0
 		temp_file_path=os.getcwd()+'/ddash/data/static-nodes2.json'
 		temp_file = open(temp_file_path,'w+')

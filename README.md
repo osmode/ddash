@@ -54,8 +54,6 @@ The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs 
 ## Precautions
 The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development and has not been audited for security. Be very careful when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
 
-Different countries have different laws regulating token sales. Please abide by all laws that apply to your use case. 
-
 ## Quickstart 
 DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X.
 
@@ -82,23 +80,32 @@ To start the DDASH Networking Utility, run:
 The directory structure is important because DDASH and the DDASH Networking Utility look for certain files in certain directories. Your application will look something like this:
 ```
  /your_working_directory
-     /ddash
-	crypto.py
-	genesis.json
-	interface.py
-	ipfs.py
-	main.py
+ 	README.md
+	install.sh
+	dnu.sh
+	deploy.sh
+	log_nodeInfo.sh
 
-        /data
-	    static-nodes.json
-
+    /ddash
+		crypto.py
+		genesis.json
+		bcinterface.py
+		fsinterface.py
+		ipfs.py
+		main.py
+		nodeInfo.ds
+		
+		/upload
+		/download
         /source
+        /data
+	    	static-nodes.json
+
 ```
 Save Ethereum contracts in the *source* directory with the .sol extension.
+Contents of the *upload* directory are uploaded using the DDASH command with the same name. Blockchain contents are downloaded to the *download* directory using the DDASH command with the same name.
 
 ```
-python main.py
-
         _____  _____           _____ _    _ 
        |  __ \|  __ \   /\    / ____| |  | |
        | |  | | |  | | /  \  | (___ | |__| |
@@ -112,21 +119,12 @@ python main.py
 
 [1]   ddash> sanity check
 [2]   ddash> peer count
-[3]   ddash> contract blackswan 0x40a4dcb3fdcbaa00848d2c14386abed56797bf61
-[4]   ddash> set directory /home/ucsf/ddash/gnupg
-[5]   ddash> new key
-[6]   ddash> show keys
-[7]   ddash> use key 0
-[8]   ddash> show accounts
-[9]   ddash> use account 0
-[10]  ddash> set recipient your_recipient's_pubkey_id 
-[11]  ddash> set file /path/to/clinical/trial/data.csv
-[12]  ddash> encrypt
-[13]  ddash> upload
-[14]  ddash> checkout QmUahy9JKE6Q5LSHArePowQ91fsXNR2yKafTYtC9xQqhwP
-[15]  ddash> hello
-[16]  ddash> listen
-[17]  ddash> broadcast
+[3]   ddash> upload
+[4]	  ddash> download
+[5]   ddash> hello
+[6]   ddash> listen
+[7]   ddash> broadcast
+[8]	  ddash> quit
 
 ```
 The above commands:
@@ -135,37 +133,17 @@ The above commands:
 
 [2]  returns number of enodes found on chain
 
-[3]  start interfacing with contract named 'blackswan' at given address
+[3]  upload contents of *upload* directory to IPFS and save meta-data to blockchain.
 
-[4]  specify working directory (need to have read/write permission)
+[4]  query blockchain for file meta-data and download files from IPFS to *download* directory
 
-[5]  generate a new PGP keypair 
+[6] query blockchain for peer enodes
 
-[6]  list all PGP keypairs on your machine
-
-[7]  uses the first (index 0) keypair as your identity
-
-[8]  list Ethereum accounts
-
-[9]  specify index of Ethereum account to use for transactions
-
-[10]  specify an intended recipient's public key
-
-[11]  upload the file to IPFS and create transaction containing the hash, user id of the person who uploaded the file, and recipient's public key id (or "public" indicating that it's not encrypted).
-
-[12] encrypt file from step [9] using public key from step [8]
-
-[13] upload file from [9] to IPFS network
-
-[14] query blockchain using IPFS has as handle 
-
-[16] query blockchain for peer enodes
-
-[17] broadcast client enode to blockchain
+[7] broadcast client enode to blockchain
 
 
 ## Permissions management 
-Data on the IPFS network cannot be removed and can be accessed by anyone who has your content hash. DDASH utilizes PGP keypair encryption to control permissions. The above examples demonstrated how to share data at IPFS address *QmRmE1vnc7mbEiqQv5SjrW3ctAmXXt4MQqbykenJmSqPuk*. If I only want Steven to be able to view the contents of this file, I'll encrypt the file using Steven's public key and upload it IPFS. The resulting IPFS hash, a description of the file, the owner, and the recipient's pubkey fingerprint (or "public") are saved on the blockchain.
+Data on the IPFS network cannot be removed and can be accessed by anyone who has your content hash. DDASH utilizes PGP keypair encryption to control permissions. This feature is still under development.
 
 ## Contribute
 ### Use cases

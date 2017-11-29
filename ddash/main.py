@@ -9,6 +9,8 @@ ethereum_acc_pass = None
 # and query blockchain for peer enodes
 BROADCAST=True
 LISTEN=True
+blackswan_contract_address="0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"
+recordmanager_contract_address="0xa814d7f88827df8dddef27be933bc33f62742b25"
 
 intro = r"""
 	_____  _____		   _____ _	_ 
@@ -72,6 +74,7 @@ while 1:
 	if 'sanity check' in result:
 		bci.sanity_check()
 
+	'''
 	if ('check key' in result) or ('show key' in result) or ('list key' in result):
 		u.check_keys()
 
@@ -111,36 +114,53 @@ while 1:
 		recipient_pubkey_fingerprint = get_value_from_index(result,1)
 		u.encrypt_with_key(recipient_pubkey_fingerprint)
 
+	'''
+
 	if ('upload' in result):
-		print "This function has been deprecated"
-		exit 
+		print "uploading contents of "+os.getcwd()+"/upload..."
+		if not ethereum_acc_pass:
+			print "Enter password for account "+bci.eth_accounts[0]+":"
+			ethereum_acc_pass=getpass() 
+		bci.unlock_account(ethereum_acc_pass)
+		bci.load_contract(contract_name='recordmanager',contract_address=recordmanager_contract_address)
 
-		if not u.file_to_upload: 
-			print "No file selected. Please select file using method PGPUser.set_file(filepath)."
-		else:
-			filename,filehash = bci.upload(u.file_to_upload)
-			description = get_value_from_index(result, 1, convert_to="string")
-			print "Attempting to push the following record to the blockchain:"
-			print "filename: ",(filename or description)
-			print "filehash: ",filehash
-			#print "sender pubkey id",u.keys[u.key_index]['fingerprint']
-			print "recipient pubkey id",u.get_recipient()
+		fsi.upload_all_files(bci)
+	
+	if ('download' in result):
+		print "downloading blockchain contents to "+os.getcwd()+"/download..."
+		if not ethereum_acc_pass:
+			print "Enter password for account "+bci.eth_accounts[0]+":"
+			ethereum_acc_pass=getpass() 
+		bci.unlock_account(ethereum_acc_pass)
 
-			bci.push_ipfs_hash_to_chain(filehash,(filename or description),u.keys[u.key_index]['fingerprint'],u.get_recipient()) 
+		bci.load_contract(contract_name='recordmanager',contract_address=recordmanager_contract_address)
 
+		fsi.download_all_files(bci)
+
+
+	'''
 	if ('set directory'  in result):
 		workdir = get_value_from_index(result,2,convert_to="string")
 		print "Setting directory to", workdir
 		u.set_directory(workdir)
+	'''
 
 	if ('show account' in result):
-		bci.show_eth_accounts()
+		if not ethereum_acc_pass:
+			print "Enter password for account "+bci.eth_accounts[0]+":"
+			ethereum_acc_pass=getpass() 
+		bci.unlock_account(ethereum_acc_pass)
 
+		bci.show_eth_accounts()
 	elif ('use account' in result) or ('set account' in result):
+		if not ethereum_acc_pass:
+			print "Enter password for account "+bci.eth_accounts[0]+":"
+			ethereum_acc_pass=getpass() 
+		bci.unlock_account(ethereum_acc_pass)
+
 		account_index = get_value_from_index(result,2,convert_to="integer")
 		print "Extracted index ",account_index
 		bci.set_account(account_index)
-
 	if ('unlock' in result):
 		password = get_value_from_index(result,2,convert_to="string")
 		print "Attempting to unlock account..."
@@ -152,6 +172,12 @@ while 1:
 		bci.get_record(ipfs_hash)
 
 	if ( ('broadcast' in result) or BROADCAST):
+		if not ethereum_acc_pass:
+			print "Enter password for account "+bci.eth_accounts[0]+":"
+			ethereum_acc_pass=getpass() 
+		bci.unlock_account(ethereum_acc_pass)
+		bci.load_contract(contract_name='blackswan',contract_address=blackswan_contract_address)
+
 		enode = fsi.my_enode()  #'myenode123' # my_enode()
 		print "Broadcasting enode "+enode+" to the blackswan network."
 
@@ -167,9 +193,10 @@ while 1:
 		if not ethereum_acc_pass:
 			print "Enter password for account "+bci.eth_accounts[0]+":"
 			ethereum_acc_pass=getpass() 
+		bci.unlock_account(ethereum_acc_pass)
+		bci.load_contract(contract_name='blackswan',contract_address=blackswan_contract_address)
 
 		print "Downloading peer list from blockchain."
-		bci.unlock_account(ethereum_acc_pass)
 		peers = []
 		num_peers = bci.contract.call().get_entity_count()
 		if num_peers == 0:
@@ -183,18 +210,24 @@ while 1:
 			print "Adding to list of peers:"
 			print p
 			peers.append(p)
-			update_static_nodes(p)
+			fsi.update_static_nodes(p)
 			y+=1
 
 		LISTEN=False
 
 	# greet omar
 	if ('greet omar' in result) or ('omar' in result) or ('hello' in result):
+		if not ethereum_acc_pass:
+			print "Enter password for account "+bci.eth_accounts[0]+":"
+			ethereum_acc_pass=getpass() 
+		bci.unlock_account(ethereum_acc_pass)
+		bci.load_contract(contract_name='blackswan',contract_address=blackswan_contract_address)
+
 		bci.heyo()
 
-		# format:  contract blackswan 0x...
-		if 'contract' in result:
-			args = result.split()
+	# format:  contract blackswan 0x...
+	if 'contract' in result:
+		args = result.split()
 		if len(args) != 3:
 			print "Example of correct usage:  contract blackswan 0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"	
 		else:
@@ -203,6 +236,12 @@ while 1:
 			bci.load_contract(contract_name=contract_name, contract_address=contract_address)
 
 	if ('friend count' in result) or ('peer count' in result):
+		if not ethereum_acc_pass:
+			print "Enter password for account "+bci.eth_accounts[0]+":"
+			ethereum_acc_pass=getpass() 
+		bci.unlock_account(ethereum_acc_pass)
+		bci.load_contract(contract_name='blackswan',contract_address=blackswan_contract_address)
+
 		bci.friend_count()
 
 	loop_counter+=1
