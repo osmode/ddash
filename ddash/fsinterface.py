@@ -15,21 +15,18 @@ class FSInterface:
 	# downloads all files, and reconstructs *.dsc files
 	# argument bci is a BCInterface object
 	def download_all_files(self,bci,walk_dir=None):
-		num_records = bci.get_record_count()
+		num_records = bci.contract.call().getRecordCount()
 		i=0
 		while i < num_records:
 			record=bci.get_record_by_row(i)
-			owner=record[0]
-			owner_address=record[1]
+			owner_address=record[0]
+			ipfs_hash=record[1]
 			filename=record[2]
-			ipfs_hash=record[3]
-			description=record[4]
-			shared_with=record[5]
-			shared_by=record[6]
+			description=record[3]
 
 			# download from IPFS network
 			bci.api.get(ipfs_hash)
-			bashcommand="mv "+record[2]+" "+os.path.join(os.getcwd(),'download')+"/"+filename
+			bashcommand="mv "+ipfs_hash+" "+os.path.join(os.getcwd(),'download')+"/"+filename
 
 			p=Popen(bashcommand.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
 			output, err=p.communicate()
@@ -71,14 +68,12 @@ class FSInterface:
 						print "Invalid *.dsc file does not contain required fields: owner, description, ipfs, shared_with"
 					else:
 						print "adding record to blockchain:"
-						print "owner: ",owner
 						print "owner_account:",bci.eth_accounts[0]
 						print "filename:",filename
 						print "ipfs_hash:",ipfs_hash
 						print "description:",description
-						print "shared_with:",shared_with
 
-						print bci.add_record(owner,bci.eth_accounts[0],filename,ipfs_hash,description,shared_with,"public")
+						print bci.add_record(bci.eth_accounts[0],filename,ipfs_hash,description)
 
 					#print "dsc files contents: ",content
 

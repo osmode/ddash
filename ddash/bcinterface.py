@@ -105,30 +105,27 @@ class BCInterface:
 		return 1
 
 
-	def add_record(self,owner_name,owner_address,filename,ipfs_hash,description,shared_with_fingerprint,shared_by_fingerprint):
+	def add_record(self,owner_address,filename,ipfs_hash,description):
 		print "adding record to blockchain:"
-		print "owner_name:",owner_name
 		print "owner_adddress:",owner_address
 		print "filename:",filename
 		print "ipfs_hash:",ipfs_hash
 		print "description",description
-		print "shared_with_fingerprint",shared_with_fingerprint
-		print "shared_by_fingerprint",shared_by_fingerprint
 
-		return self.contract.transact(self.tx).add_record(owner_name,owner_address,filename,ipfs_hash,description,shared_with_fingerprint,shared_by_fingerprint)
+		return self.contract.transact(self.tx).addRecord(ipfs_hash,filename,description)
 
 	def get_record_by_row(self,row):
 	
-		self.contract.transact(self.tx).get_record_by_row(row)
-		return self.contract.call().get_record_by_row(row)
+		self.contract.transact(self.tx).getRecordByRow(row)
+		return self.contract.call().getRecordByRow(row)
 
 	def get_record_by_ipfs_hash(self,ipfs_hash):
 		self.contract.transact(self.tx).get_record_by_ipfs_hash(ipfs_hash)
 		return self.contract.call().get_record_by_ipfs_hash(ipfs_hash)
 
 	def get_record_count(self):
-   		self.contract.transact(self.tx).get_record_count()
-		return self.contract.call().get_record_count()
+   		self.contract.transact(self.tx).getRecordCount()
+		return self.contract.call().getRecordCount()
 
    # unlock selected Ethereum account
 	def unlock_account(self, password):

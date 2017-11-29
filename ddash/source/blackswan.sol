@@ -61,7 +61,7 @@ contract BlackSwan {
 	} else {
 		new_entity(msg.sender, enode);
 	}
-    }
+    } 
 
 	// retrieve record using IPFS hash (input)
 	// returns Record elements, namely id, ipfs hash, description, 
