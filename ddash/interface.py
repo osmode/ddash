@@ -105,6 +105,19 @@ class Interface:
         return 1
 
 
+    def add_record(self,owner_name,owner_address,ipfs_hash,description,shared_with_fingerprint,shared_by_fingerprint):
+
+	return self.contract.transact(self.tx).add_record(owner_name,owner_address,ipfs_hash,description,shared_with_fingerprint,shared_by_fingerprint)
+
+    def get_record_by_row(self,row):
+    
+    	self.contract.transact(self.tx).get_record_by_row(row)
+	return self.contract.call().get_record_by_row(row)
+
+    def get_record_by_ipfs_hash(self,ipfs_hash):
+    	i.contract.transact(i.tx).get_record_by_ipfs_hash(ipfs_hash)
+	return i.contract.call().get_record_by_ipfs_hash(ipfs_hash)
+
     # retrieve entry from blockchain using ipfs hash as handle
     def get_record(self,ipfs_hash):
 	assert(self.contract)
