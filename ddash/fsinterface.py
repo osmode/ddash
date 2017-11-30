@@ -26,7 +26,7 @@ class FSInterface:
 
 			# download from IPFS network
 			bci.api.get(ipfs_hash)
-			bashcommand="mv "+ipfs_hash+" "+os.path.join(os.getcwd(),'download')+"/"+filename
+			bashcommand="mv "+ipfs_hash+" "+os.path.join(os.getcwd(),'ddash/download')+"/"+filename
 
 			p=Popen(bashcommand.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
 			output, err=p.communicate()
@@ -42,7 +42,7 @@ class FSInterface:
 	def upload_all_files(self,bci,walk_dir=None):
 		all_files=[]
 		if not walk_dir:
-			walk_dir=os.path.join(os.getcwd(), 'upload') 		
+			walk_dir=os.path.join(os.getcwd(), 'ddash/upload') 		
 			print "walk_dir:",walk_dir
 		for root, subdirs, files in os.walk(walk_dir):	
 			for f in files:
