@@ -10,7 +10,7 @@ ethereum_acc_pass = None
 BROADCAST=True
 LISTEN=True
 blackswan_contract_address="0x5ff2ce40e82e52d370fa9a0ddf49aeee32184756"
-recordmanager_contract_address="0xa95775cc72f64ac4404b79a1a6ae8ff1621a0d3f"
+recordmanager_contract_address="0xcc109bf72338909ead31a5bf46d8d8fa455ff09b"
 
 intro = r"""
 
