@@ -13,12 +13,12 @@ blackswan_contract_address="0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"
 recordmanager_contract_address="0xa814d7f88827df8dddef27be933bc33f62742b25"
 
 intro = r"""
-	_____  _____		   _____ _	_ 
-   |  __ \|  __ \   /\	/ ____| |  | |
+	_____  _____		   _____ _	  _ 
+   |  __ \|  __ \   /\	  / ____| |  | |
    | |  | | |  | | /  \  | (___ | |__| |
    | |  | | |  | |/ /\ \  \___ \|  __  |
    | |__| | |__| / ____ \ ____) | |  | |
-   |_____/|_____/_/	\_\_____/|_|  |_|
+   |_____/|_____/_/	   \_\_____/|_|  |_|
 											 
    ::: Distributed Data Sharing Hyperledger :::
 """
