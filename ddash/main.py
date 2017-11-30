@@ -9,16 +9,17 @@ ethereum_acc_pass = None
 # and query blockchain for peer enodes
 BROADCAST=True
 LISTEN=True
-blackswan_contract_address="0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"
-recordmanager_contract_address="0xa814d7f88827df8dddef27be933bc33f62742b25"
+blackswan_contract_address="0xc6fb1ea5c7e67e83d0e3561cb86a4a8490cad6ee"
+recordmanager_contract_address="0xa95775cc72f64ac4404b79a1a6ae8ff1621a0d3f"
 
 intro = r"""
-	_____  _____		   _____ _	  _ 
+
+    _____  _____	   _____ _    _ 
    |  __ \|  __ \   /\	  / ____| |  | |
    | |  | | |  | | /  \  | (___ | |__| |
    | |  | | |  | |/ /\ \  \___ \|  __  |
    | |__| | |__| / ____ \ ____) | |  | |
-   |_____/|_____/_/	   \_\_____/|_|  |_|
+   |_____/|_____/_/    \_\_____/|_|  |_|
 											 
    ::: Distributed Data Sharing Hyperledger :::
 """
@@ -47,7 +48,7 @@ def get_contract_name_and_address():
 	while 1:
 		contract_address=raw_input("Enter your contract address (leave blank for blackswan)> ")
 		if not contract_address: 
-			contract_address="0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"
+			contract_address=blackswan_contract_address
 
 		if not contract_name: 
 			contract_name='blackswan' 
@@ -229,7 +230,7 @@ while 1:
 	if 'contract' in result:
 		args = result.split()
 		if len(args) != 3:
-			print "Example of correct usage:  contract blackswan 0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"	
+			print "Example of correct usage:  contract blackswan "+blackswan_contract_address
 		else:
 			contract_name = args[1].strip()
 			contract_address = args[2].strip()
