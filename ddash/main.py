@@ -9,7 +9,7 @@ ethereum_acc_pass = None
 # and query blockchain for peer enodes
 BROADCAST=True
 LISTEN=True
-blackswan_contract_address="0xc6fb1ea5c7e67e83d0e3561cb86a4a8490cad6ee"
+blackswan_contract_address="0x5ff2ce40e82e52d370fa9a0ddf49aeee32184756"
 recordmanager_contract_address="0xa95775cc72f64ac4404b79a1a6ae8ff1621a0d3f"
 
 intro = r"""
