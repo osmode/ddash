@@ -1,12 +1,5 @@
-# Distributed Data Sharing Hyperledger (DDASH)
-
-             _____  _____           _____ _    _ 
-            |  __ \|  __ \   /\    / ____| |  | |
-            | |  | | |  | | /  \  | (___ | |__| |
-            | |  | | |  | |/ /\ \  \___ \|  __  |
-            | |__| | |__| / ____ \ ____) | |  | |
-            |_____/|_____/_/    \_\_____/|_|  |_|
-                                             
+# DDASH 
+![DDASH Introduction](https://s3-us-west-1.amazonaws.com/ddash/ddash_intro.png)
 
 :earth_americas: :rocket: :boom: :rocket: :earth_asia: :boom: :rocket: :boom: :earth_africa: :rocket: :boom: :rocket: :earth_americas:
 
@@ -24,10 +17,6 @@ DDASH is a protocol for exchange of distributed data in blockchain networks.
 * Allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
 * Upload and download data to/from an Etheruem blockchain with one click
-
-## DDASH Walkthrough 
-[![DDASH Walkthrough Video](https://s3-us-west-1.amazonaws.com/ddash/intro.png)](https://youtu.be/dV0Uel2M4kQ)
- 
 
 ## Why DDASH?
 Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is an emerging blockchain networking protocol that interfaces between common data formats and the Ethereum blockchain, between the Ethereum blockchain and IPFS, and for private Ethereum networking.
@@ -52,13 +41,13 @@ This project is built on awesome work by the [IPFS](https://github.com/ipfs/ipfs
 The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs all dependencies (including the Go Ethereum client, IPFS, the Python IPFS API, and gnupg).
 
 ## Precautions
-The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development and has not been audited for security. Be very careful when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
+The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development. Be very careful when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
 
 
 ## Quickstart 
 DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X. Use default settings to connect to the blackswan network.
 
-Before you start, be sure you're running these scripts with appropriate permissions (usually sudo on Unix systems) and change file permissions of the *install.sh*, *deploy.sh*, and *manager.sh* bash scripts to allow execution:
+Before you start, be sure you're running these scripts with appropriate permissions (usually sudo on Unix systems) and change file permissions of the *install.sh*, *deploy.sh*, *gui.sh* and *manager.sh* bash scripts to allow execution:
 
 ```
 chmod u+x install.sh deploy.sh dnu.sh gui.sh
@@ -100,8 +89,6 @@ The directory structure is important because DDASH and the DDASH Networking Util
 		main.py
 		nodeInfo.ds
 		
-		/upload
-		/download
         /source
 		/data
 	    	static-nodes.json
