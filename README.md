@@ -54,6 +54,7 @@ The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs 
 ## Precautions
 The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development and has not been audited for security. Be very careful when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
 
+
 ## Quickstart 
 DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X.
 
@@ -62,7 +63,7 @@ Use default settings to connect to the blackswan network.
 Before you start, be sure you're running these scripts with appropriate permissions (usually sudo on Unix systems) and change file permissions of the *install.sh*, *deploy.sh*, and *manager.sh* bash scripts to allow execution:
 
 ```
-chmod u+x install.sh deploy.sh dnu.sh
+chmod u+x install.sh deploy.sh dnu.sh gui.sh
 ```
 
 Navigate to the directory where you want to install DDASH and run:
@@ -75,6 +76,12 @@ To start the DDASH Networking Utility, run:
 ```
 ./dnu.sh
 ```
+
+To start *Twin Peaks*, DDASH's Graphical User Interface, run:
+```
+python3 gui.py
+```
+
 
 ## Directory structure
 The directory structure is important because DDASH and the DDASH Networking Utility look for certain files in certain directories. Your application will look something like this:
