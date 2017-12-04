@@ -17,16 +17,16 @@ class PGPUser:
 	"""
 	def __init__(self, workdir='/gnupg'):
 		self.workdir = workdir
-                self.encrypted_file_store = self.workdir + '/encrypted_file_store'
+		self.encrypted_file_store = self.workdir + '/encrypted_file_store'
 		self.identities_filename = "identity.pkl"
-                self.keypair_filename = "keypair.asc"
+		self.keypair_filename = "keypair.asc"
 		self.identities_path = self.workdir+'/'+self.identities_filename
-                self.keypair_path = self.workdir+'/'+self.keypair_filename
+		self.keypair_path = self.workdir+'/'+self.keypair_filename
 		self.gpg = gnupg.GPG(gnupghome=workdir)
 		self.keys = self.gpg.list_keys() or [] 
-                self.key_index = 0
-                self.file_to_upload = None
-                self.recipient_pubkey_fingerprint = None
+ 		self.key_index = 0
+		self.file_to_upload = None
+		self.recipient_pubkey_fingerprint = None
         	
 	def set_directory(self, workdir):
 		self.workdir = workdir
