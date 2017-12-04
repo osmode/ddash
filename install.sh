@@ -70,7 +70,7 @@ Your choice> " choice
 		add-apt-repository ppa:ethereum/ethereum
 		apt-get update
 		apt-get install solc
-	        apt-get install python-pip
+	        apt-get install python3-pip
 	fi
 
 	if [ ! -f /usr/local/bin/ipfs ]; then
@@ -82,9 +82,9 @@ Your choice> " choice
 
 	apt-get update
 	ipfs init
-	pip install web3
-	pip install ipfsapi
-	pip install python-gnupg
+	pip3 install web3
+	pip3 install ipfsapi
+	pip3 install python-gnupg
 
 
 	if [ ! -d $pwd/ddash ]; then

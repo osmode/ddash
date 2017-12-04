@@ -3,7 +3,7 @@
 :::  File system interface to interact with local files :::
 '''
 import os
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 from subprocess import Popen, PIPE
 
 class FSInterface:
@@ -26,7 +26,7 @@ class FSInterface:
 
 			# download from IPFS network
 			bci.api.get(ipfs_hash)
-			bashcommand="mv "+ipfs_hash+" "+os.path.join(os.getcwd(),'ddash/download')+"/"+filename
+			bashcommand="mv "+ipfs_hash+" "+os.path.join(os.getcwd(),'ddash/share')+"/"+filename
 
 			p=Popen(bashcommand.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
 			output, err=p.communicate()
@@ -34,7 +34,7 @@ class FSInterface:
 			i+=1
 
 
-		print "Downloaded "+str(num_records)+" records from the blockchain."
+		print("Downloaded "+str(num_records)+" records from the blockchain.")
 
 
 
@@ -42,13 +42,13 @@ class FSInterface:
 	def upload_all_files(self,bci,walk_dir=None):
 		all_files=[]
 		if not walk_dir:
-			walk_dir=os.path.join(os.getcwd(), 'ddash/upload') 		
-			print "walk_dir:",walk_dir
+			walk_dir=os.path.join(os.getcwd(), 'ddash/share') 		
+			print("walk_dir:",walk_dir)
 		for root, subdirs, files in os.walk(walk_dir):	
 			for f in files:
-				print f
+				print(f)
 				file_path=os.path.join(root,f)
-				print self.get_ipfs_hash(file_path)
+				print(self.get_ipfs_hash(file_path))
 
 				dsc_file_path=file_path+".dsc"
 				all_files.append(file_path)
@@ -58,22 +58,22 @@ class FSInterface:
 						content=dsc_file.read()
 						parser.feed(content.replace('\n',''))
 					(owner,description,ipfs,shared_with)= parser.get_dsc_attributes()
-					print "tags: ", (owner,description,ipfs,shared_with)
+					print("tags: ", (owner,description,ipfs,shared_with))
 					if 'yes' in ipfs:
 						filename,ipfs_hash=bci.upload_to_ipfs(file_path)
 					else:
 						filename=f
 						ipfs_hash=get_ipfs_hash(file_path)
 					if not (owner and description and ipfs and shared_with):
-						print "Invalid *.dsc file does not contain required fields: owner, description, ipfs, shared_with"
+						print("Invalid *.dsc file does not contain required fields: owner, description, ipfs, shared_with")
 					else:
-						print "adding record to blockchain:"
-						print "owner_account:",bci.eth_accounts[0]
-						print "filename:",filename
-						print "ipfs_hash:",ipfs_hash
-						print "description:",description
+						print("adding record to blockchain:")
+						print("owner_account:",bci.eth_accounts[0])
+						print("filename:",filename)
+						print("ipfs_hash:",ipfs_hash)
+						print("description:",description)
 
-						print bci.add_record(bci.eth_accounts[0],filename,ipfs_hash,description)
+						print(bci.add_record(bci.eth_accounts[0],filename,ipfs_hash,description))
 
 					#print "dsc files contents: ",content
 
@@ -86,7 +86,7 @@ class FSInterface:
 		output, err=p.communicate()
 		result=output.split()
 		if len(result)!=3:
-			print "Unable to generate IPFS hash."
+			print("Unable to generate IPFS hash.")
 			return 1
 		return result[1]
 
@@ -101,8 +101,8 @@ class FSInterface:
 		enode = content[0].strip().replace('"','').replace('\n','')
 		ip = content[1].strip().replace('\n','')
 
-		print enode
-		print ip
+		print(enode)
+		print(ip)
 
 		# typically [::] is present when running on Ubuntu
 		# need to process the enode in this case
@@ -116,7 +116,7 @@ class FSInterface:
 			end=len(enode[enode.find('@'):])+start
 			ip=enode[start:end]
 		
-		print final_enode
+		print(final_enode)
 		return final_enode
 
 	def file_len(self,fname):
@@ -130,7 +130,7 @@ class FSInterface:
 		fname_path=os.getcwd()+'/ddash/data/static-nodes.json'	   
 		# avoid duplicate enode entries
 		if enode in open(fname_path).read():
-			print "enode already exists!"
+			print("enode already exists!")
 			return 1
 
 		num_lines = self.file_len(fname_path)
