@@ -25,6 +25,7 @@ class BCInterface:
 		self.blockNumber = self.web3.eth.blockNumber
 		self.eth_accounts = self.web3.personal.listAccounts
 		self.account_index = 0
+		self.ethereum_acc_pass = None
 		
 		self.tx = {}
 

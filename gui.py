@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import simpledialog
 import subprocess, os
 from subprocess import call
 import sys, datetime
@@ -105,18 +106,37 @@ class TwinPeaks:
 
 	def clock(self):
 		time = datetime.datetime.now().strftime("Time: %H:%M:%S")
+
 		if self.bci:
-			ethereum_acc_pass='abc'
-			self.bci.unlock_account(ethereum_acc_pass)
+			if len(self.bci.eth_accounts)==0:
+				self.address_label.configure(text="No Ethereum account found.")
+				self.balance_label.configure(text="Balance: 0 Ether")
+
+				answer = messagebox.askyesno("DDASH","I don't see any Ethereum accounts. Would you like to create one?")
+				if answer:
+					answer = simpledialog.askstring("DDASH","Choose a password: ")
+					answer2 = simpledialog.askstring("DDASH","Enter your password again: ")
+					if answer == answer2:
+						# create new Ethereum account
+						bci.web3.personal.newAccount(answer)
+						self.ethereum_acc_pass=answer
+			else: # account(s) found
+				if not self.bci.ethereum_acc_pass:
+					answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
+
+					self.bci.ethereum_acc_pass=answer
+
+			self.bci.unlock_account(self.bci.ethereum_acc_pass)
 
 			self.bci.load_contract(contract_name='blackswan', contract_address=blackswan_contract_address)
 			self.address_label.configure(text="Your Ethereum address:\n "+self.bci.get_address())
 			self.balance_label.configure(text="Balance:\n "+str(self.bci.get_balance())) 
+
 			self.bci.load_contract(contract_name='recordmanager', contract_address=recordmanager_contract_address)
 			self.fsi.upload_all_files(self.bci)
 			self.fsi.download_all_files(self.bci)
 
-		self.master.after(1000,self.clock)
+		self.master.after(5000,self.clock)
 
 
 #default_font=font.nametofont("Courier")

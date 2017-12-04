@@ -93,7 +93,7 @@ Welcome to the DDASH Network Utility. What would you like to do?
 	tmux new-session -d -s ipfs 'ipfs daemon'
 	sleep 5
 
-	python $PWD/ddash/main.py
+	python3 $PWD/ddash/main.py
     fi
 
     if [[ "$choice" = 6 ]]; then
