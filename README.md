@@ -56,7 +56,7 @@ The technologies used here are still in alpha. If you own cryptoassets such as B
 
 
 ## Quickstart 
-DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X.
+DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X. The [Twin Peaks branch](https://github.com/osmode/ddash) supports Python3 and features an experimental Graphical User Interface.
 
 Use default settings to connect to the blackswan network.
 
