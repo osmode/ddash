@@ -1,4 +1,4 @@
-from crypto import PGPUser
+#from crypto import PGPUser
 from bcinterface import BCInterface
 from getpass import getpass
 from fsinterface import *
@@ -44,9 +44,9 @@ def get_contract_name_and_address():
 	contract_name=None
 	contract_address=None
 
-	contract_name=raw_input("Enter your contract name (leave blank for blackswan)> ")
+	contract_name=input("Enter your contract name (leave blank for blackswan)> ")
 	while 1:
-		contract_address=raw_input("Enter your contract address (leave blank for blackswan)> ")
+		contract_address=input("Enter your contract address (leave blank for blackswan)> ")
 		if not contract_address: 
 			contract_address=blackswan_contract_address
 
@@ -59,14 +59,14 @@ def get_contract_name_and_address():
 
 bci = BCInterface()
 fsi = FSInterface()
-u = PGPUser()
-u.load_profile()
+#u = PGPUser()
+#u.load_profile()
 contract_name, contract_address = get_contract_name_and_address()
 bci.load_contract(contract_name=contract_name, contract_address=contract_address)
 loop_counter = 0
 
 while 1:
-	result = raw_input("ddash> ")
+	result = input("ddash> ")
 	BROADCAST=False
 	LISTEN=False
 

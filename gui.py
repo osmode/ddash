@@ -9,7 +9,6 @@ from bcinterface import *
 from fsinterface import *
 from getpass import getpass
 
-ethereum_acc_pass = None
 
 # Flags to instruct DDASH to broadcast enode address to blockchain
 # and query blockchain for peer enodes
@@ -118,8 +117,8 @@ class TwinPeaks:
 					answer2 = simpledialog.askstring("DDASH","Enter your password again: ")
 					if answer == answer2:
 						# create new Ethereum account
-						bci.web3.personal.newAccount(answer)
-						self.ethereum_acc_pass=answer
+						self.bci.web3.personal.newAccount(answer)
+						self.bci.ethereum_acc_pass=answer
 			else: # account(s) found
 				if not self.bci.ethereum_acc_pass:
 					answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
