@@ -56,9 +56,7 @@ The technologies used here are still in alpha. If you own cryptoassets such as B
 
 
 ## Quickstart 
-DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X. The [Twin Peaks branch](https://github.com/osmode/ddash) supports Python3 and features an experimental Graphical User Interface.
-
-Use default settings to connect to the blackswan network.
+DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X. Use default settings to connect to the blackswan network.
 
 Before you start, be sure you're running these scripts with appropriate permissions (usually sudo on Unix systems) and change file permissions of the *install.sh*, *deploy.sh*, and *manager.sh* bash scripts to allow execution:
 
@@ -108,9 +106,11 @@ The directory structure is important because DDASH and the DDASH Networking Util
 		/data
 	    	static-nodes.json
 
+	/share
+
 ```
 Save Ethereum contracts in the *source* directory with the .sol extension.
-Contents of the *upload* directory are uploaded using the DDASH command with the same name. Blockchain contents are downloaded to the *download* directory using the DDASH command with the same name.
+Contents of the *upload* directory are uploaded using the DDASH command with the same name. Blockchain contents are downloaded to/from the *share* directory using the DDASH command with the same name.
 
 ```
         _____  _____           _____ _    _ 
@@ -140,9 +140,9 @@ The above commands:
 
 [2]  returns number of enodes found on chain
 
-[3]  upload contents of *upload* directory to IPFS and save meta-data to blockchain.
+[3]  upload contents of *share* directory to IPFS and save meta-data to blockchain.
 
-[4]  query blockchain for file meta-data and download files from IPFS to *download* directory
+[4]  query blockchain for file meta-data and download files from IPFS to *share* directory
 
 [6] query blockchain for peer enodes
 

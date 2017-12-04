@@ -118,7 +118,7 @@ while 1:
 	'''
 
 	if ('upload' in result):
-		print("uploading contents of "+os.getcwd()+"/ddash/upload...")
+		print("uploading contents of "+os.getcwd()+"/ddash/share...")
 		if not ethereum_acc_pass:
 			print("Enter password for account "+bci.eth_accounts[0]+":")
 			ethereum_acc_pass=getpass() 
@@ -128,7 +128,7 @@ while 1:
 		fsi.upload_all_files(bci)
 	
 	if ('download' in result):
-		print("downloading blockchain contents to "+os.getcwd()+"/ddash/download...")
+		print("downloading blockchain contents to "+os.getcwd()+"/ddash/share...")
 		if not ethereum_acc_pass:
 			print("Enter password for account "+bci.eth_accounts[0]+":")
 			ethereum_acc_pass=getpass() 
