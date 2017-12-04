@@ -56,9 +56,11 @@ The technologies used here are still in alpha. If you own cryptoassets such as B
 
 
 ## Quickstart 
-DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X. Use default settings to connect to the blackswan network.
+DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X. The [Twin Peaks branch](https://github.com/osmode/ddash) supports Python3 and features an experimental Graphical User Interface.
 
-Before you start, be sure you're running these scripts with appropriate permissions (usually sudo on Unix systems) and change file permissions of the *install.sh*, *deploy.sh*, *gui.sh*, and *manager.sh* bash scripts to allow execution:
+Use default settings to connect to the blackswan network.
+
+Before you start, be sure you're running these scripts with appropriate permissions (usually sudo on Unix systems) and change file permissions of the *install.sh*, *deploy.sh*, and *manager.sh* bash scripts to allow execution:
 
 ```
 chmod u+x install.sh deploy.sh dnu.sh gui.sh
@@ -70,7 +72,7 @@ Navigate to the directory where you want to install DDASH and run:
 ```
 This will install the Go Ethereum client, IPFS, and the necessary Python modules to allow DDASH to interface with these clients. 
 
-To start the comand line DDASH Networking Utility, run:
+To start the DDASH Networking Utility, run:
 ```
 ./dnu.sh
 ```
