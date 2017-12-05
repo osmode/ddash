@@ -98,7 +98,7 @@ The directory structure is important because DDASH and the DDASH Networking Util
 
 ```
 Save Ethereum contracts in the *source* directory with the .sol extension.
-Contents of the *upload* directory are uploaded using the DDASH command with the same name. Blockchain contents are downloaded to/from the *share* directory using the DDASH command with the same name.
+Contents of the *share* directory are hosted on IPFS, and the Ethereum blockchain is used as a data ledger of this shared directory.
 
 ```
         _____  _____           _____ _    _ 
