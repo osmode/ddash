@@ -16,6 +16,8 @@ DDASH is a protocol for exchange of distributed data in blockchain networks.
 
 * Allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
+* Convert between private net Ether and main net Ether
+
 * Upload and download data to/from an Etheruem blockchain with one click
 
 ## Why DDASH?
