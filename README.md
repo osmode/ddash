@@ -18,7 +18,6 @@ DDASH is a protocol for exchange of distributed data in blockchain networks.
 
 * Convert between private net Ether and main net Ether
 
-* Upload and download data to/from an Etheruem blockchain with one click
 
 ## Why DDASH?
 Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is an emerging blockchain networking protocol that interfaces between common data formats and the Ethereum blockchain, between the Ethereum blockchain and IPFS, and for private Ethereum networking.
