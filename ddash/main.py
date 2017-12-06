@@ -12,7 +12,7 @@ BROADCAST=True
 LISTEN=True
 blackswan_contract_address="0x5ff2ce40e82e52d370fa9a0ddf49aeee32184756"
 recordmanager_contract_address="0xcc109bf72338909ead31a5bf46d8d8fa455ff09b"
-swap_contract_addresses = ["0x01","0x02"]
+swap_contract_addresses = ["0x23cc31236a1e4748415c49c0492ef80158e9cdb3","0x8d227f2125122678b1cf72a8aa907b2f10fb7f43"]
 
 intro = r"""
 
