@@ -98,6 +98,10 @@ class FSInterface:
 		with open(fname) as f:
 			content=f.readlines()
 
+		if len(content) !=2:
+			print("Invalid enode read in /ddash/nodeInfo.ds")
+			return None
+
 		enode = content[0].strip().replace('"','').replace('\n','')
 		ip = content[1].strip().replace('\n','')
 
