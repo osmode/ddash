@@ -23,16 +23,8 @@ contract Swap {
     function get_transaction_count() public constant returns(uint transactionCount) {
 	 return swapTransactionList.length;
     }
-    
-    function get_eth_balance(address eth_addr) public constant returns (uint balance) {
-        return eth_balance[eth_addr];
-    }
-    
-    function get_pvn_eth_balance(address pvn_addr) public constant returns (uint balance) {
-        return pvn_balance[pvn_addr];
-    }
 
-    function make_hash(uint _pvn_to_eth_amt, uint _eth_to_pvn_amt, address _eth_addr, address _pvn_addr, uint _exchange_rate, uint _timestamp) public returns (bytes32 hash) {
+    function make_hash(uint _pvn_to_eth_amt, uint _eth_to_pvn_amt, address _eth_addr, address _pvn_addr, uint _exchange_rate) public returns (bytes32 hash) {
         //hash = bytes32(_pvn_to_eth_amt);
         
         hash = bytes32(_pvn_to_eth_amt) | bytes32(_eth_to_pvn_amt);
@@ -40,15 +32,10 @@ contract Swap {
         hash = hash | bytes32(_pvn_addr);
         hash = hash | bytes32(block.timestamp);
         hash = hash | bytes32(_exchange_rate);
-        hash = hash | bytes32(_timestamp);
     }
     
-    function new_transaction(uint _pvn_to_eth_amt, uint _eth_to_pvn_amt, address _eth_addr, address _pvn_addr, uint _exchange_rate, uint _timestamp, bytes32 _hash) public returns (uint rowNumber) {
-        if (_hash !=0 ) {
-            if(is_transaction(_hash)) revert();
-        }
-        
-        _hash = make_hash(_pvn_to_eth_amt, _eth_to_pvn_amt, _eth_addr, _pvn_addr, _exchange_rate, _timestamp);
+    function new_transaction(uint _pvn_to_eth_amt, uint _eth_to_pvn_amt, address _eth_addr, address _pvn_addr, uint _exchange_rate) public returns (uint rowNumber) {
+        bytes32 _hash = make_hash(_pvn_to_eth_amt, _eth_to_pvn_amt, _eth_addr, _pvn_addr, _exchange_rate);
         
 	    if(is_transaction(_hash)) revert();
 	    require( _pvn_to_eth_amt * _eth_to_pvn_amt ==0 );
@@ -186,7 +173,6 @@ contract Swap {
 				selfdestruct(owner);
 			}
 	}
-	
-	
 }		
+
 

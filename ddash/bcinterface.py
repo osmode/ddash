@@ -15,11 +15,14 @@ class BCInterface:
 	# construct points to ddash contract address on blackswan Ethereum network
 	# by default
 
-	def __init__(self,host='localhost',port=5001):
+	def __init__(self,host='localhost',port=5001,mainnet=False):
 		self.last_hash_added = None
 		self.api = ipfsapi.connect(host='127.0.0.1',port=port)
 		# self.web3 = Web3(HTTPProvider('http://localhost:8545'))
-		ipc_path = os.path.dirname(os.path.realpath(__file__))+'/data/geth.ipc'
+		if mainnet:
+			ipc_path=os.path.dirname(os.path.realpath(__file__))+'/data_mainnet/geth.ipc'
+		else:
+			ipc_path = os.path.dirname(os.path.realpath(__file__))+'/data/geth.ipc'
 		print("IPCProvider path: ",ipc_path)
 		self.web3 = Web3(IPCProvider(ipc_path))
 		self.blockNumber = self.web3.eth.blockNumber
@@ -30,6 +33,9 @@ class BCInterface:
 		self.tx = {}
 
 		print("Initializing a DDASH Interface object.")
+
+		# log Ethereum accounts to ddash/swap/
+		self.write_ethereum_address(mainnet)
 
 	# contract_name is without the sol extension
 	def load_contract(self,contract_name,sender_address=None,contract_address="0x40a4dcb3fdcbaa00848d2c14386abed56797bf61"):
@@ -158,3 +164,40 @@ class BCInterface:
 	def get_address(self):
 		return self.eth_accounts[0]
 
+	def write_ethereum_address(self,mainnet=False):
+	
+		swap_path = os.path.dirname(os.path.realpath(__file__))+'/swap/eth_addresses.ds'
+		file_text=''
+
+		if os.path.isfile(swap_path):
+			with open(swap_path,'r') as myfile:
+				file_text+=myfile.read()
+		
+		if self.eth_accounts[0]:
+			if self.eth_accounts[0] not in file_text:
+				with open(swap_path,'a') as fileout:
+					if mainnet:
+						fileout.write('mn:'+self.eth_accounts[0]+'\n')
+					else:
+						fileout.write('pn:'+self.eth_accounts[0]+'\n')
+
+			
+	def get_ethereum_address(self):
+		swap_path = os.path.dirname(os.path.realpath(__file__))+'/swap/eth_addresses.ds'
+		file_text=''
+		mainnet_eth_address = None
+		privatenet_eth_address = None
+
+		if os.path.isfile(swap_path):
+			with open(swap_path,'r') as myfile:
+				file_text+=myfile.read()
+				x = file_text.split('pn:')
+				y = x[1].split('mn:')
+				privatenet_eth_address = y[0]
+				mainnet_eth_address = y[1]
+
+		self.privatenet_eth_address = privatenet_eth_address
+		self.mainnet_eth_address = mainnet_eth_address
+
+		return privatenet_eth_address, mainnet_eth_address
+			

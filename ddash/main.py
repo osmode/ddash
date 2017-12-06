@@ -1,5 +1,6 @@
 #from crypto import PGPUser
 from bcinterface import BCInterface
+from swapinterface import *
 from getpass import getpass
 from fsinterface import *
 
@@ -11,6 +12,7 @@ BROADCAST=True
 LISTEN=True
 blackswan_contract_address="0x5ff2ce40e82e52d370fa9a0ddf49aeee32184756"
 recordmanager_contract_address="0xcc109bf72338909ead31a5bf46d8d8fa455ff09b"
+swap_contract_addresses = ["0x01","0x02"]
 
 intro = r"""
 
@@ -57,7 +59,7 @@ def get_contract_name_and_address():
 
 	return contract_name, contract_address
 
-bci = BCInterface()
+bci = BCInterface(mainnet=False)
 fsi = FSInterface()
 #u = PGPUser()
 #u.load_profile()
@@ -244,6 +246,33 @@ while 1:
 		bci.load_contract(contract_name='blackswan',contract_address=blackswan_contract_address)
 
 		bci.friend_count()
+
+	if ('download swap' in result):
+		if not ethereum_acc_pass:
+			print("Enter password for account "+bci.eth_accounts[0]+":")
+			ethereum_acc_pass=getpass()
+		si = SwapInterface()
+		for addr in swap_contract_addresses:
+			try:
+				si.load_contract(contract_name='swap',contract_address=addr)
+				si.write_swap_transactions_to_file()
+			except:
+				print("Skipping write_swap_transactions_to_file.")
+				pass
+
+
+	if ('upload swap' in result):
+		if not ethereum_acc_pass:
+			print("Enter password for account "+bci.eth_accounts[0]+":")
+			ethereum_acc_pass=getpass()
+		si = SwapInterface()
+		for addr in swap_contract_addresses:
+			try:
+				si.load_contract(contract_name='swap',contract_address=addr)
+				si.read_swap_transactions_from_file()
+			except:
+				print("Skipping read_swap_transactions_from_file.")
+				pass
 
 	loop_counter+=1
 
