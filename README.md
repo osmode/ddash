@@ -6,7 +6,7 @@
 
 ## What is DDASH?
 ---
-DDASH is a protocol for exchange of distributed data in blockchain networks.
+DDASH is a tool for issuing Ethereum-based tokens as proof-of-integrity of locally hosted and distributed data.
 
 * One-click Ethereum coinification of any digital resource
 
@@ -14,19 +14,19 @@ DDASH is a protocol for exchange of distributed data in blockchain networks.
 
 * One-click compilation and deployment of Ethereum contracts to any Ethereum blockchain 
 
-* Allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
+* Optionally allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
 * Convert between private net Ether and main net Ether
 
 
 ## Why DDASH?
-Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is an emerging blockchain networking protocol that interfaces between common data formats and the Ethereum blockchain, between the Ethereum blockchain and IPFS, and for private Ethereum networking.
+Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is a blockchain networking protocol for exchaing data and meta-data against Ethereum-based tokens.
 
 ### In its usual siloed state, data is a liability rather than an asset.
 
 ### DDASH turns data into digital assets.
 
-DDASH allows network administrators to quickly create, maintain, and grow private Ethereum networks. Data can be uploaded to a blockchain and downloaded from a blockchain with a single command. DDASH also interfaces with IPFS to allow network administrators to host resources on IPFS and use the Ethereum blockchain as a permissions manager. No longer confined to a single machine, data hosted on the IPFS network flows perputually through network nodes, rendering it persistent and rapidly accessible. Permissions are managed via PGP keypair encryption and stored on the Ethereum blockchain. 
+DDASH enables one-click deployment of Ethereum networks. MD5 hashes of local or distributed data resources are hosted on chain against Ethereum-based tokens than can be exchanged on the main Ethereum network. DDASH optionally interfaces with IPFS to allow network administrators to host resources on IPFS and use the Ethereum blockchain as a permissions manager. 
 
 Our goals are to:
 
@@ -37,12 +37,12 @@ Our goals are to:
 
 ## Prerequisites
 ---
-This project is built on awesome work by the [IPFS](https://github.com/ipfs/ipfs), [Ethereum](https://www.ethereum.org), [OpenPGP](https://www.openpgp.org), [web3.py](https://github.com/pipermerriam/web3.py), and [py-ipfs](https://github.com/ipfs/py-ipfs-api) communities. 
+This project builds on work by the [Ethereum](https://www.ethereum.org), [web3.py](https://github.com/pipermerriam/web3.py), [IPFS](https://github.com/ipfs/ipfs) and [py-ipfs](https://github.com/ipfs/py-ipfs-api) communities. 
 
-The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs all dependencies (including the Go Ethereum client, IPFS, the Python IPFS API, and gnupg).
+The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs all dependencies (including the Go Ethereum client, IPFS, and the Python IPFS API). 
 
 ## Precautions
-The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development. Be very careful when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
+The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development. Be cautious when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
 
 
 ## Quickstart 
@@ -95,10 +95,12 @@ The directory structure is important because DDASH and the DDASH Networking Util
 	    	static-nodes.json
 
 	/share
+	/swap
 
 ```
 Save Ethereum contracts in the *source* directory with the .sol extension.
-Contents of the *share* directory are hosted on IPFS, and the Ethereum blockchain is used as a data ledger of this shared directory.
+Meta-data (MD5 hashes, filenames, and file descriptions) of the *share* directory's contents are saved on chain.
+*By default, locally hosted files are not uploaded to IPFS; only meta-eta are shared with the network.*
 
 ```
         _____  _____           _____ _    _ 
@@ -112,33 +114,27 @@ Contents of the *share* directory are hosted on IPFS, and the Ethereum blockchai
 
     Welcome to the DDASH Command Line Interface.
 
-[1]		ddash> sanity check
-[2]		ddash> peer count
-[3]		ddash> upload
-[4]		ddash> download
-[5]		ddash> hello
-[6]		ddash> listen
-[7]		ddash> broadcast
-[8]		ddash> quit
+[1]		ddash> peer count
+[2]		ddash> upload
+[3]		ddash> download
+[4]		ddash> hello
+[5]		ddash> listen
+[6]		ddash> broadcast
+[7]		ddash> quit
 
 ```
 The above commands:
 
-[1]  check if IPFS daemon and Go Ethereum client are running
+[1]  returns number of enodes found on chain
 
-[2]  returns number of enodes found on chain
+[2]  upload meta-data of *share* directory's contents to blockchain 
 
-[3]  upload contents of *share* directory to IPFS and save meta-data to blockchain.
+[3]  query blockchain for file meta-data
 
-[4]  query blockchain for file meta-data and download files from IPFS to *share* directory
+[5] query blockchain for peer enodes
 
-[6] query blockchain for peer enodes
+[6] broadcast client enode to blockchain
 
-[7] broadcast client enode to blockchain
-
-
-## Permissions management 
-Data on the IPFS network cannot be removed and can be accessed by anyone who has your content hash. DDASH utilizes PGP keypair encryption to control permissions. This feature is still under development.
 
 ## Contribute
 ### Use cases
@@ -150,6 +146,6 @@ You can submit bug reports using the [GitHub issue tracker](https://github.com/o
 ### Pull requests
 Pull requests are welcome.
 
-## Authors
+## License
 MIT License (see *LICENSE* file for details).
 
