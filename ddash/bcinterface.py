@@ -17,7 +17,7 @@ class BCInterface:
 
 	def __init__(self,host='localhost',port=5001,mainnet=False):
 		self.last_hash_added = None
-		self.api = ipfsapi.connect(host='127.0.0.1',port=port)
+		#self.api = ipfsapi.connect(host='127.0.0.1',port=port)
 		# self.web3 = Web3(HTTPProvider('http://localhost:8545'))
 		if mainnet:
 			ipc_path=os.path.dirname(os.path.realpath(__file__))+'/data_mainnet/geth.ipc'

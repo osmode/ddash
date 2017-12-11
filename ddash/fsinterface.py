@@ -5,6 +5,8 @@
 import os
 from html.parser import HTMLParser
 from subprocess import Popen, PIPE
+import hashlib
+from functools import partial
 
 class FSInterface:
 
@@ -25,11 +27,10 @@ class FSInterface:
 			description=record[3]
 
 			# download from IPFS network
-			bci.api.get(ipfs_hash)
-			bashcommand="mv "+ipfs_hash+" "+os.path.join(os.getcwd(),'ddash/share')+"/"+filename
-
-			p=Popen(bashcommand.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
-			output, err=p.communicate()
+			#bci.api.get(ipfs_hash)
+			#bashcommand="mv "+ipfs_hash+" "+os.path.join(os.getcwd(),'ddash/share')+"/"+filename
+			#p=Popen(bashcommand.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
+			#output, err=p.communicate()
 
 			i+=1
 
@@ -59,11 +60,8 @@ class FSInterface:
 						parser.feed(content.replace('\n',''))
 					(owner,description,ipfs,shared_with)= parser.get_dsc_attributes()
 					print("tags: ", (owner,description,ipfs,shared_with))
-					if 'yes' in ipfs:
-						filename,ipfs_hash=bci.upload_to_ipfs(file_path)
-					else:
-						filename=f
-						ipfs_hash=get_ipfs_hash(file_path)
+					filename=f
+					ipfs_hash = self.md5sum(file_path)
 					if not (owner and description and ipfs and shared_with):
 						print("Invalid *.dsc file does not contain required fields: owner, description, ipfs, shared_with")
 					else:
@@ -162,6 +160,13 @@ class FSInterface:
 		os.rename(temp_file_path, fname_path)
 
 		return 0
+
+	def md5sum(self,filename):
+		with open(filename, mode='rb') as f:
+			d = hashlib.md5()
+			for buf in iter(partial(f.read, 128), b''):
+ 				d.update(buf)
+		return d.hexdigest()
 				
 # DSCParser is a class that parses *.dsc files
 # File information (including IPFS upload status, description,

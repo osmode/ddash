@@ -17,6 +17,12 @@ LISTEN=False
 blackswan_contract_address="0x5ff2ce40e82e52d370fa9a0ddf49aeee32184756"
 recordmanager_contract_address="0xcc109bf72338909ead31a5bf46d8d8fa455ff09b"
 
+MENU_OPTIONS = [
+	"Black Swan network",
+	"Main Ethereum network"
+]
+
+
 intro = r"""
 
     _____  _____       	   _____ _    _ 
@@ -61,13 +67,23 @@ class TwinPeaks:
 		self.balance_label = Label(text="Balance: ")
 		self.balance_label.grid(row=2, columnspan=2)
 
+		self.variable = StringVar(self.master)
+		self.variable.set(MENU_OPTIONS[0])
+		self.option = OptionMenu(self.master, self.variable, *MENU_OPTIONS, command=self.dropdown)
+		self.option.grid(row=3,columnspan=2)
+
+
 		self.greet_button = Button(master, text="Launch", command=self.launch)
-		self.greet_button.grid(row=3)
+		self.greet_button.grid(row=4)
 
 		self.close_button = Button(master, text="Close", command=self.close)
-		self.close_button.grid(row=3, column=1)
+		self.close_button.grid(row=4, column=1)
 
 
+		self.bci = None
+		self.fsi = None
+
+		'''
 		cmd = "./gui.sh"
 		process = subprocess.Popen('./gui.sh',stdin=subprocess.PIPE,
 			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -83,21 +99,46 @@ class TwinPeaks:
 		self.contract_name='blackswan'
 		self.contract_address=blackswan_contract_address
 		self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
+		'''
+
+	def dropdown(self, value):
+		pass
 
 	def launch(self):
-		print("Greetings!")
-		#call(["./log_nodeInfo.sh"])
-		#bashCommand = "tmux new-session -d -s geth \"geth --verbosity 3 --datadir="+os.getcwd()+"/ddash/data --networkid 4828 --port 30303 --rpcapi=\"db,eth,net,personal,web3\" --rpc --rpcport 8545 --mine --minerthreads=1 console\""
-		#print(bashCommand)
-		#call(bashCommand.split())
-		#call(["./gui.sh"])
 
-	#bashCommand = "./log_nodeInfo.sh"
-		#process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-		#output, error = process.communicate()
-		#process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-		#output, error=process.communicate()
-	
+		choice = self.variable.get()
+
+		if choice == MENU_OPTIONS[0]: #Black Swan network selected
+				print("Loading ",choice)
+				cmd = "./load_blackswan.sh"
+				process = subprocess.Popen(cmd,stdin=subprocess.PIPE,
+					stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+				process.stdin.write("\n".encode())
+				process.stdin.write("\n".encode())
+				process.stdin.close()
+				print (process.stdout.read())
+			
+				self.bci = BCInterface()
+				self.fsi = FSInterface()
+				self.contract_name='blackswan'
+				self.contract_address=blackswan_contract_address
+				self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
+		if choice == MENU_OPTIONS[1]: #Main Ethereum network
+				print("Loading ",choice)
+				cmd = "./load_mainnet.sh"
+				process = subprocess.Popen(cmd,stdin=subprocess.PIPE,
+					stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+				process.stdin.write("\n".encode())
+				process.stdin.write("\n".encode())
+				process.stdin.close()
+				print (process.stdout.read())
+					
+				self.bci = BCInterface(mainnet=True)
+				self.fsi = FSInterface()
+				self.contract_name='blackswan'
+				self.contract_address=blackswan_contract_address
+				self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
+
 	def close(self):
 		process=subprocess.Popen("tmux kill-session -t geth".split())
 		process=subprocess.Popen("tmux kill-session -t ipfs".split())

@@ -25,14 +25,14 @@ Welcome to the DDASH Network Utility. What would you like to do?
 
     if [ "$choice" = 1 ]; then
 	tmux kill-session -t geth
-	tmux kill-session -t ipfs
+	#tmux kill-session -t ipfs
 
 	read -sp "Choose a password: " pass        
 	echo "personal.newAccount(\"$pass\")" | geth --verbosity 1 --datadir=$PWD/ddash/data console 
     fi
     if [ "$choice" = 2 ]; then
 	tmux kill-session -t geth
-	tmux kill-session -t ipfs
+	#tmux kill-session -t ipfs
 
 	geth --verbosity 1 --datadir=$PWD/ddash/data console <<< $'eth.accounts'
 
@@ -40,7 +40,7 @@ Welcome to the DDASH Network Utility. What would you like to do?
     fi
     if [ "$choice" = 3 ]; then
 	tmux kill-session -t geth
-	tmux kill-session -t ipfs
+	#tmux kill-session -t ipfs
 
 	read -p "Enter your Ethereum address (without quotes). E.g. 0x...
 > " addr
@@ -62,7 +62,7 @@ Welcome to the DDASH Network Utility. What would you like to do?
     fi
     if [ "$choice" = 4 ]; then
 	tmux kill-session -t geth
-	tmux kill-session -t ipfs
+	#tmux kill-session -t ipfs
 
 	./deploy.sh
     fi
@@ -90,7 +90,7 @@ Welcome to the DDASH Network Utility. What would you like to do?
 
         tmux new-session -d -s geth "geth --verbosity 3 --datadir=$PWD/ddash/data --networkid $networkId --port $port  --rpcapi=\"db,eth,net,personal,web3\" --rpc --rpcport $rpcport --mine --minerthreads=1 console"
  
-	tmux new-session -d -s ipfs 'ipfs daemon'
+	#tmux new-session -d -s ipfs 'ipfs daemon'
 	sleep 5
 
 	python3 $PWD/ddash/main.py
@@ -174,7 +174,7 @@ Welcome to the DDASH Network Utility. What would you like to do?
 
     if [[ "$choice" = 9 ]] || [[ "$choice" == "exit" ]] || [[ "$choice" == "quit" ]]; then
 	tmux kill-session -t geth
-	tmux kill-session -t ipfs
+	#tmux kill-session -t ipfs
 
         finished=true
     fi
