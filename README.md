@@ -20,7 +20,7 @@ DDASH is a tool for issuing Ethereum-based tokens as proof-of-integrity of local
 
 
 ## Why DDASH?
-Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is a blockchain networking protocol for exchaing data and meta-data against Ethereum-based tokens.
+Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is a blockchain networking protocol for exchanging data and meta-data against Ethereum-based tokens.
 
 ### In its usual siloed state, data is a liability rather than an asset.
 
@@ -100,7 +100,7 @@ The directory structure is important because DDASH and the DDASH Networking Util
 ```
 Save Ethereum contracts in the *source* directory with the .sol extension.
 Meta-data (MD5 hashes, filenames, and file descriptions) of the *share* directory's contents are saved on chain.
-*By default, locally hosted files are not uploaded to IPFS; only meta-eta are shared with the network.*
+*By default, locally hosted files are not uploaded to IPFS; only meta-data are shared with the network.*
 
 ```
         _____  _____           _____ _    _ 
