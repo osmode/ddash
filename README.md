@@ -1,12 +1,12 @@
 # DDASH 
-![DDASH Introduction](https://s3-us-west-1.amazonaws.com/ddash/ddash_intro.png)
+![DDASH Introduction](https://s3-us-west-1.amazonaws.com/ddash/ddash_intro2.png)
 
 :earth_americas: :rocket: :boom: :rocket: :earth_asia: :boom: :rocket: :boom: :earth_africa: :rocket: :boom: :rocket: :earth_americas:
 
 
 ## What is DDASH?
 ---
-DDASH is a networking protocol for the exchange of distributed/locally hosted data and meta-data.
+DDASH is a protocol for information exchange across Ethereum networks.
 
 * One-click Ethereum coinification of any digital resource
 
@@ -124,6 +124,8 @@ Meta-data (MD5 hashes, filenames, and file descriptions) of the *share* director
 [5]		ddash> listen
 [6]		ddash> broadcast
 [7]		ddash> quit
+[8]		ddash> show accounts
+[9]		ddash> use account 0
 
 ```
 The above commands:
@@ -137,6 +139,10 @@ The above commands:
 [5] query blockchain for peer enodes
 
 [6] broadcast client enode to blockchain
+
+[8] enumerate Ethereum accounts
+
+[9] set current Ethereum account to zero-index account (last argument refers to account index)
 
 
 ## Contribute
