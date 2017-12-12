@@ -20,7 +20,7 @@ DDASH is a networking protocol for the exchange of distributed/locally hosted da
 
 
 ## Legal Notice
-This is a research protocol being developed at UCSF. This is not a tool for launching Initial Coin Offerings or issuing securities. Please familiarize yourself with laws that apply to your use case. U.S. users should refer to the U.S. Securities and Exchange Commission's [Statement on Cryptocurrencies and Initial Coin Offerings](https://www.sec.gov/news/public-statement/statement-clayton-2017-12-11). By using this software, you assume all responsibility for your actions. 
+This is a research protocol being developed at UCSF. Please familiarize yourself with laws that apply to your use case. U.S. users should refer to the U.S. Securities and Exchange Commission's [Statement on Cryptocurrencies and Initial Coin Offerings](https://www.sec.gov/news/public-statement/statement-clayton-2017-12-11). By using this software, you assume all responsibility for your actions. 
 
 ## Why DDASH?
 Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is a blockchain networking protocol for exchanging data and meta-data in the form of Ethereum-based tokens.
