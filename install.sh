@@ -4,6 +4,7 @@
 # omar.metwally@gmail.com
 # https://github.com/osmode/ddash
 # USAGE:  ./install.sh 
+# Installs DDASH dependencies
 
 finished=false
 pwd=$(pwd)
@@ -20,45 +21,79 @@ Your choice> " choice
 
     if [ "$choice" = 1 ]; then
 	tmux kill-session -t geth
-	tmux kill-session -t ipfs
+	#tmux kill-session -t ipfs
 	echo Installing dependencies...
 	echo ""
 	os="$(uname -s)"
 	if [ "$os" = 'Darwin' ]; then
 		echo "It appears you're installing DDASH on a Mac. Mac Installer is still experimental."
-		read -p "Would you like to install Homebrew? Enter Y/n: " answer1
+		#read -p "Would you like to install Homebrew? Enter Y/n: " answer1
 
+		while true; do
+		read -p "Would you like to install Homebrew? Enter Y/n: " answer1
+			if [[ "$answer1" = 'y' ]] || [[ "$answer1" = 'Y' ]] || [[ "$answer1" = 'n' ]] || [[ "$answer1" = 'N' ]]; then
+				break
+			fi
+		done
+			
 		if [[ "$answer1" = 'Y' ]] || [[ "$answer1" = 'y' ]]; then
 		    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 		    brew update
 		fi
 		 
+		while true; do
 		read -p "Would you like to install the Go compiler? Enter Y/n: " answer2
+			if [[ "$answer2" = 'y' ]] || [[ "$answer2" = 'Y' ]] || [[ "$answer2" = 'N' ]] || [[ "$answer2" = 'n' ]]; then
+				break
+			fi
+		done
+
 		if [[ "$answer2" = 'Y' ]] || [[ "$answer2" = 'y' ]]; then
 		    brew update
 		    brew install go
 		fi
 
+		while true; do
 		read -p "Would you like to install the Go Ethereum client? Enter Y/n: " answer3
+			if [[ "$answer3" = 'y' ]] || [[ "$answer3" = 'Y' ]] || [[ "$answer3" = 'N' ]] || [[ "$answer3" = 'n' ]]; then
+				break
+			fi
+		done	
+
 		if [[ "$answer3" = 'Y' ]] || [[ "$answer3" = 'y' ]]; then
 		    brew tap ethereum/ethereum
 		    brew install ethereum
 		fi
 
+		while true; do
 		read -p "Would you like to install Node and npm? Enter Y/n: " answer4
+			if [[ "$answer4" = 'y' ]] || [[ "$answer4" = 'Y' ]] || [[ "$answer4" = 'N' ]] || [[ "$answer4" = 'n' ]]; then
+				break
+			fi
+		done	
 		if [[ "$answer4" = 'Y' ]] || [[ "$answer4" = 'y' ]]; then
 		    brew install node
 		fi
+		while true; do
 		read -p "Would you like to install the solC compiler? Enter Y/n: " answer5
+			if [[ "$answer5" = 'y' ]] || [[ "$answer5" = 'Y' ]] || [[ "$answer5" = 'N' ]] || [[ "$answer5" = 'n' ]]; then
+				break
+			fi
+		done	
 		if [[ "$answer5" = 'Y' ]] || [[ "$answer5" = 'y' ]]; then
 		    npm install -g solc	    
 		fi
+		while true; do
 		read -p "Would you like to install tmux? Enter Y/n: " answer6
+			if [[ "$answer6" = 'y' ]] || [[ "$answer6" = 'Y' ]] || [[ "$answer6" = 'N' ]] || [[ "$answer6" = 'n' ]]; then
+				break
+			fi	
+		done
 		if [[ "$answer6" = 'Y' ]] || [[ "$answer6" = 'y' ]]; then
 		    brew install tmux
 		fi
 
-	    fi
+	fi
 	if [ "$os" = 'Linux' ]; then
 		echo "Installing Ubuntu dependencies..."
 		apt-get update
@@ -70,20 +105,20 @@ Your choice> " choice
 		add-apt-repository ppa:ethereum/ethereum
 		apt-get update
 		apt-get install solc
-	        apt-get install python3-pip
+	    apt-get install python3-pip
 	fi
 
-	if [ ! -f /usr/local/bin/ipfs ]; then
-	    wget https://dist.ipfs.io/go-ipfs/v0.4.10/go-ipfs_v0.4.10_linux-386.tar.gz
-	    tar xvfz go-ipfs_v0.4.10_linux-386.tar.gz
-	    mv go-ipfs/ipfs /usr/local/bin/ipfs
-	    rm go-ipfs_v0.4.10_linux-386.tar.gz
-	fi
+	#if [ ! -f /usr/local/bin/ipfs ]; then
+	#    wget https://dist.ipfs.io/go-ipfs/v0.4.10/go-ipfs_v0.4.10_linux-386.tar.gz
+	#    tar xvfz go-ipfs_v0.4.10_linux-386.tar.gz
+	#    mv go-ipfs/ipfs /usr/local/bin/ipfs
+	#    rm go-ipfs_v0.4.10_linux-386.tar.gz
+	#fi
 
 	apt-get update
-	ipfs init
+	#ipfs init
 	pip3 install web3
-	pip3 install ipfsapi
+	#pip3 install ipfsapi
 	pip3 install python-gnupg
 
 
@@ -172,7 +207,7 @@ Your choice> " choice
 
         echo "exit" | geth --verbosity 2 --datadir=$PWD/ddash/data --networkid "$networkId" --port "$port" --rpc --rpcport "$rpcport" console
 
-	rm -r $PWD/go-ipfs
+	#rm -r $PWD/go-ipfs
 	# save enode information
 	./log_nodeInfo.sh
     fi  # end if [ "$choice" =1 ]
