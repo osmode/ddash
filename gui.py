@@ -71,6 +71,10 @@ class TwinPeaks:
 
 		self.account_label = Label(text="Account: ")
 		self.account_label.grid(row=4)
+		self.new_account_button = Button(self.master, text="New Account", command=self.handle_new_account)
+		self.new_account_button.grid(row=4,column=3)
+		self.unlock_account_button = Button(self.master, text="Unlock Account", command=self.handle_unlock_account)
+		self.unlock_account_button.grid(row=4, column=2)
 
 		self.network_label = Label(text="Network: ")
 		self.network_label.grid(row=5 )
@@ -81,10 +85,10 @@ class TwinPeaks:
 		self.network_option.grid(row=5,column=1)
 
 		self.greet_button = Button(master, text="Launch", command=self.launch)
-		self.greet_button.grid(row=8, column=1)
+		self.greet_button.grid(row=9, column=1)
 
 		self.close_button = Button(master, text="Close", command=self.close)
-		self.close_button.grid(row=8, column=0)
+		self.close_button.grid(row=9, column=0)
 
 
 		self.bci = None
@@ -112,12 +116,35 @@ class TwinPeaks:
 		pass
 	
 	'''
-	@class BCInterface @method account_dropdown_changed 
+	@class BCInterface @method handle_new_account
+	Interfaces with tkinter "New Account" button
+	'''
+	def handle_new_account(self):
+		password = None
+		while not password:
+			password = simpledialog.askstring("DDASH","Choose a password for your new account: ")
+		print("Attempting to unlock account...")
+		self.bci.web3.personal.newAccount(password)
+
+
+	'''
+	@class BCInterface @method handle_unlock_account
+	Interfaces with tkinter "Unlock Account" button
+	'''
+	def handle_unlock_account(self):
+		password = None
+		while not password:
+			password = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
+
+		self.bci.ethereum_acc_pass=password
+		self.bci.unlock_account(password)
+
+	'''
+	@class BCInterface @method handle_account_dropdown
 	Handles changes to the dropdown menu with a list of Ethereum accounts.
 	Utilizes the ACCOUNT_OPTIONS dictionary to map accounts with account indices
 	'''
-	# BOOKMARK
-	def account_dropdown_changed(self, value):
+	def handle_account_dropdown(self, value):
 		if value not in ACCOUNT_OPTIONS.keys():
 			print(value+" was not recognized as a valid Ethereum account.")
 			return 1
@@ -180,8 +207,8 @@ class TwinPeaks:
 					self.account_variable.set(accounts[self.last_account_index])
 				else:
 					self.account_variable.set(accounts[0])
-				self.account_option = OptionMenu(self.master, self.account_variable, *accounts, command=self.account_dropdown_changed)
-				self.account_option.grid(row=3,column=1)
+				self.account_option = OptionMenu(self.master, self.account_variable, *accounts, command=self.handle_account_dropdown)
+				self.account_option.grid(row=4,column=1)
 
 			if len(self.bci.eth_accounts)==0:
 				self.address_entry.delete(0, END)
