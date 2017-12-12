@@ -77,48 +77,6 @@ while 1:
 	if 'sanity check' in result:
 		bci.sanity_check()
 
-	'''
-	if ('check key' in result) or ('show key' in result) or ('list key' in result):
-		u.check_keys()
-
-	if ('set key' in result) or ('use key' in result):
-		value = get_value_from_index(result,2)
-		u.set_key(value)
-
-	if ('delete key' in result) or ('del key' in result):
-		value = get_value_from_index(result,2) 
-	   	u.delete_key(value)
-		u.save_user()
-		u.load_profile()
-
-	if ('new key' in result):
-		u.new_keypair()
-		u.save_user()
-		u.load_profile() 
-
-	if ('set recipient' in result):
-		recipient = get_value_from_index(result,2,convert_to='string')
-		u.set_recipient(recipient)
-
-	if ('who recipient' in result):
-		u.get_recipient()
-
-	if ('set file' in result) or ('use file' in result):
-		value = get_value_from_index(result, 2,convert_to="string")
-		u.set_file(value)
-
-	if ('which file' in result) or ('get file' in result):
-		u.get_current_file()
-
-	if ('which key' in result):
-		u.get_current_key() 
-
-	if ('encrypt' in result):
-		recipient_pubkey_fingerprint = get_value_from_index(result,1)
-		u.encrypt_with_key(recipient_pubkey_fingerprint)
-
-	'''
-
 	if ('upload' in result):
 		print("uploading contents of "+os.getcwd()+"/ddash/share...")
 		if not ethereum_acc_pass:
@@ -140,21 +98,9 @@ while 1:
 
 		fsi.download_all_files(bci)
 
-
-	'''
-	if ('set directory'  in result):
-		workdir = get_value_from_index(result,2,convert_to="string")
-		print "Setting directory to", workdir
-		u.set_directory(workdir)
-	'''
-
 	if ('show account' in result):
-		if not ethereum_acc_pass:
-			print("Enter password for account "+bci.eth_accounts[0]+":")
-			ethereum_acc_pass=getpass() 
-		bci.unlock_account(ethereum_acc_pass)
-
 		bci.show_eth_accounts()
+
 	elif ('use account' in result) or ('set account' in result):
 		if not ethereum_acc_pass:
 			print("Enter password for account "+bci.eth_accounts[0]+":")
@@ -162,11 +108,10 @@ while 1:
 		bci.unlock_account(ethereum_acc_pass)
 
 		account_index = get_value_from_index(result,2,convert_to="integer")
-		print("Extracted index ",account_index)
 		bci.set_account(account_index)
+
 	if ('unlock' in result):
 		password = get_value_from_index(result,2,convert_to="string")
-		print("Attempting to unlock account...")
 		bci.unlock_account(password)
 
 	if ('checkout' in result):
@@ -238,14 +183,14 @@ while 1:
 			contract_address = args[2].strip()
 			bci.load_contract(contract_name=contract_name, contract_address=contract_address)
 
-	if ('friend count' in result) or ('peer count' in result):
+	if  'peer count' in result:
 		if not ethereum_acc_pass:
 			print("Enter password for account "+bci.eth_accounts[0]+":")
 			ethereum_acc_pass=getpass() 
 		bci.unlock_account(ethereum_acc_pass)
 		bci.load_contract(contract_name='blackswan',contract_address=blackswan_contract_address)
 
-		bci.friend_count()
+		bci.peer_count()
 
 	if ('download swap' in result):
 		if not ethereum_acc_pass:

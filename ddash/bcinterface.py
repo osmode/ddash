@@ -71,6 +71,12 @@ class BCInterface:
 		print("I found the following Ethereum accounts:")
 		for i, acc in enumerate(self.eth_accounts):
 			print(i,"\t\t",acc)
+	
+	def get_eth_accounts(self):
+		if len(self.eth_accounts) == 0:
+			print("You have no Ethereum accounts. Create a new account by typing 'new account'")
+			return 0
+		return self.eth_accounts
 
 	def sanity_check(self):
 		if not (self.api):
@@ -139,6 +145,8 @@ class BCInterface:
 		if len(self.eth_accounts) ==0: 
 			print("No Ethereum account found. Create a new account by typing 'new account'")
 		else:
+			print("Attempting to unlock account ",str(self.eth_accounts[self.account_index]))
+
 			self.web3.personal.unlockAccount(self.eth_accounts[self.account_index],password)	
 
 
@@ -150,11 +158,12 @@ class BCInterface:
 		elif index >= len(self.eth_accounts):
 			print("Invalid index.")
 		else:
+			print("You are now using account index ",index)
 			self.account_index = index
 		#self.load_contract(sender_address=self.eth_accounts[self.account_index])
 		
 	# get number of enodes on the blockchain
-	def friend_count(self):
+	def peer_count(self):
 		print(str(self.contract.call().get_entity_count())+" enodes found on the blockchain.")
 		return 0
 
