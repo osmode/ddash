@@ -16,7 +16,7 @@ DDASH is a networking protocol for the exchange of distributed/locally hosted da
 
 * Optionally allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
-* Convert between private net Ether and main net Ether
+* Interface between private net Ether and main net Ether
 
 
 ## Legal Notice
@@ -61,7 +61,7 @@ Navigate to the directory where you want to install DDASH and run:
 ```
 ./install.sh
 ```
-This will install the Go Ethereum client, IPFS, and the necessary Python modules to allow DDASH to interface with these clients. 
+This will install the Go Ethereum client and the necessary Python modules to allow DDASH to interface with these clients. 
 
 To start the DDASH Networking Utility, run:
 ```
