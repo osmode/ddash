@@ -6,7 +6,7 @@
 
 ## What is DDASH?
 ---
-DDASH is a tool for issuing Ethereum-based tokens as proof-of-integrity of locally hosted and distributed data.
+DDASH is a networking protocol for the exchange of distributed/locally hosted data and meta-data.
 
 * One-click Ethereum coinification of any digital resource
 
@@ -19,14 +19,17 @@ DDASH is a tool for issuing Ethereum-based tokens as proof-of-integrity of local
 * Convert between private net Ether and main net Ether
 
 
+## Legal Notice
+This is a research protocol being developed at the University of California, San Francisco. This is not a tool for launching Initial Coin Offerings or issuing securities. Please familiarize yourself with laws that apply to your use case. U.S. users should refer to the U.S. Securities and Exchange Commission's [Statement on Cryptocurrencies and Initial Coin Offerings](https://www.sec.gov/news/public-statement/statement-clayton-2017-12-11). By using this software, you assume all responsibility for your actions. 
+
 ## Why DDASH?
-Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is a blockchain networking protocol for exchanging data and meta-data against Ethereum-based tokens.
+Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is a blockchain networking protocol for exchanging data and meta-data in the form of Ethereum-based tokens.
 
 ### In its usual siloed state, data is a liability rather than an asset.
 
 ### DDASH turns data into digital assets.
 
-DDASH enables one-click deployment of Ethereum networks. MD5 hashes of local or distributed data resources are hosted on chain against Ethereum-based tokens than can be exchanged on the main Ethereum network. DDASH optionally interfaces with IPFS to allow network administrators to host resources on IPFS and use the Ethereum blockchain as a permissions manager. 
+DDASH enables one-click deployment of Ethereum networks. MD5 hashes of local or distributed data resources are hosted on chain against Ethereum-based tokens. DDASH optionally interfaces with IPFS to allow network administrators to host resources on IPFS and use the Ethereum blockchain as a permissions manager. 
 
 Our goals are to:
 
@@ -39,7 +42,7 @@ Our goals are to:
 ---
 This project builds on work by the [Ethereum](https://www.ethereum.org), [web3.py](https://github.com/pipermerriam/web3.py), [IPFS](https://github.com/ipfs/ipfs) and [py-ipfs](https://github.com/ipfs/py-ipfs-api) communities. 
 
-The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs all dependencies (including the Go Ethereum client, IPFS, and the Python IPFS API). 
+The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs all dependencies (including the Go Ethereum client).
 
 ## Precautions
 The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development. Be cautious when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
