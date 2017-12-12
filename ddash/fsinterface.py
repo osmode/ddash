@@ -1,6 +1,9 @@
 '''
 :::  fsinterface.py									 :::
 :::  File system interface to interact with local files :::
+:::  Author: Omar N. Metwally, MD
+:::  omar.metwally@gmail.com
+:::  https://github.com/osmode/ddash
 '''
 import os
 from html.parser import HTMLParser
@@ -17,26 +20,28 @@ class FSInterface:
 	# downloads all files, and reconstructs *.dsc files
 	# argument bci is a BCInterface object
 	def download_all_files(self,bci,walk_dir=None):
-		num_records = bci.contract.call().getRecordCount()
-		i=0
-		while i < num_records:
-			record=bci.get_record_by_row(i)
-			owner_address=record[0]
-			ipfs_hash=record[1]
-			filename=record[2]
-			description=record[3]
+		try:
+			num_records = bci.contract.call().getRecordCount()
+			i=0
+			while i < num_records:
+				record=bci.get_record_by_row(i)
+				owner_address=record[0]
+				ipfs_hash=record[1]
+				filename=record[2]
+				description=record[3]
 
-			# download from IPFS network
-			#bci.api.get(ipfs_hash)
-			#bashcommand="mv "+ipfs_hash+" "+os.path.join(os.getcwd(),'ddash/share')+"/"+filename
-			#p=Popen(bashcommand.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
-			#output, err=p.communicate()
+				# download from IPFS network
+				#bci.api.get(ipfs_hash)
+				#bashcommand="mv "+ipfs_hash+" "+os.path.join(os.getcwd(),'ddash/share')+"/"+filename
+				#p=Popen(bashcommand.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
+				#output, err=p.communicate()
 
-			i+=1
+				i+=1
 
+			print("Downloaded "+str(num_records)+" records from the blockchain.")
 
-		print("Downloaded "+str(num_records)+" records from the blockchain.")
-
+		except:
+			print("DDASH: @class FSInterface @method download_all failed.")
 
 
 	# argument bci is a BCInterface object
@@ -68,10 +73,13 @@ class FSInterface:
 						print("adding record to blockchain:")
 						print("owner_account:",bci.eth_accounts[0])
 						print("filename:",filename)
-						print("ipfs_hash:",ipfs_hash)
+						print("md5_hash:",ipfs_hash)
 						print("description:",description)
 
-						print(bci.add_record(bci.eth_accounts[0],filename,ipfs_hash,description))
+						try:
+							print(bci.add_record(bci.eth_accounts[0],filename,ipfs_hash,description))
+						except:
+							print("DDASH: @class FSInterface @method bci.add_record() failed.")
 
 					#print "dsc files contents: ",content
 

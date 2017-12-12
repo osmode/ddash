@@ -141,7 +141,7 @@ class TwinPeaks:
 
 	def close(self):
 		process=subprocess.Popen("tmux kill-session -t geth".split())
-		process=subprocess.Popen("tmux kill-session -t ipfs".split())
+		#process=subprocess.Popen("tmux kill-session -t ipfs".split())
 		self.master.quit()
 
 	def clock(self):
