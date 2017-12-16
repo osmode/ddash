@@ -10,12 +10,12 @@ echo "exit" | geth --verbosity 2 --datadir=$PWD/ddash/data_mainnet console
     #tmux new-session -d -s geth "geth --verbosity 2 --datadir=$PWD/ddash/data --networkid 4828 --port 30303 --rpcapi=\"db,eth,net,personal,web3\" --rpc --rpcport 8545 console"
 
 tmux kill-session -t geth
-tmux kill-session -t ipfs
+#tmux kill-session -t ipfs
 
-tmux new-session -d -s geth "geth --verbosity 3 --datadir=$PWD/ddash/data_mainnet console"
+tmux new-session -d -s geth "geth --verbosity 3 --fast --cache=1024 --datadir=$PWD/ddash/data_mainnet console"
 
-tmux new-session -d -s ipfs 'ipfs daemon'
+#tmux new-session -d -s ipfs 'ipfs daemon'
 sleep 8
 
-python $PWD/ddash/main.py
+#python3 $PWD/ddash/main.py
 

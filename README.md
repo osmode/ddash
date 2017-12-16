@@ -1,12 +1,12 @@
 # DDASH 
-![DDASH Introduction](https://s3-us-west-1.amazonaws.com/ddash/ddash_intro2.png)
+![DDASH Introduction](https://s3-us-west-1.amazonaws.com/ddash/blackswan.png)
 
 :earth_americas: :rocket: :boom: :rocket: :earth_asia: :boom: :rocket: :boom: :earth_africa: :rocket: :boom: :rocket: :earth_americas:
 
 
 ## What is DDASH?
 ---
-DDASH is a protocol for information exchange across Ethereum networks.
+DDASH is a protocol for information exchange across Ethereum networks. 
 
 * One-click Ethereum coinification of any digital resource
 
@@ -18,12 +18,15 @@ DDASH is a protocol for information exchange across Ethereum networks.
 
 * Interface between private net Ether and main net Ether
 
+## SwapCoin
+SwapCoin is a utility token that enables DDASH to exchange value across networks. There are currently 10,000,000 SwapCoins in circulation, with 1000 SwapCoin (SC) = 1 ETH. SwapCoin can be acquired by running the DDASH client. The SwapCoin contract is located on the main Ethereum network at 0xed8c634ac8c2fa3694c32cb01b96a6912f8a7738. 
+
 
 ## Legal Notice
 Please familiarize yourself with laws that apply to your use case. Users in the U.S. should refer to the U.S. Securities and Exchange Commission's [Statement on Cryptocurrencies and Initial Coin Offerings](https://www.sec.gov/news/public-statement/statement-clayton-2017-12-11). By using this software, you assume all responsibility for your actions. 
 
 ## Why DDASH?
-Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is a blockchain networking protocol for exchanging data and meta-data in the form of Ethereum-based tokens.
+Despite the wealth of data produced by academic institutions, research labs, hospitals, and corporations, only a small percentage of data is used to its fullest potential. DDASH is a networking protocol for exchanging value and information across Ethereum networks.
 
 ### In its usual siloed state, data is a liability rather than an asset.
 
@@ -45,11 +48,10 @@ This project builds on work by the [Ethereum](https://www.ethereum.org), [web3.p
 The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs all dependencies (including the Go Ethereum client).
 
 ## Precautions
-The technologies used here are still in alpha. If you own cryptoassets such as Bitcoin and Ether, make sure you keep these on a completely separate machine. This software is still in development. Be cautious when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks, hence the recommendation to keep your development environment completely separate from any real Ether you might own.
-
+The technologies used here are still in alpha, and this software is still in development. Be cautious when enabling RPC while your accounts are unlocked. This can lead to Ethereum wallet attacks. 
 
 ## Quickstart 
-DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X. Use default settings to connect to the blackswan network.
+DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X.
 
 Before you start, be sure you're running these scripts with appropriate permissions (usually sudo on Unix systems) and change file permissions of the *install.sh*, *deploy.sh*, *gui.sh* and *manager.sh* bash scripts to allow execution:
 
@@ -83,6 +85,8 @@ The directory structure is important because DDASH and the DDASH Networking Util
 	dnu.sh
 	deploy.sh
 	log_nodeInfo.sh
+	load_mainnet.sh
+	load_blackswan.sh 
 
 	/ddash
 		crypto.py
@@ -105,6 +109,12 @@ Save Ethereum contracts in the *source* directory with the .sol extension.
 Meta-data (MD5 hashes, filenames, and file descriptions) of the *share* directory's contents are saved on chain.
 *By default, locally hosted files are not uploaded to IPFS; only meta-data are shared with the network.*
 
+## How to acquire SwapCoin
+Use Twin Peaks to exchange SwapCoin for Ether. 
+![SwapCoin](https://s3-us-west-1.amazonaws.com/ddash/mainnet.png)
+
+
+## The DDASH Command Line Interface
 ```
         _____  _____           _____ _    _ 
        |  __ \|  __ \   /\    / ____| |  | |

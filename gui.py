@@ -7,6 +7,7 @@ import sys, datetime
 sys.path.insert(0, os.path.join(os.getcwd(),'ddash'))
 from bcinterface import *
 from fsinterface import *
+from swapinterface import *
 from getpass import getpass
 
 
@@ -17,9 +18,17 @@ LISTEN=False
 blackswan_contract_address="0x5ff2ce40e82e52d370fa9a0ddf49aeee32184756"
 recordmanager_contract_address="0xcc109bf72338909ead31a5bf46d8d8fa455ff09b"
 
+mainnet_swap_address = "0xed8c634ac8c2fa3694c32cb01b96a6912f8a7738"
+blackswan_swap_address = "0x5fced4408a9ff19091a97a616e8432d00b808098"
+
 NETWORK_OPTIONS = [
 	"Black Swan network",
 	"Main Ethereum network"
+]
+
+SWAP_TX_OPTIONS = [
+	"Buy SwapCoin",
+	"Sell SwapCoin"
 ]
 
 ACCOUNT_OPTIONS = {}
@@ -55,6 +64,7 @@ class TwinPeaks:
 		self.master = master
 		master.title("DDASH")
 		self.last_account_index = 0 
+		self.last_swap_tx_amount = 0
 
 		Label(text=intro,relief=RIDGE,font="Courier 14").grid(row=0,columnspan=2,column=0)
 #dialog= simpledialog.askstring(title='question',prompt='please do something') #self.label.grid(columnspan=2, sticky=W)
@@ -66,33 +76,38 @@ class TwinPeaks:
 		self.address_entry = Entry(self.master)  #Label(text="Your Ethereum address: ")
 		self.address_entry.grid(row=2, columnspan=2)
 
-		self.balance_label = Label(text="Balance: ")
+		self.balance_label = Label(text="Ether Balance: ")
 		self.balance_label.grid(row=3, columnspan=2)
 
+		self.swapcoin_balance_label = Label(text="SwapCoin Balance: ")
+		self.swapcoin_balance_label.grid(row=4, column=1)
+
 		self.account_label = Label(text="Account: ")
-		self.account_label.grid(row=4)
+		self.account_label.grid(row=6)
 		self.new_account_button = Button(self.master, text="New Account", command=self.handle_new_account)
-		self.new_account_button.grid(row=4,column=3)
+		self.new_account_button.grid(row=7,column=0)
 		self.unlock_account_button = Button(self.master, text="Unlock Account", command=self.handle_unlock_account)
-		self.unlock_account_button.grid(row=4, column=2)
+		self.unlock_account_button.grid(row=7, column=1)
 
 		self.network_label = Label(text="Network: ")
-		self.network_label.grid(row=5 )
+		self.network_label.grid(row=8 )
 
 		self.network_variable = StringVar(self.master)
 		self.network_variable.set(NETWORK_OPTIONS[0])
 		self.network_option = OptionMenu(self.master, self.network_variable, *NETWORK_OPTIONS, command=self.dropdown)
-		self.network_option.grid(row=5,column=1)
+		self.network_option.grid(row=8,column=1)
+
 
 		self.greet_button = Button(master, text="Launch", command=self.launch)
-		self.greet_button.grid(row=9, column=1)
+		self.greet_button.grid(row=10, column=1)
 
 		self.close_button = Button(master, text="Close", command=self.close)
-		self.close_button.grid(row=9, column=0)
+		self.close_button.grid(row=10, column=0)
 
 
 		self.bci = None
 		self.fsi = None
+		self.swapinterface = None
 
 		'''
 		cmd = "./gui.sh"
@@ -114,7 +129,42 @@ class TwinPeaks:
 
 	def dropdown(self, value):
 		pass
-	
+
+	def swaptxdropdown(self, choice):
+		amount = self.swap_tx_entry.get()
+		print("swaptxdropdown value: ",amount)
+		if choice == SWAP_TX_OPTIONS[0]: # Buy SwapCoin
+			print("Trying to purchase tokens using ",amount," Ether.")
+			#self.swapinterface.increase_gas(2)
+			self.last_swap_tx_amount = amount
+			tx = self.swapinterface.buy_tokens(self.gas_entry.get())
+			return tx
+
+			try:
+				self.swapinterface.tx['gas'] = 100000
+				self.swapinterface.set_gas(self.gas_entry.get())
+				tx = self.swapinterface.buy_tokens(amount)
+			except:
+				tx = None
+				print("Failed to buy tokens")
+				pass
+
+			return tx
+		if choice == SWAP_TX_OPTIONS[1]: # Sell SwapCoin
+			self.swapinterface.tx['gas'] = 10000
+			print("Trying to sell ", amount, " tokens.")
+			self.last_swap_tx_amount = amount
+			#self.swapinterface.decrease_gas(3)
+			tx = self.swapinterface.sell_tokens(self.gas_entry.get())
+			return tx
+
+			try:
+				self.swapinterface.set_gas(self.gas_entry.get())
+				tx = self.swapinterface.sell_tokens(self.gas_entry.get())
+			except:
+				tx = None
+				print("Failed to sell tokens")
+				pass
 	'''
 	@class BCInterface @method handle_new_account
 	Interfaces with tkinter "New Account" button
@@ -168,9 +218,15 @@ class TwinPeaks:
 			
 				self.bci = BCInterface()
 				self.fsi = FSInterface()
+				self.swapinterface = SwapInterface(mainnet=False)
+				print("SWAPINTERFACE created")
 				self.contract_name='blackswan'
 				self.contract_address=blackswan_contract_address
-				self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
+				#self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
+				#self.swapinterface.load_contract(contract_name="swap2", contract_address=swap_contract_address)
+				self.swapinterface.load_contract(mainnet=False,contract_name='swap2',contract_address=blackswan_swap_address) 
+
+
 		if choice == NETWORK_OPTIONS[1]: #Main Ethereum network
 				print("Loading ",choice)
 				cmd = "./load_mainnet.sh"
@@ -183,9 +239,12 @@ class TwinPeaks:
 					
 				self.bci = BCInterface(mainnet=True)
 				self.fsi = FSInterface()
+				self.swapinterface = SwapInterface(mainnet=True)
 				self.contract_name='blackswan'
 				self.contract_address=blackswan_contract_address
-				self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
+				#self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
+				self.swapinterface.load_contract(mainnet=True, contract_name="swap2", contract_address=mainnet_swap_address)
+
 
 	def close(self):
 		process=subprocess.Popen("tmux kill-session -t geth".split())
@@ -194,6 +253,11 @@ class TwinPeaks:
 
 	def clock(self):
 		time = datetime.datetime.now().strftime("Time: %H:%M:%S")
+		'''
+		if self.swap_tx_entry:
+			self.swap_tx_entry.delete(0,END)
+			self.swap_tx_entry.insert(0,self.last_swap_tx_amount)
+		'''
 
 		if self.bci:
 			if len(self.bci.eth_accounts) > 0:
@@ -208,7 +272,7 @@ class TwinPeaks:
 				else:
 					self.account_variable.set(accounts[0])
 				self.account_option = OptionMenu(self.master, self.account_variable, *accounts, command=self.handle_account_dropdown)
-				self.account_option.grid(row=4,column=1)
+				self.account_option.grid(row=6,column=1)
 
 			if len(self.bci.eth_accounts)==0:
 				self.address_entry.delete(0, END)
@@ -230,19 +294,33 @@ class TwinPeaks:
 
 					self.bci.ethereum_acc_pass=answer
 
-			self.bci.unlock_account(self.bci.ethereum_acc_pass)
+			#self.bci.unlock_account(self.bci.ethereum_acc_pass)
 
 			self.bci.load_contract(contract_name='blackswan', contract_address=blackswan_contract_address)
 			self.address_entry.delete(0,END)
 			self.address_entry.insert(0, self.bci.get_address())
 			#self.address_label.configure(text="Your Ethereum address:\n "+self.bci.get_address())
 			self.balance_label.configure(text="Balance:\n "+str(self.bci.get_balance())) 
+			if self.swapinterface:
+				self.swapcoin_balance_label.configure(text="SwapCoin Balance:\n "+str(self.swapinterface.my_token_balance()))
+				self.swap_tx_variable = StringVar(self.master)
+				self.swap_tx_variable.set(SWAP_TX_OPTIONS[0])
+				
+				self.swap_tx_option = OptionMenu(self.master, self.swap_tx_variable, *SWAP_TX_OPTIONS, command=self.swaptxdropdown) 
+				self.swap_tx_option.grid(row=5, column=0)
+				Label(text="ETH/SWAPCOIN:",relief=RIDGE,font="Courier 14").grid(row=5,column=1)
 
-			self.bci.load_contract(contract_name='recordmanager', contract_address=recordmanager_contract_address)
-			self.fsi.upload_all_files(self.bci)
-			self.fsi.download_all_files(self.bci)
+				self.swap_tx_entry = Entry(self.master)
+				self.swap_tx_entry.grid(row=5, column=2)
+				Label(text="Gas:",relief=RIDGE,font="Courier 14").grid(row=5,column=3)
+				self.gas_entry = Entry(self.master)
+				self.gas_entry.grid(row=5,column=4)
 
-		self.master.after(5000,self.clock)
+			#self.bci.load_contract(contract_name='recordmanager', contract_address=recordmanager_contract_address)
+			#self.fsi.upload_all_files(self.bci)
+			#self.fsi.download_all_files(self.bci)
+
+		self.master.after(30000,self.clock)
 
 
 #default_font=font.nametofont("Courier")

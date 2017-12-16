@@ -209,4 +209,23 @@ class BCInterface:
 		self.mainnet_eth_address = mainnet_eth_address
 
 		return privatenet_eth_address, mainnet_eth_address
+
+	def increase_gas(self,exp):
+		if 'gas' not in self.tx.keys():
+			self.tx['gas'] = 10000
+		new_gas_value = self.tx['gas'] * 10**exp
+		print("Increasing gas to ", new_gas_value)
+		self.tx['gas'] = new_gas_value
+		return new_gas_value
+
+	def decrease_gas(self,exp):
+		if 'gas' not in self.tx.keys():
+			self.tx['gas'] = 10000
+		new_gas_value = self.tx['gas'] / 10**exp
+		print("Decreasing gas to ", new_gas_value)
+		self.tx['gas'] = new_gas_value
+		return new_gas_value
+
+
+
 			
