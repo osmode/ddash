@@ -1,5 +1,5 @@
 # DDASH 
-![DDASH Introduction](https://s3-us-west-1.amazonaws.com/ddash/blackswan.png)
+![DDASH Introduction](https://s3-us-west-1.amazonaws.com/ddash/mainnet.png)
 
 :earth_americas: :rocket: :boom: :rocket: :earth_asia: :boom: :rocket: :boom: :earth_africa: :rocket: :boom: :rocket: :earth_americas:
 
