@@ -109,7 +109,7 @@ Meta-data (MD5 hashes, filenames, and file descriptions) of the *share* director
 *By default, locally hosted files are not uploaded to IPFS; only meta-data are shared with the network.*
 
 ## How to acquire SwapCoin
-Use Twin Peaks to exchange SwapCoin for Ether. 
+Use Twin Peaks to exchange Ether for SwapCoin. 
 ![SwapCoin](https://s3-us-west-1.amazonaws.com/ddash/mainnet.png)
 
 
