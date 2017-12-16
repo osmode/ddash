@@ -19,8 +19,7 @@ DDASH is a protocol for information exchange across Ethereum networks.
 * Interface between private net Ether and main net Ether
 
 ## SwapCoin
-SwapCoin is a utility token that enables DDASH to exchange value across networks. There are currently 10,000,000 SwapCoins in circulation, with 1000 SwapCoin (SC) = 1 ETH. SwapCoin can be acquired by running the DDASH client. The SwapCoin contract is located on the main Ethereum network at 0xed8c634ac8c2fa3694c32cb01b96a6912f8a7738. 
-
+SwapCoin is a utility token that enables DDASH to exchange value across Ethereum networks. SwapCoin can be acquired by running the DDASH client. 
 
 ## Legal Notice
 Please familiarize yourself with laws that apply to your use case. Users in the U.S. should refer to the U.S. Securities and Exchange Commission's [Statement on Cryptocurrencies and Initial Coin Offerings](https://www.sec.gov/news/public-statement/statement-clayton-2017-12-11). By using this software, you assume all responsibility for your actions. 
