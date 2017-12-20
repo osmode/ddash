@@ -101,8 +101,7 @@ Meta-data (MD5 hashes, filenames, and file descriptions) of the *share* director
 
 ## How to acquire SwapCoin
 Use the DDASH GUI  exchange Ether for SwapCoin. 
-![SwapCoin](https://s3-us-west-1.amazonaws.com/ddash/mainnet.png)
-
+![SwapCoin](https://s3-us-west-1.amazonaws.com/ddash/swapcoin_intro.png)
 
 ## The DDASH Command Line Interface
 ```
