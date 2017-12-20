@@ -8,7 +8,8 @@
 ---
 DDASH is a protocol for information exchange across Ethereum networks. 
 
-* One-click Ethereum coinification of any digital resource
+
+* Interface between private net Ether and main net Ether
 
 * One-click creation of self-propagating Ethereum networks (no need for manual enode entry)
 
@@ -16,18 +17,17 @@ DDASH is a protocol for information exchange across Ethereum networks.
 
 * Optionally allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
-* Interface between private net Ether and main net Ether
 
 ## SwapCoin
 SwapCoin is the utility token that powers DDASH, enabling the exchange of information and value across Ethereum networks. SwapCoin is based on the ERC20 standard but differs slightly in the nomenclature of its methods. The SWAP ABI and contract are located in the source directory and can be directly inspected at address 0xeD8C634aC8C2fa3694C32Cb01b96A6912f8a7738.
 
-SwapCoin can be exchanged for Ether using the DDASH client, which can be launched by running 
+SwapCoin and Ether can be exchanged using the DDASH client, which can be launched by running 
 ```
 python3 gui.py 
 ```
 
 ## Why DDASH?
-DDASH is the best of Ethereum private networks and the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer Ether among the main Ethereum network and private networks.
+DDASH combines the benefits of private Ethereum networks with the benefits of the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer Ether among the main Ethereum network and private Ethereum networks.
 
 ### In its usual siloed state, data is a liability rather than an asset.
 
@@ -35,9 +35,8 @@ DDASH is the best of Ethereum private networks and the Ethereum main network. DD
 
 Our goals are to:
 
-1. Eliminate barriers to information exchange within and among organizations.
-2. Provide granular permission control.
-3. Build economies around knowledge and information
+### Eliminate barriers to information exchange within and among organizations.
+### Build economies around knowledge and information
 
 ## Prerequisites
 ---
@@ -108,7 +107,7 @@ Meta-data (MD5 hashes, filenames, and file descriptions) of the *share* director
 *By default, locally hosted files are not uploaded to IPFS; only meta-data are shared with the network.*
 
 ## How to acquire SwapCoin
-Use Twin Peaks to exchange Ether for SwapCoin. 
+Use the DDASH GUI  exchange Ether for SwapCoin. 
 ![SwapCoin](https://s3-us-west-1.amazonaws.com/ddash/mainnet.png)
 
 
