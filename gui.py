@@ -66,48 +66,78 @@ class TwinPeaks:
 		self.last_account_index = 0 
 		self.last_swap_tx_amount = 0
 
-		Label(text=intro,relief=RIDGE,font="Courier 14").grid(row=0,columnspan=2,column=0)
-#dialog= simpledialog.askstring(title='question',prompt='please do something') #self.label.grid(columnspan=2, sticky=W)
-		#self.label = Label(master, text="This is our first GUI!")
-		#self.label.pack()
+		self.intro_label = Label(text=intro,relief=RIDGE,font="Courier 14")
+		self.intro_label.grid(row=0,columnspan=2,column=0)
 
 		self.address_label = Label(text="Your Ethereum address: ")
 		self.address_label.grid(row=1, columnspan=2)
-		self.address_entry = Entry(self.master)  #Label(text="Your Ethereum address: ")
+		self.address_label.grid_remove()
+		self.address_entry = Entry(self.master)  
+
 		self.address_entry.grid(row=2, columnspan=2)
+		self.address_entry.grid_remove()
 
 		self.balance_label = Label(text="Ether Balance: ")
-		self.balance_label.grid(row=3, columnspan=2)
+		self.balance_label.grid(row=3, column=1)
+		self.balance_label.grid_remove()
 
 		self.swapcoin_balance_label = Label(text="SwapCoin Balance: ")
-		self.swapcoin_balance_label.grid(row=4, column=1)
+		self.swapcoin_balance_label.grid(row=3, column=0,padx=100,pady=100)
+		self.swapcoin_balance_label.grid_remove()
 
-		self.account_label = Label(text="Account: ")
-		self.account_label.grid(row=6)
+		self.swap_tx_variable = StringVar(self.master)
+		self.swap_tx_variable.set(SWAP_TX_OPTIONS[0])
+				
+		self.swap_tx_option = OptionMenu(self.master, self.swap_tx_variable, *SWAP_TX_OPTIONS, command=self.swaptxdropdown) 
+
+		#self.swap_tx_option.grid(row=5, column=0)
+		self.buy_swapcoin_label = Label(text="Buy SwapCoin with this amount of Ether (in wei = 1e18 Ether): ")
+		self.buy_swapcoin_label.grid(row=5,column=0, ipadx=10, ipady=10)
+		self.buy_swapcoin_label.grid_remove()
+
+		self.swap_tx_entry = Entry(self.master)
+		self.swap_tx_entry.grid(row=6, column=0)
+		self.swap_tx_entry.grid_remove()
+		self.gas_label = Label(text="Gas:")
+		self.gas_label.grid(row=5,column=1)
+		self.gas_label.grid_remove()
+	
+		self.gas_entry = Entry(self.master)
+		self.gas_entry.grid(row=6,column=1)
+		self.gas_entry.insert(0, "62136")
+		self.gas_entry.grid_remove()
+
+		self.account_label = Label(text="Account: ",padx=20,pady=40)
+		self.account_label.grid(row=7)
+		self.account_label.grid_remove()
 		self.new_account_button = Button(self.master, text="New Account", command=self.handle_new_account)
-		self.new_account_button.grid(row=7,column=0)
+		self.new_account_button.grid(row=8,column=0)
+		self.new_account_button.grid_remove()
 		self.unlock_account_button = Button(self.master, text="Unlock Account", command=self.handle_unlock_account)
-		self.unlock_account_button.grid(row=7, column=1)
+		self.unlock_account_button.grid(row=8, column=1)
+		self.unlock_account_button.grid_remove()
 
 		self.network_label = Label(text="Network: ")
-		self.network_label.grid(row=8 )
+		self.network_label.grid(row=9, pady=20 )
 
 		self.network_variable = StringVar(self.master)
-		self.network_variable.set(NETWORK_OPTIONS[0])
+		self.network_variable.set(NETWORK_OPTIONS[1])
 		self.network_option = OptionMenu(self.master, self.network_variable, *NETWORK_OPTIONS, command=self.dropdown)
-		self.network_option.grid(row=8,column=1)
-
+		self.network_option.grid(row=9,column=1,pady=20)
 
 		self.greet_button = Button(master, text="Launch", command=self.launch)
-		self.greet_button.grid(row=10, column=1)
+		self.greet_button.grid(row=14, column=1)
 
-		self.close_button = Button(master, text="Close", command=self.close)
-		self.close_button.grid(row=10, column=0)
-
+		self.close_button = Button(master, text="Close", command=self.close,
+			pady=20)
+		self.close_button.grid(row=14, column=0,pady=20)
 
 		self.bci = None
 		self.fsi = None
 		self.swapinterface = None
+
+		# self.ready changes to True when Launch button is clicked
+		self.ready = False
 
 		'''
 		cmd = "./gui.sh"
@@ -205,6 +235,9 @@ class TwinPeaks:
 
 	def launch(self):
 
+		self.ready = True
+		self.reveal()
+
 		choice = self.network_variable.get()
 
 		if choice == NETWORK_OPTIONS[0]: #Black Swan network selected
@@ -251,7 +284,29 @@ class TwinPeaks:
 		#process=subprocess.Popen("tmux kill-session -t ipfs".split())
 		self.master.quit()
 
+	def reveal(self):
+		if not self.ready:
+			return
+
+		self.address_label.grid()
+		self.address_entry.grid()
+		self.balance_label.grid()
+		self.swapcoin_balance_label.grid()
+		self.buy_swapcoin_label.grid()
+		self.swap_tx_entry.grid()
+		self.gas_label.grid()
+		self.gas_entry.grid()
+		self.account_label.grid()
+		self.new_account_button.grid()
+		self.unlock_account_button.grid()
+		self.network_label.grid()
+		
+
 	def clock(self):
+
+		#self.swapcoin_balance_label.grid_remove() 
+		#self.swapcoin_balance_label.grid()
+
 		time = datetime.datetime.now().strftime("Time: %H:%M:%S")
 		'''
 		if self.swap_tx_entry:
@@ -266,13 +321,12 @@ class TwinPeaks:
 					ACCOUNT_OPTIONS[acc] = index
 					
 				self.account_variable = StringVar(self.master)
-				# BOOKMARK
 				if self.last_account_index < len(accounts):
 					self.account_variable.set(accounts[self.last_account_index])
 				else:
 					self.account_variable.set(accounts[0])
 				self.account_option = OptionMenu(self.master, self.account_variable, *accounts, command=self.handle_account_dropdown)
-				self.account_option.grid(row=6,column=1)
+				self.account_option.grid(row=7,column=1)
 
 			if len(self.bci.eth_accounts)==0:
 				self.address_entry.delete(0, END)
@@ -300,21 +354,13 @@ class TwinPeaks:
 			self.address_entry.delete(0,END)
 			self.address_entry.insert(0, self.bci.get_address())
 			#self.address_label.configure(text="Your Ethereum address:\n "+self.bci.get_address())
-			self.balance_label.configure(text="Balance:\n "+str(self.bci.get_balance())) 
+			self.balance_label.configure(text="Ether Balance:\n "+str(self.bci.get_balance())) 
+
 			if self.swapinterface:
 				self.swapcoin_balance_label.configure(text="SwapCoin Balance:\n "+str(self.swapinterface.my_token_balance()))
-				self.swap_tx_variable = StringVar(self.master)
-				self.swap_tx_variable.set(SWAP_TX_OPTIONS[0])
-				
-				self.swap_tx_option = OptionMenu(self.master, self.swap_tx_variable, *SWAP_TX_OPTIONS, command=self.swaptxdropdown) 
-				self.swap_tx_option.grid(row=5, column=0)
-				Label(text="ETH/SWAPCOIN:",relief=RIDGE,font="Courier 14").grid(row=5,column=1)
 
-				self.swap_tx_entry = Entry(self.master)
-				self.swap_tx_entry.grid(row=5, column=2)
-				Label(text="Gas:",relief=RIDGE,font="Courier 14").grid(row=5,column=3)
-				self.gas_entry = Entry(self.master)
-				self.gas_entry.grid(row=5,column=4)
+			#self.gas_entry = Entry(self.master)
+				#self.gas_entry.grid(row=5,column=4)
 
 			#self.bci.load_contract(contract_name='recordmanager', contract_address=recordmanager_contract_address)
 			#self.fsi.upload_all_files(self.bci)
@@ -330,5 +376,7 @@ root = Tk()
 twinpeaks = TwinPeaks(root)
 twinpeaks.clock()
 root.mainloop()
+
+
 
 
