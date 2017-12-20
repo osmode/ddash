@@ -1,8 +1,5 @@
 # DDASH 
 
-:earth_americas: :rocket: :boom: :rocket: :earth_asia: :boom: :rocket: :boom: :earth_africa: :rocket: :boom: :rocket: :earth_americas:
-
-
 ## What is DDASH?
 ---
 DDASH is a protocol for information exchange across Ethereum networks. 
