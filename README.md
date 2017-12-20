@@ -29,10 +29,7 @@ DDASH combines the benefits of private Ethereum networks with the benefits of th
 
 ### DDASH turns data into digital assets.
 
-Our goals are to:
-
-### Eliminate barriers to information exchange within and among organizations.
-### Build economies around knowledge and information
+### Our goals are to eliminate barriers to information exchange within and among organizations and to build economies around knowledge and information
 
 ## Prerequisites
 ---
