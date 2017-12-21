@@ -17,7 +17,7 @@ DDASH is a protocol for information exchange across Ethereum networks.
 ## SwapCoin
 SwapCoin is the utility token that powers DDASH, enabling the exchange of information and value across Ethereum networks. SwapCoin is based on the ERC20 standard but differs slightly in the nomenclature of its methods. The SWAP ABI and contract are located in the source directory and can be directly inspected at address 0xeD8C634aC8C2fa3694C32Cb01b96A6912f8a7738.
 
-There are 10,000,000 SwapCoin in circulation, which can be exchanged for Ether at a rate of 1,000 SwapCoin per Ether.
+There are 10,000,000 SwapCoin in circulation, which can be exchanged for Ether at a rate of 1,000 SwapCoin per 1 Ether.
 
 SwapCoin and Ether can be exchanged using the DDASH client, which can be launched by running 
 ```
