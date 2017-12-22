@@ -40,7 +40,7 @@ This project builds on work by the [Ethereum](https://www.ethereum.org), [web3.p
 The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs all dependencies (including the Go Ethereum client).
 
 ## Precautions
-The technologies used here are still in alpha, and this software is still in development. 
+The technologies used here are still in alpha. 
 
 ## Quickstart 
 DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X.
@@ -49,7 +49,7 @@ Downlod or clone this repository to your machine, and navigate to that directory
 ```
 ./install.sh
 ```
-This will install the Go Ethereum client and the necessary Python modules to allow DDASH to interface with the client. 
+This will install the Go Ethereum client and the necessary Python modules to allow DDASH to interface with the client. The installation process can take a long time depending on which dependencies and libraries your machine already has. The installer will explicitly ask for permission to install each dependency via yes/no prompts.   
 
 To start the DDASH Networking Utility, run:
 ```
