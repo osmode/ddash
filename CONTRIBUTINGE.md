@@ -112,7 +112,7 @@ Both issue lists are sorted by total number of comments. While not perfect, numb
     * :mountain_cableway: `:mountain_cableway:` when improving the GUI 
     * :money_with_wings:  `:money_with_wings` when improving SwapCoin contract code
     * :floppy_disk: `:floppy_disk:` when improving the DDASH command line interface
-    * :satellite_: `:satellite:` when improving the DDASH networking protocol
+    * :satellite: `:satellite:` when improving the DDASH networking protocol
     * :art: `:art:` when improving the format/structure of the code
     * :racehorse: `:racehorse:` when improving performance
     * :non-potable_water: `:non-potable_water:` when plugging memory leaks
