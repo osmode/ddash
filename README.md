@@ -139,15 +139,11 @@ The above commands:
 
 
 ## Contribute
-### Use cases
-If you or your organization use DDASH to do something that would otherwise be impossible using a centralized system, please share your experience!
+Please take a look at our [contribution documentation](https://github.com/osmode/ddash/blob/master/docs/CONTRIBUTING.md) for information on how to report bugs, suggest enhancements, and contribute code. If you or your organization use DDASH to do something that would otherwise be impossible using traditional system, please share your experience! 
 
-### Bug reports
-You can submit bug reports using the [GitHub issue tracker](https://github.com/osmode/ddash/issues).
-
-### Pull requests
-Pull requests are welcome.
+## Code of conduct
+In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation. Read the full [Contributor Covenant](https://github.com/osmode/ddash/blob/master/docs/CODE_OF_CONDUCT.md). 
 
 ## License
-MIT License (see *LICENSE* file for details).
+[MIT License](https://github.com/osmode/ddash/blob/master/docs/LICENSE) 
 
