@@ -63,7 +63,7 @@ Include details about your configuration and environment:
 * **What's the name and version of the OS you're using**?
 * **Are you running DDASH in a virtual machine?** If so, which VM software are you using and which operating system?
 * **Which dependencies do you have installed? 
-* **Are you connecting to the default (Black Swan) private network, the main Ethereum network, or another private network? 
+* Are you connecting to the default (Black Swan) private network, the main Ethereum network, or another private network? 
 
 ### Suggesting Enhancements
 
