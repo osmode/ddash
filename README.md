@@ -31,7 +31,7 @@ python3 gui.py
 ## Why DDASH?
 DDASH combines the benefits of private Ethereum networks with the benefits of the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer Ether among the main Ethereum network and private Ethereum networks.
 
-### Our goals are to eliminate barriers to information exchange within and among organizations and to build economies around knowledge and information
+### Our goals are to eliminate barriers to information exchange within and among organizations and to build open economies around information
 
 ## Prerequisites
 ---
