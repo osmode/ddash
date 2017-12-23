@@ -1,6 +1,4 @@
-#Distributed Data Sharing Hyperledger (DDASH)
-Omar Metwally, MD
-University of California, San Francisco
+Distributed Data Sharing Hyperledger (DDASH)
 =============================================
     [Github repository](https://github.com/osmode/ddash)
     -----------------    
