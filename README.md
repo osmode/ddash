@@ -1,9 +1,9 @@
 Distributed Data Sharing Hyperledger (DDASH)
-=============================================
-    [Github repository](https://github.com/osmode/ddash)
-    -----------------    
-    [Project website](https://osmode.github.io/ddash/)
-    -----------------
+======================================================
+[Github repository](https://github.com/osmode/ddash)
+------------------------------------------------------  
+[Project website](https://osmode.github.io/ddash/)
+------------------------------------------------------
 
 
 ## What is DDASH?
