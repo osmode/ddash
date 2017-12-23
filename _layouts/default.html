@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% if site.rtl %}
+<html dir="rtl">
+{% else %}
+<html>
+{% endif %}
+<head>
+  {% include head.html %}
+</head>
+<body>
+  {% include header.html %}
+  <div class="container">
+  {{ content }}
+
+  {% include footer.html %}
+  </div><!-- /.main -->
+</body>
+</html>
