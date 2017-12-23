@@ -1,10 +1,10 @@
 ### Subject of the issue
 Describe your issue here.
 
-### Your environment
-* version of angular-translate
-* version of angular
-* which browser and its version
+### Nature of the issue
+* DDASH command line interface or GUI?
+* Networking, SwapCoin, or contract issue?
+* Operating system and version
 
 ### Steps to reproduce
 Tell us how to reproduce this issue. 
