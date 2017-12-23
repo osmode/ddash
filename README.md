@@ -145,5 +145,5 @@ Please take a look at our [contribution documentation](https://github.com/osmode
 In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation. Read the full [Contributor Covenant](https://github.com/osmode/ddash/blob/master/docs/CODE_OF_CONDUCT.md). 
 
 ## License
-[MIT License](https://github.com/osmode/ddash/blob/master/docs/LICENSE) 
+[MIT License](https://github.com/osmode/ddash/blob/master/LICENSE) 
 
