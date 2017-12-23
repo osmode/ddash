@@ -38,7 +38,7 @@ This section guides you through submitting a bug report for DDASH. Following the
 
 #### How Do I Submit A (Good) Bug Report?
 
-Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create an issue on the DDASH repository and provide the following information by filling in [the template](ISSUE_TEMPLATE.md).
+Bugs are tracked as [GitHub issues](https://github.com/osmode/ddash/issues). Create an issue on the DDASH repository and provide the following information by filling in [the template](ISSUE_TEMPLATE.md).
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
