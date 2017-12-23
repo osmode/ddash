@@ -1,8 +1,17 @@
-# DDASH 
+#Distributed Data Sharing Hyperledger (DDASH)
+Omar Metwally, MD
+University of California, San Francisco
+=============================================
+    [Github repository](https://github.com/osmode/ddash)
+    -----------------    
+    [Project website](https://osmode.github.io/ddash/)
+    -----------------
+
 
 ## What is DDASH?
 ---
 DDASH is a protocol for information exchange across Ethereum networks. 
+
 
 
 * Interface between private net Ether and main net Ether
