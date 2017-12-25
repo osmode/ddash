@@ -452,11 +452,33 @@ class TwinPeaks:
 		self.new_account_button.grid()
 		self.unlock_account_button.grid()
 		self.network_label.grid()
+		self.close_button.grid()
+		self.launch_button.grid()
 
 	
 	def clear_screen(self):
 		if not self.ready:
 			return
+
+		self.proposals_scrollbar.grid_remove() 
+		self.proposals_text.grid_remove()
+		self.manifesto_address_label.grid_remove()
+		self.manifesto_address_entry.grid_remove()
+		self.new_proposal_scrollbar.grid_remove()
+		self.new_proposal_text.grid_remove()
+		self.new_proposal_label.grid_remove()
+		self.new_proposal_button.grid_remove()
+		self.vote_proposalID_label.grid_remove()
+		self.vote_proposalID_entry.grid_remove()
+		self.vote_label.grid_remove()
+		self.vote_entry.grid_remove()
+		self.vote_button.grid_remove()
+		self.execute_proposal_label.grid_remove()
+		self.execute_proposal_entry.grid_remove()
+		self.execute_proposal_button.grid_remove() 
+		self.manifesto_gas_label.grid_remove()
+		self.manifesto_gas_entry.grid_remove()
+		self.manifesto_set_gas_button.grid_remove()
 
 		self.address_label.grid_remove()
 		self.address_entry.grid_remove()
@@ -560,9 +582,10 @@ def Manifesto():
 	twinpeaks.clear_screen()
 	twinpeaks.manifesto_context()
 
-def OpenFile():
-	name = askopenfilename()
-	print(name)
+def Swapcoin():
+	twinpeaks.clear_screen()
+	twinpeaks.swapcoin_context()
+
 def About():
 	print("This is a simple example of a menu")
     
@@ -578,7 +601,7 @@ twinpeaks.clock()
 filemenu = Menu(menubar)
 menubar.add_cascade(label="Contract", menu=filemenu)
 filemenu.add_command(label="Manifesto", command=Manifesto)
-filemenu.add_command(label="SwapCoin", command=OpenFile)
+filemenu.add_command(label="SwapCoin", command=Swapcoin)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=twinpeaks.close())
 helpmenu = Menu(menubar)
