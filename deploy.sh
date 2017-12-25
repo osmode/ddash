@@ -52,8 +52,8 @@ fi
 output_file=$PWD/ddash/source/"$contract_name".js
 data_dir=$PWD/ddash/data
 
-contract_abi=$(<$PWD/ddash/source/"$contract_name".abi)
-data=$(<$PWD/ddash/source/"$contract_name".bin)
+contract_abi=$(<$PWD/ddash/source/*"$contract_name".abi)
+data=$(<$PWD/ddash/source/*"$contract_name".bin)
 echo ""
 echo contract_abi: "$contract_abi"
 echo ""
