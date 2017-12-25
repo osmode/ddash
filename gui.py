@@ -35,6 +35,7 @@ SWAP_TX_OPTIONS = [
 ACCOUNT_OPTIONS = {}
 
 
+'''
 intro = r"""
 
     _____  _____       	   _____ _    _ 
@@ -46,6 +47,11 @@ intro = r"""
                                              
    ::: Distributed Data Sharing Hyperledger :::
 """
+'''
+intro = r"""
+   ddash   
+"""
+
 def get_value_from_index(input_phrase,index,convert_to='integer'):
     input_phrase = input_phrase.split()
     value =None
@@ -68,7 +74,7 @@ class TwinPeaks:
 		self.last_account_index = 0 
 		self.last_swap_tx_amount = 0
 
-		self.intro_label = Label(text=intro,relief=RIDGE,font="Courier 14")
+		self.intro_label = Label(text=intro,font="Courier 72")
 		self.intro_label.grid(row=0,columnspan=2,column=0)
 
 		self.address_label = Label(text="Your Ethereum address: ")
