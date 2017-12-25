@@ -21,6 +21,10 @@ DDASH is a protocol for information exchange across Ethereum networks.
 * Optionally allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
 
+## Mission Statement
+
+### Our goal is to build open economies for information exchange within and among organizations.
+
 ## SwapCoin
 SwapCoin is the utility token that powers DDASH, enabling the exchange of information and value across Ethereum networks. SwapCoin is based on the ERC20 standard but differs slightly in the nomenclature of its methods. The SWAP ABI and contract are located in the source directory and can be directly inspected at address 0xeD8C634aC8C2fa3694C32Cb01b96A6912f8a7738.
 
@@ -37,9 +41,6 @@ python3 gui.py
 
 ## Why DDASH?
 DDASH combines the benefits of private Ethereum networks with the benefits of the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer Ether among the main Ethereum network and private Ethereum networks.
-
-## Mission Statement
-### Our goal is to build open economies for information exchange within and among organizations.
 
 ## Prerequisites
 ---
