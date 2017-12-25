@@ -1,3 +1,4 @@
+import tkinter as tk
 from tkinter import *
 from tkinter import simpledialog
 import subprocess, os
@@ -59,8 +60,28 @@ def get_value_from_index(input_phrase,index,convert_to='integer'):
 
     return value
 
-class TwinPeaks:
-	def __init__(self, master):
+class TwinPeaks(tk.Tik):
+	def __init__(self, *args, **kwargs):  #master):
+		tk.Tk.__init__(self, *args, **kkwargs)
+		container = tk.Frame(self)
+		container.grid(side="top", fill="both",expand=True)
+		container.grid_rowconfigure(0, weight=1)
+		container.grid_columncinfigure(0, weight=1)
+
+		self.frames = {}
+
+		for F in (Home):
+			frame = F(container, self)
+
+			self.frames[F] = frame
+			frame.grid(row=0, column=0, sticky="nsew")
+		self.show_frame(Home)
+
+	def show_frame(self, cont):
+		frame = self.frames[cont]
+		frame.tkraise()
+
+
 		self.master = master
 		master.title("DDASH")
 		self.last_account_index = 0 
@@ -85,21 +106,6 @@ class TwinPeaks:
 		self.swapcoin_balance_label.grid(row=3, column=0,padx=100,pady=100)
 		self.swapcoin_balance_label.grid_remove()
 
-		self.manifesto_address_label = Label(text="Manifesto.sol address:")
-		self.manifesto_address_label.grid(row=2,column=0)
-		self.manifesto_address_label.grid_remove()
-		self.manifesto_address_entry = Entry(self.master)
-		self.manifesto_address_entry.grid(row=2,column=1)
-		self.manifesto_address_entry.grid_remove() 
-
-		self.proposals_scrollbar = Scrollbar(self.master) 
-		self.proposals_scrollbar.grid(row=3, column=0)
-		self.proposals_text = Text(self.master, wrap=WORD, yscrollcommand=self.proposals_scrollbar.set)
-		self.proposals_text.grid(row=3, column=0)
-		self.proposals_scrollbar.configure(command=self.proposals_text.yview)
-		self.proposals_text.grid_remove()
-		self.proposals_scrollbar.grid_remove() 
-
 		self.swap_tx_variable = StringVar(self.master)
 		self.swap_tx_variable.set(SWAP_TX_OPTIONS[0])
 				
@@ -123,7 +129,7 @@ class TwinPeaks:
 		self.gas_entry.grid_remove()
 
 		self.account_label = Label(text="Account: ",padx=20,pady=40)
-		self.account_label.grid(row=7,column=0)
+		self.account_label.grid(row=7)
 		self.account_label.grid_remove()
 		self.new_account_button = Button(self.master, text="New Account", command=self.handle_new_account)
 		self.new_account_button.grid(row=8,column=0)
@@ -140,8 +146,8 @@ class TwinPeaks:
 		self.network_option = OptionMenu(self.master, self.network_variable, *NETWORK_OPTIONS, command=self.dropdown)
 		self.network_option.grid(row=9,column=1,pady=20)
 
-		self.launch_button = Button(master, text="Launch", command=self.launch)
-		self.launch_button.grid(row=14, column=1)
+		self.greet_button = Button(master, text="Launch", command=self.launch)
+		self.greet_button.grid(row=14, column=1)
 
 		self.close_button = Button(master, text="Close", command=self.close,
 			pady=20)
@@ -240,11 +246,6 @@ class TwinPeaks:
 	Utilizes the ACCOUNT_OPTIONS dictionary to map accounts with account indices
 	'''
 	def handle_account_dropdown(self, value):
-		if len(self.bci.eth_accounts) > 0:
-			accounts = self.bci.get_eth_accounts()
-			for index, acc in enumerate(accounts):
-				ACCOUNT_OPTIONS[acc] = index
-
 		if value not in ACCOUNT_OPTIONS.keys():
 			print(value+" was not recognized as a valid Ethereum account.")
 			return 1
@@ -256,7 +257,7 @@ class TwinPeaks:
 	def launch(self):
 
 		self.ready = True
-		self.swapcoin_context()
+		self.reveal()
 
 		choice = self.network_variable.get()
 
@@ -298,28 +299,13 @@ class TwinPeaks:
 				#self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
 				self.swapinterface.load_contract(mainnet=True, contract_name="swap2", contract_address=mainnet_swap_address)
 
-		ACCOUNT_OPTIONS = self.bci.eth_accounts
-		self.account_variable = StringVar(self.master)
-		self.account_variable.set(ACCOUNT_OPTIONS[0])
-		self.account_option = OptionMenu(self.master, self.account_variable, *ACCOUNT_OPTIONS, command=self.handle_account_dropdown)
-		self.account_option.grid(row=7,column=1,pady=20)
-
 
 	def close(self):
 		process=subprocess.Popen("tmux kill-session -t geth".split())
 		#process=subprocess.Popen("tmux kill-session -t ipfs".split())
 		self.master.quit()
 
-	def manifesto_context(self):
-		if not self.ready:
-			return
-
-		self.manifesto_address_label.grid()
-		self.manifesto_address_entry.grid()
-		self.proposals_scrollbar.grid()
-		self.proposals_text.grid()
-
-	def swapcoin_context(self):
+	def reveal(self):
 		if not self.ready:
 			return
 
@@ -335,28 +321,8 @@ class TwinPeaks:
 		self.new_account_button.grid()
 		self.unlock_account_button.grid()
 		self.network_label.grid()
+		
 
-	
-	def clear_screen(self):
-		if not self.ready:
-			return
-
-		self.address_label.grid_remove()
-		self.address_entry.grid_remove()
-		self.balance_label.grid_remove()
-		self.swapcoin_balance_label.grid_remove()
-		self.buy_swapcoin_label.grid_remove()
-		self.swap_tx_entry.grid_remove()
-		self.gas_label.grid_remove()
-		self.gas_entry.grid_remove()
-		self.account_label.grid_remove()
-		self.new_account_button.grid_remove()
-		self.unlock_account_button.grid_remove()
-		self.network_label.grid_remove()
-		self.account_option.grid_remove()
-		self.network_option.grid_remove()
-		self.launch_button.grid_remove()
-	
 	def clock(self):
 
 		#self.swapcoin_balance_label.grid_remove() 
@@ -370,6 +336,19 @@ class TwinPeaks:
 		'''
 
 		if self.bci:
+			if len(self.bci.eth_accounts) > 0:
+				accounts = self.bci.get_eth_accounts()
+				for index, acc in enumerate(accounts):
+					ACCOUNT_OPTIONS[acc] = index
+					
+				self.account_variable = StringVar(self.master)
+				if self.last_account_index < len(accounts):
+					self.account_variable.set(accounts[self.last_account_index])
+				else:
+					self.account_variable.set(accounts[0])
+				self.account_option = OptionMenu(self.master, self.account_variable, *accounts, command=self.handle_account_dropdown)
+				self.account_option.grid(row=7,column=1)
+
 			if len(self.bci.eth_accounts)==0:
 				self.address_entry.delete(0, END)
 				self.address_entry.insert(0, "No Ethereum account found.")
@@ -390,23 +369,28 @@ class TwinPeaks:
 
 					self.bci.ethereum_acc_pass=answer
 
+			#self.bci.unlock_account(self.bci.ethereum_acc_pass)
 
 			self.bci.load_contract(contract_name='blackswan', contract_address=blackswan_contract_address)
 			self.address_entry.delete(0,END)
 			self.address_entry.insert(0, self.bci.get_address())
+			#self.address_label.configure(text="Your Ethereum address:\n "+self.bci.get_address())
 			self.balance_label.configure(text="Ether Balance:\n "+str(self.bci.get_balance())) 
 
 			if self.swapinterface:
 				self.swapcoin_balance_label.configure(text="SwapCoin Balance:\n "+str(self.swapinterface.my_token_balance()))
 
+			#self.gas_entry = Entry(self.master)
+				#self.gas_entry.grid(row=5,column=4)
 
+			#self.bci.load_contract(contract_name='recordmanager', contract_address=recordmanager_contract_address)
+			#self.fsi.upload_all_files(self.bci)
+			#self.fsi.download_all_files(self.bci)
 
 		self.master.after(30000,self.clock)
 
-def Manifesto():
-	twinpeaks.clear_screen()
-	twinpeaks.manifesto_context()
-
+def NewFile():
+	print("New File!")
 def OpenFile():
 	name = askopenfilename()
 	print(name)
@@ -414,17 +398,16 @@ def About():
 	print("This is a simple example of a menu")
     
 root = Tk()
-twinpeaks = TwinPeaks(root)
 menubar = Menu(root)
-root.config(menu=menubar)
-
 menubar.add_command(label="Hello!",command=root.quit)
 menubar.add_command(label="Quit!", command=root.quit)
+twinpeaks = TwinPeaks(root)
 twinpeaks.clock()
+root.config(menu=menubar)
 
 filemenu = Menu(menubar)
 menubar.add_cascade(label="Contract", menu=filemenu)
-filemenu.add_command(label="Manifesto", command=Manifesto)
+filemenu.add_command(label="Manifesto", command=NewFile)
 filemenu.add_command(label="SwapCoin", command=OpenFile)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=root.quit)
