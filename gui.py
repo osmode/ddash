@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.join(os.getcwd(),'ddash'))
 from bcinterface import *
 from fsinterface import *
 from swapinterface import *
+from manifestointerface import *
 from getpass import getpass
 
 
@@ -94,11 +95,54 @@ class TwinPeaks:
 
 		self.proposals_scrollbar = Scrollbar(self.master) 
 		self.proposals_scrollbar.grid(row=3, column=0)
-		self.proposals_text = Text(self.master, wrap=WORD, yscrollcommand=self.proposals_scrollbar.set)
+		self.proposals_text = Text(self.master, wrap=WORD, yscrollcommand=self.proposals_scrollbar.set,height=6)
+		self.proposals_text.insert(END,"Loading proposals...")
+
 		self.proposals_text.grid(row=3, column=0)
 		self.proposals_scrollbar.configure(command=self.proposals_text.yview)
 		self.proposals_text.grid_remove()
 		self.proposals_scrollbar.grid_remove() 
+
+		self.new_proposal_label = Label(text="New Proposal:")
+		self.new_proposal_label.grid(row=4,column=0)
+		self.new_proposal_label.grid_remove()
+		self.new_proposal_scrollbar = Scrollbar(self.master)
+		self.new_proposal_scrollbar.grid(row=4,column=0)
+		self.new_proposal_text = Text(self.master, wrap=WORD, yscrollcommand=self.proposals_scrollbar.set,height=5)
+		self.new_proposal_text.insert(END,"Enter a new proposal here...")
+		self.new_proposal_text.grid(row=4,column=0)
+		self.new_proposal_scrollbar.grid_remove()
+		self.new_proposal_text.grid_remove() 
+		self.new_proposal_button = Button(self.master, text="Submit Proposal", command=self.handle_new_proposal)
+		self.new_proposal_button.grid(row=4,column=1)
+		self.new_proposal_button.grid_remove()
+
+		self.vote_proposalID_label = Label(text="ProposalID: ")
+		self.vote_proposalID_label.grid(row=5,column=0)
+		self.vote_proposalID_label.grid_remove()
+		self.vote_proposalID_entry = Entry(self.master)
+		self.vote_proposalID_entry.grid(row=5,column=1)
+		self.vote_proposalID_entry.grid_remove()
+		self.vote_label = Label(text="Vote (yes/no):")
+		self.vote_label.grid(row=5,column=2)
+		self.vote_label.grid_remove()
+		self.vote_entry = Entry(self.master)
+		self.vote_entry.grid(row=5,column=3)
+		self.vote_entry.grid_remove()
+
+		self.vote_button = Button(self.master, text="Submit Vote",command=self.handle_vote)
+		self.vote_button.grid(row=5,column=4)
+		self.vote_button.grid_remove()
+
+		self.execute_proposal_label = Label(text="Execute proposalD:")
+		self.execute_proposal_label.grid(row=6,column=0)
+		self.execute_proposal_label.grid_remove()
+		self.execute_proposal_entry = Entry(self.master)
+		self.execute_proposal_entry.grid(row=6,column=1)
+		self.execute_proposal_entry.grid_remove()
+		self.execute_proposal_button = Button(self.master, text="Execute Proposal",command=self.handle_execute_proposal)
+		self.execute_proposal_button.grid(row=6,column=2)
+		self.execute_proposal_button.grid_remove()
 
 		self.swap_tx_variable = StringVar(self.master)
 		self.swap_tx_variable.set(SWAP_TX_OPTIONS[0])
@@ -210,6 +254,34 @@ class TwinPeaks:
 				tx = None
 				print("Failed to sell tokens")
 				pass
+
+	def handle_execute_proposal(self):
+		proposalID = self.execute_proposal_entry.get()
+		print("Attemtping to execute proposalID ",proposalID)
+		if proposalID:
+			self.manifestointerface.executeProposal(int(proposalID))
+
+	def handle_vote(self):
+		proposalID = self.vote_proposalID_entry.get()
+		vote = self.vote_entry.get()
+		vote = vote.lower()
+		print("proposalID: ",proposalID)
+		print("vote: ",vote)
+		if vote[0]=='y':
+			self.manifestointerface.vote(int(proposalID),True)
+		if vote[0]=='n':
+			self.manifestointerface.vote(int(proposalID),False)
+		
+
+	'''
+	@class TwinPeaks @method handle_new_proposal
+	Responds to button when clicked to submit new proposal
+	'''
+	def handle_new_proposal(self):
+		description = self.new_proposal_text.get(1.0,END)
+		print("New Proposal: ",description)
+		self.manifestointerface.new_proposal(description)
+
 	'''
 	@class BCInterface @method handle_new_account
 	Interfaces with tkinter "New Account" button
@@ -314,10 +386,32 @@ class TwinPeaks:
 		if not self.ready:
 			return
 
+		self.manifestointerface = ManifestoInterface(mainnet=False)
+		self.manifestointerface.load_contract(mainnet=False)
+
+		if not self.manifestointerface.ethereum_acc_pass:
+			answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
+			self.manifestointerface.ethereum_acc_pass=answer
+
+		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
+
+
 		self.manifesto_address_label.grid()
 		self.manifesto_address_entry.grid()
 		self.proposals_scrollbar.grid()
 		self.proposals_text.grid()
+		self.new_proposal_label.grid()
+		self.new_proposal_scrollbar.grid()
+		self.new_proposal_text.grid() 
+		self.new_proposal_button.grid()
+		self.vote_proposalID_label.grid()
+		self.vote_proposalID_entry.grid()
+		self.vote_label.grid()
+		self.vote_entry.grid()
+		self.vote_button.grid()
+		self.execute_proposal_label.grid()
+		self.execute_proposal_entry.grid()
+		self.execute_proposal_button.grid() 
 
 	def swapcoin_context(self):
 		if not self.ready:
@@ -369,8 +463,8 @@ class TwinPeaks:
 			self.swap_tx_entry.insert(0,self.last_swap_tx_amount)
 		'''
 
-		if self.bci:
-			if len(self.bci.eth_accounts)==0:
+		if hasattr(self,'manifestointerface'):
+			if len(self.manifestointerface.eth_accounts)==0:
 				self.address_entry.delete(0, END)
 				self.address_entry.insert(0, "No Ethereum account found.")
 				#self.address_label.configure(text="No Ethereum account found.")
@@ -382,24 +476,43 @@ class TwinPeaks:
 					answer2 = simpledialog.askstring("DDASH","Enter your password again: ")
 					if answer == answer2:
 						# create new Ethereum account
-						self.bci.web3.personal.newAccount(answer)
-						self.bci.ethereum_acc_pass=answer
+						self.manifestointerface.web3.personal.newAccount(answer)
+						self.manifestointerface.ethereum_acc_pass=answer
 			else: # account(s) found
-				if not self.bci.ethereum_acc_pass:
+				if not self.manifestointerface.ethereum_acc_pass:
 					answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
 
-					self.bci.ethereum_acc_pass=answer
+					self.manifestointerface.ethereum_acc_pass=answer
 
 
-			self.bci.load_contract(contract_name='blackswan', contract_address=blackswan_contract_address)
-			self.address_entry.delete(0,END)
-			self.address_entry.insert(0, self.bci.get_address())
+			self.manifestointerface.load_contract(contract_name='manifesto', contract_address=blackswan_manifesto_address,mainnet=False)
+			print("self has attribute manifestointerface")
+
+			print("Changing Text contents of proposals_text...")
+			num_proposals = self.manifestointerface.get_proposal_count()
+			text = ""
+			text+="Number of proposals: "+str(num_proposals)+"\n\n"
+			i = 0
+			while i < num_proposals:
+				p = self.manifestointerface.get_proposal_by_row(i)
+				text+="Proposal ID: "+str(i)+"\n"
+				text+="Proposal description: "+p[0]+"\n"
+				text+="Voting deadline: "+str(p[1])+"\n"
+				text+="Executed: "+str(p[2])+"\n"
+				text+="Passed: "+str(p[3])+"\n"
+				text+="Number of votes: "+str(p[4])+"\n\n"
+				i+=1
+
+			self.proposals_text.delete(1.0,END)
+			self.proposals_text.insert(1.0, text)
+
+			'''
 			self.balance_label.configure(text="Ether Balance:\n "+str(self.bci.get_balance())) 
 
 			if self.swapinterface:
 				self.swapcoin_balance_label.configure(text="SwapCoin Balance:\n "+str(self.swapinterface.my_token_balance()))
 
-
+			'''
 
 		self.master.after(30000,self.clock)
 
@@ -427,7 +540,7 @@ menubar.add_cascade(label="Contract", menu=filemenu)
 filemenu.add_command(label="Manifesto", command=Manifesto)
 filemenu.add_command(label="SwapCoin", command=OpenFile)
 filemenu.add_separator()
-filemenu.add_command(label="Exit", command=root.quit)
+filemenu.add_command(label="Exit", command=twinpeaks.close())
 helpmenu = Menu(menubar)
 menubar.add_cascade(label="Help", menu=helpmenu)
 helpmenu.add_command(label="About...", command=About)
