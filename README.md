@@ -104,14 +104,14 @@ Save Ethereum contracts in the *source* directory with the .sol extension.
 
 ## How to acquire SwapCoin
 Use the DDASH GUI to exchange Ether for SwapCoin. 
-![SwapCoin](https://s3-us-west-1.amazonaws.com/ddash/ddash_home_menu.png)
+![SwapCoin](https://s3-us-west-1.amazonaws.com/ddash/swapcoin.png)
 
 ## Toggling between contracts
 DDASH currently interfaces with the SwapCoin contract (*swap2.sol*) and the Manifesto contract (*manifesto.sol*). Toggle between contracts using the "Contract" menu.
 
 The Manifesto contract allows participants to create a manifesto through a transparent voting process. Anyone can submit and vote on proposals.
 
-![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/ddash_manifesto.png)
+![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/manifesto.png)
 
 ## The DDASH Command Line Interface
 ```
