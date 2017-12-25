@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import simpledialog
+from tkinter import simpledialog, messagebox
 import subprocess, os
 from subprocess import call
 import sys, datetime
@@ -64,6 +64,7 @@ class TwinPeaks:
 	def __init__(self, master):
 		self.master = master
 		master.title("DDASH")
+		self.network=None
 		self.last_account_index = 0 
 		self.last_swap_tx_amount = 0
 
@@ -90,12 +91,12 @@ class TwinPeaks:
 		self.manifesto_address_label.grid(row=2,column=0)
 		self.manifesto_address_label.grid_remove()
 		self.manifesto_address_entry = Entry(self.master)
-		self.manifesto_address_entry.grid(row=2,column=1)
+		self.manifesto_address_entry.grid(row=2,column=1,columnspan=3)
 		self.manifesto_address_entry.grid_remove() 
 
 		self.proposals_scrollbar = Scrollbar(self.master) 
 		self.proposals_scrollbar.grid(row=3, column=0)
-		self.proposals_text = Text(self.master, wrap=WORD, yscrollcommand=self.proposals_scrollbar.set,height=6)
+		self.proposals_text = Text(self.master, wrap=WORD, yscrollcommand=self.proposals_scrollbar.set,height=6,borderwidth=1)
 		self.proposals_text.insert(END,"Loading proposals...")
 
 		self.proposals_text.grid(row=3, column=0)
@@ -143,6 +144,16 @@ class TwinPeaks:
 		self.execute_proposal_button = Button(self.master, text="Execute Proposal",command=self.handle_execute_proposal)
 		self.execute_proposal_button.grid(row=6,column=2)
 		self.execute_proposal_button.grid_remove()
+
+		self.manifesto_gas_label = Label(text="Gas: ")
+		self.manifesto_gas_label.grid(row=7,column=0)
+		self.manifesto_gas_label.grid_remove()
+		self.manifesto_gas_entry = Entry(self.master)
+		self.manifesto_gas_entry.grid(row=7,column=1)
+		self.manifesto_gas_entry.grid_remove()
+		self.manifesto_set_gas_button = Button(self.master, text="Set Gas Amount",command=self.handle_set_gas)
+		self.manifesto_set_gas_button.grid(row=7,column=2)
+		self.manifesto_set_gas_button.grid_remove()
 
 		self.swap_tx_variable = StringVar(self.master)
 		self.swap_tx_variable.set(SWAP_TX_OPTIONS[0])
@@ -224,7 +235,6 @@ class TwinPeaks:
 		print("swaptxdropdown value: ",amount)
 		if choice == SWAP_TX_OPTIONS[0]: # Buy SwapCoin
 			print("Trying to purchase tokens using ",amount," Ether.")
-			#self.swapinterface.increase_gas(2)
 			self.last_swap_tx_amount = amount
 			tx = self.swapinterface.buy_tokens(self.gas_entry.get())
 			return tx
@@ -255,7 +265,15 @@ class TwinPeaks:
 				print("Failed to sell tokens")
 				pass
 
+	def handle_set_gas(self):
+		new_gas = self.manifesto_gas_entry.get()
+		if new_gas:
+			print("Setting gas to: ",new_gas)
+			new_gas=int(new_gas)
+			self.manifestointerface.set_gas(new_gas)
+
 	def handle_execute_proposal(self):
+		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
 		proposalID = self.execute_proposal_entry.get()
 		print("Attemtping to execute proposalID ",proposalID)
 		if proposalID:
@@ -267,6 +285,8 @@ class TwinPeaks:
 		vote = vote.lower()
 		print("proposalID: ",proposalID)
 		print("vote: ",vote)
+		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
+
 		if vote[0]=='y':
 			self.manifestointerface.vote(int(proposalID),True)
 		if vote[0]=='n':
@@ -280,6 +300,7 @@ class TwinPeaks:
 	def handle_new_proposal(self):
 		description = self.new_proposal_text.get(1.0,END)
 		print("New Proposal: ",description)
+		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
 		self.manifestointerface.new_proposal(description)
 
 	'''
@@ -333,6 +354,7 @@ class TwinPeaks:
 		choice = self.network_variable.get()
 
 		if choice == NETWORK_OPTIONS[0]: #Black Swan network selected
+				self.network="blackswan"
 				print("Loading ",choice) 
 				cmd = "./load_blackswan.sh" 
 				process = subprocess.Popen(cmd,stdin=subprocess.PIPE,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -341,18 +363,17 @@ class TwinPeaks:
 				process.stdin.close()
 				print (process.stdout.read())
 			
-				self.bci = BCInterface()
+				self.bci = BCInterface(mainnet=False)
 				self.fsi = FSInterface()
 				self.swapinterface = SwapInterface(mainnet=False)
 				print("SWAPINTERFACE created")
 				self.contract_name='blackswan'
 				self.contract_address=blackswan_contract_address
-				#self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
-				#self.swapinterface.load_contract(contract_name="swap2", contract_address=swap_contract_address)
 				self.swapinterface.load_contract(mainnet=False,contract_name='swap2',contract_address=blackswan_swap_address) 
 
 
 		if choice == NETWORK_OPTIONS[1]: #Main Ethereum network
+				self.network="mainnet"
 				print("Loading ",choice)
 				cmd = "./load_mainnet.sh"
 				process = subprocess.Popen(cmd,stdin=subprocess.PIPE,
@@ -367,7 +388,6 @@ class TwinPeaks:
 				self.swapinterface = SwapInterface(mainnet=True)
 				self.contract_name='blackswan'
 				self.contract_address=blackswan_contract_address
-				#self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
 				self.swapinterface.load_contract(mainnet=True, contract_name="swap2", contract_address=mainnet_swap_address)
 
 		ACCOUNT_OPTIONS = self.bci.eth_accounts
@@ -412,6 +432,9 @@ class TwinPeaks:
 		self.execute_proposal_label.grid()
 		self.execute_proposal_entry.grid()
 		self.execute_proposal_button.grid() 
+		self.manifesto_gas_label.grid()
+		self.manifesto_gas_entry.grid()
+		self.manifesto_set_gas_button.grid()
 
 	def swapcoin_context(self):
 		if not self.ready:
@@ -479,16 +502,19 @@ class TwinPeaks:
 						self.manifestointerface.web3.personal.newAccount(answer)
 						self.manifestointerface.ethereum_acc_pass=answer
 			else: # account(s) found
-				if not self.manifestointerface.ethereum_acc_pass:
-					answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
+				if self.bci.ethereum_acc_pass:
+					self.manifestointerface.ethereum_acc_pass = self.bci_ethereum_acc_pass
+				else:
+					if not self.manifestointerface.ethereum_acc_pass:
+						answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
 
-					self.manifestointerface.ethereum_acc_pass=answer
-
+						self.manifestointerface.ethereum_acc_pass=answer
+	
 
 			self.manifestointerface.load_contract(contract_name='manifesto', contract_address=blackswan_manifesto_address,mainnet=False)
-			print("self has attribute manifestointerface")
+			self.manifesto_address_entry.delete(0,END)
+			self.manifesto_address_entry.insert(0, self.manifestointerface.tx['to'])
 
-			print("Changing Text contents of proposals_text...")
 			num_proposals = self.manifestointerface.get_proposal_count()
 			text = ""
 			text+="Number of proposals: "+str(num_proposals)+"\n\n"
@@ -505,18 +531,32 @@ class TwinPeaks:
 
 			self.proposals_text.delete(1.0,END)
 			self.proposals_text.insert(1.0, text)
+			
+			# populate default gas price
+			# note this is  manually set - need a way to automatically calculate
+			if not self.manifesto_gas_entry.get():
+				self.manifesto_gas_entry.delete(0,END)
+				self.manifesto_gas_entry.insert(0,"62136")
 
-			'''
-			self.balance_label.configure(text="Ether Balance:\n "+str(self.bci.get_balance())) 
-
-			if self.swapinterface:
+		if hasattr(self,'swapinterface'):
+			if self.bci:
+				self.balance_label.configure(text="Ether Balance:\n "+str(self.bci.get_balance()))
 				self.swapcoin_balance_label.configure(text="SwapCoin Balance:\n "+str(self.swapinterface.my_token_balance()))
 
-			'''
+			if self.swapinterface:
+				if len(self.swapinterface.eth_accounts) >0:
+					self.address_entry.delete(0,END)
+					self.address_entry.insert(0,self.swapinterface.eth_accounts[self.swapinterface.account_index])
+
+
 
 		self.master.after(30000,self.clock)
 
 def Manifesto():
+	if twinpeaks.network != "blackswan":
+		messagebox.showinfo("Error", "The Manifesto.sol contract is only available on the Black Swan network, not the Ethereum main net.")
+		return
+
 	twinpeaks.clear_screen()
 	twinpeaks.manifesto_context()
 
