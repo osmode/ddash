@@ -7,7 +7,7 @@ import sys, datetime
 sys.path.insert(0, os.path.join(os.getcwd(),'ddash'))
 from bcinterface import *
 from fsinterface import *
-from swapinterface import *
+from nfointerface import *
 from manifestointerface import *
 from getpass import getpass
 
@@ -18,18 +18,17 @@ BROADCAST=False
 LISTEN=False
 blackswan_contract_address="0x5ff2ce40e82e52d370fa9a0ddf49aeee32184756"
 recordmanager_contract_address="0xcc109bf72338909ead31a5bf46d8d8fa455ff09b"
-
-mainnet_swap_address = "0xed8c634ac8c2fa3694c32cb01b96a6912f8a7738"
-blackswan_swap_address = "0x5fced4408a9ff19091a97a616e8432d00b808098"
+mainnet_nfo = "0x3100047369b54c34042b9dc138c02a0567d90a7a"
+blackswan_nfo_address = "0x38a779dd481b5f812b76b039cb2077fb124677a7"
 
 NETWORK_OPTIONS = [
 	"Black Swan network",
 	"Main Ethereum network"
 ]
 
-SWAP_TX_OPTIONS = [
-	"Buy SwapCoin",
-	"Sell SwapCoin"
+NFO_TX_OPTIONS = [
+	"Buy NFO Coin",
+	"Sell NFO Coin"
 ]
 
 ACCOUNT_OPTIONS = {}
@@ -72,7 +71,7 @@ class TwinPeaks:
 		master.title("DDASH")
 		self.network=None
 		self.last_account_index = 0 
-		self.last_swap_tx_amount = 0
+		self.last_nfo_tx_amount = 0
 
 		self.intro_label = Label(text=intro,font="Courier 72")
 		self.intro_label.grid(row=0,columnspan=2,column=0)
@@ -89,9 +88,9 @@ class TwinPeaks:
 		self.balance_label.grid(row=3, column=1)
 		self.balance_label.grid_remove()
 
-		self.swapcoin_balance_label = Label(text="SwapCoin Balance: ")
-		self.swapcoin_balance_label.grid(row=3, column=0,padx=100,pady=100)
-		self.swapcoin_balance_label.grid_remove()
+		self.nfocoin_balance_label = Label(text="NFO Coin Balance: ")
+		self.nfocoin_balance_label.grid(row=3, column=0,padx=100,pady=100)
+		self.nfocoin_balance_label.grid_remove()
 
 		self.manifesto_address_label = Label(text="Manifesto.sol address:")
 		self.manifesto_address_label.grid(row=2,column=0)
@@ -161,19 +160,19 @@ class TwinPeaks:
 		self.manifesto_set_gas_button.grid(row=7,column=2)
 		self.manifesto_set_gas_button.grid_remove()
 
-		self.swap_tx_variable = StringVar(self.master)
-		self.swap_tx_variable.set(SWAP_TX_OPTIONS[0])
+		self.nfo_tx_variable = StringVar(self.master)
+		self.nfo_tx_variable.set(NFO_TX_OPTIONS[0])
 				
-		self.swap_tx_option = OptionMenu(self.master, self.swap_tx_variable, *SWAP_TX_OPTIONS, command=self.swaptxdropdown) 
+		self.nfo_tx_option = OptionMenu(self.master, self.nfo_tx_variable, *NFO_TX_OPTIONS, command=self.nfotxdropdown) 
 
-		#self.swap_tx_option.grid(row=5, column=0)
-		self.buy_swapcoin_label = Label(text="Buy SwapCoin with this amount of Ether (in wei = 1e18 Ether): ")
-		self.buy_swapcoin_label.grid(row=5,column=0, ipadx=10, ipady=10)
-		self.buy_swapcoin_label.grid_remove()
+		#self.nfo_tx_option.grid(row=5, column=0)
+		self.buy_nfocoin_label = Label(text="Buy NFO Coin with this amount of Ether (in wei = 1e18 Ether): ")
+		self.buy_nfocoin_label.grid(row=5,column=0, ipadx=10, ipady=10)
+		self.buy_nfocoin_label.grid_remove()
 
-		self.swap_tx_entry = Entry(self.master)
-		self.swap_tx_entry.grid(row=6, column=0)
-		self.swap_tx_entry.grid_remove()
+		self.nfo_tx_entry = Entry(self.master)
+		self.nfo_tx_entry.grid(row=6, column=0)
+		self.nfo_tx_entry.grid_remove()
 		self.gas_label = Label(text="Gas:")
 		self.gas_label.grid(row=5,column=1)
 		self.gas_label.grid_remove()
@@ -210,7 +209,7 @@ class TwinPeaks:
 
 		self.bci = None
 		self.fsi = None
-		self.swapinterface = None
+		self.nfointerface = None
 
 		# self.ready changes to True when Launch button is clicked
 		self.ready = False
@@ -236,36 +235,36 @@ class TwinPeaks:
 	def dropdown(self, value):
 		pass
 
-	def swaptxdropdown(self, choice):
-		amount = self.swap_tx_entry.get()
-		print("swaptxdropdown value: ",amount)
-		if choice == SWAP_TX_OPTIONS[0]: # Buy SwapCoin
+	def nfotxdropdown(self, choice):
+		amount = self.nfo_tx_entry.get()
+		print("nfotxdropdown value: ",amount)
+		if choice == NFO_TX_OPTIONS[0]: # Buy NFO Coin
 			print("Trying to purchase tokens using ",amount," Ether.")
-			self.last_swap_tx_amount = amount
-			tx = self.swapinterface.buy_tokens(self.gas_entry.get())
+			self.last_nfo_tx_amount = amount
+			tx = self.nfointerface.buy_tokens(self.gas_entry.get())
 			return tx
 
 			try:
-				self.swapinterface.tx['gas'] = 100000
-				self.swapinterface.set_gas(self.gas_entry.get())
-				tx = self.swapinterface.buy_tokens(amount)
+				self.nfointerface.tx['gas'] = 100000
+				self.nfointerface.set_gas(self.gas_entry.get())
+				tx = self.nfointerface.buy_tokens(amount)
 			except:
 				tx = None
 				print("Failed to buy tokens")
 				pass
 
 			return tx
-		if choice == SWAP_TX_OPTIONS[1]: # Sell SwapCoin
-			self.swapinterface.tx['gas'] = 10000
+		if choice == NFO_TX_OPTIONS[1]: # Sell NFO Coin
+			self.nfointerface.tx['gas'] = 10000
 			print("Trying to sell ", amount, " tokens.")
-			self.last_swap_tx_amount = amount
-			#self.swapinterface.decrease_gas(3)
-			tx = self.swapinterface.sell_tokens(self.gas_entry.get())
+			self.last_nfo_tx_amount = amount
+			#self.nfointerface.decrease_gas(3)
+			tx = self.nfointerface.sell_tokens(self.gas_entry.get())
 			return tx
 
 			try:
-				self.swapinterface.set_gas(self.gas_entry.get())
-				tx = self.swapinterface.sell_tokens(self.gas_entry.get())
+				self.nfointerface.set_gas(self.gas_entry.get())
+				tx = self.nfointerface.sell_tokens(self.gas_entry.get())
 			except:
 				tx = None
 				print("Failed to sell tokens")
@@ -355,7 +354,7 @@ class TwinPeaks:
 	def launch(self):
 
 		self.ready = True
-		self.swapcoin_context()
+		self.nfocoin_context()
 
 		choice = self.network_variable.get()
 
@@ -371,11 +370,11 @@ class TwinPeaks:
 			
 				self.bci = BCInterface(mainnet=False)
 				self.fsi = FSInterface()
-				self.swapinterface = SwapInterface(mainnet=False)
-				print("SWAPINTERFACE created")
+				self.nfointerface = NFOInterface(mainnet=False)
+				print("NFO Interface created")
 				self.contract_name='blackswan'
 				self.contract_address=blackswan_contract_address
-				self.swapinterface.load_contract(mainnet=False,contract_name='swap2',contract_address=blackswan_swap_address) 
+				self.nfointerface.load_contract(mainnet=False,contract_name='nfocoin',contract_address=blackswan_nfo_address) 
 
 
 		if choice == NETWORK_OPTIONS[1]: #Main Ethereum network
@@ -391,10 +390,10 @@ class TwinPeaks:
 					
 				self.bci = BCInterface(mainnet=True)
 				self.fsi = FSInterface()
-				self.swapinterface = SwapInterface(mainnet=True)
+				self.nfointerface = NFOInterface(mainnet=True)
 				self.contract_name='blackswan'
 				self.contract_address=blackswan_contract_address
-				self.swapinterface.load_contract(mainnet=True, contract_name="swap2", contract_address=mainnet_swap_address)
+				self.nfointerface.load_contract(mainnet=True, contract_name="nfocoin", contract_address=mainnet_nfo_address)
 
 		ACCOUNT_OPTIONS = self.bci.eth_accounts
 		self.account_variable = StringVar(self.master)
@@ -442,16 +441,16 @@ class TwinPeaks:
 		self.manifesto_gas_entry.grid()
 		self.manifesto_set_gas_button.grid()
 
-	def swapcoin_context(self):
+	def nfocoin_context(self):
 		if not self.ready:
 			return
 
 		self.address_label.grid()
 		self.address_entry.grid()
 		self.balance_label.grid()
-		self.swapcoin_balance_label.grid()
-		self.buy_swapcoin_label.grid()
-		self.swap_tx_entry.grid()
+		self.nfocoin_balance_label.grid()
+		self.buy_nfocoin_label.grid()
+		self.nfo_tx_entry.grid()
 		self.gas_label.grid()
 		self.gas_entry.grid()
 		self.account_label.grid()
@@ -489,9 +488,9 @@ class TwinPeaks:
 		self.address_label.grid_remove()
 		self.address_entry.grid_remove()
 		self.balance_label.grid_remove()
-		self.swapcoin_balance_label.grid_remove()
-		self.buy_swapcoin_label.grid_remove()
-		self.swap_tx_entry.grid_remove()
+		self.nfocoin_balance_label.grid_remove()
+		self.buy_nfocoin_label.grid_remove()
+		self.nfo_tx_entry.grid_remove()
 		self.gas_label.grid_remove()
 		self.gas_entry.grid_remove()
 		self.account_label.grid_remove()
@@ -504,14 +503,14 @@ class TwinPeaks:
 	
 	def clock(self):
 
-		#self.swapcoin_balance_label.grid_remove() 
-		#self.swapcoin_balance_label.grid()
+		#self.nfocoin_balance_label.grid_remove() 
+		#self.nfocoin_balance_label.grid()
 
 		time = datetime.datetime.now().strftime("Time: %H:%M:%S")
 		'''
-		if self.swap_tx_entry:
-			self.swap_tx_entry.delete(0,END)
-			self.swap_tx_entry.insert(0,self.last_swap_tx_amount)
+		if self.nfo_tx_entry:
+			self.nfo_tx_entry.delete(0,END)
+			self.nfo_tx_entry.insert(0,self.last_nfo_tx_amount)
 		'''
 
 		if hasattr(self,'manifestointerface'):
@@ -566,15 +565,15 @@ class TwinPeaks:
 				self.manifesto_gas_entry.delete(0,END)
 				self.manifesto_gas_entry.insert(0,"62136")
 
-		if hasattr(self,'swapinterface'):
+		if hasattr(self,'nfointerface'):
 			if self.bci:
 				self.balance_label.configure(text="Ether Balance:\n "+str(self.bci.get_balance()))
-				self.swapcoin_balance_label.configure(text="SwapCoin Balance:\n "+str(self.swapinterface.my_token_balance()))
+				self.nfocoin_balance_label.configure(text="NFO Coin Balance:\n "+str(self.nfointerface.my_token_balance()))
 
-			if self.swapinterface:
-				if len(self.swapinterface.eth_accounts) >0:
+			if self.nfointerface:
+				if len(self.nfointerface.eth_accounts) >0:
 					self.address_entry.delete(0,END)
-					self.address_entry.insert(0,self.swapinterface.eth_accounts[self.swapinterface.account_index])
+					self.address_entry.insert(0,self.nfointerface.eth_accounts[self.nfointerface.account_index])
 
 
 
@@ -588,9 +587,9 @@ def Manifesto():
 	twinpeaks.clear_screen()
 	twinpeaks.manifesto_context()
 
-def Swapcoin():
+def NFOCoin():
 	twinpeaks.clear_screen()
-	twinpeaks.swapcoin_context()
+	twinpeaks.nfocoin_context()
 
 def About():
 	print("This is a simple example of a menu")
@@ -607,7 +606,7 @@ twinpeaks.clock()
 filemenu = Menu(menubar)
 menubar.add_cascade(label="Contract", menu=filemenu)
 filemenu.add_command(label="Manifesto", command=Manifesto)
-filemenu.add_command(label="SwapCoin", command=Swapcoin)
+filemenu.add_command(label="NFO Coin", command=NFOCoin)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=twinpeaks.close())
 helpmenu = Menu(menubar)

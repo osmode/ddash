@@ -17,8 +17,10 @@ contract owned {
     }
 }
 
+/*
 interface tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData) public; }
 
+*/
 contract TokenERC20 {
     // Public variables of the token
     string public name;
@@ -28,9 +30,9 @@ contract TokenERC20 {
     uint256 public totalSupply;
 
     // This creates an array with all balances
-    mapping (address => uint256) public token_balance;  // SwapCoin token balance on main net 
+    mapping (address => uint256) public token_balance;  // NFO coin token balance on main net 
     mapping (address => uint256)  public eth_balance;   // associates Ethereum deposited on main net with main net addrress  
-    mapping (address => uint256) public pvn_token_balance;  // SwapCoin token balance on private net 
+    mapping (address => uint256) public pvn_token_balance;  // NFO coin token balance on private net 
     mapping (address => mapping (address => uint256)) public allowance;
 
     // This generates a public event on the blockchain that will notify clients
@@ -49,12 +51,20 @@ contract TokenERC20 {
         string tokenName,
         string tokenSymbol
     ) public payable {
-        totalSupply = initialSupply * 10 ** uint256(decimals);  // Update total supply with the decimal amount
-        token_balance[msg.sender] = totalSupply;                // Give the creator all initial tokens
-        eth_balance[msg.sender] = msg.value;                    // initialize Ether balance of swap contract 
-        name = tokenName;                                       // Set the name for display purposes
-        symbol = tokenSymbol;                                   // Set the symbol for display purposes
-    }
+				// Update total supply with the decimal amount
+				totalSupply = initialSupply * 10 ** uint256(decimals);          
+
+				// Give the creator all initial tokens
+				token_balance[msg.sender] = totalSupply;                
+
+				// initialize Ether balance of NFO Coin contract 
+				eth_balance[msg.sender] = msg.value;                    
+				// Set the name for display purposes
+
+				name = tokenName;                                               
+				// Set the symbol for display purposes
+				symbol = tokenSymbol;                                   
+		}
 
     /**
      * Internal transfer, only can be called by this contract
@@ -178,7 +188,7 @@ contract TokenERC20 {
 /*       ADVANCED TOKEN STARTS HERE       */
 /******************************************/
 
-contract SwapCoin is owned, TokenERC20 {
+contract NFOCoin is owned, TokenERC20 {
 
     //uint256 public sellPrice;
     //uint256 public buyPrice;
@@ -190,7 +200,7 @@ contract SwapCoin is owned, TokenERC20 {
     /* This generates a public event on the blockchain that will notify clients */
     event FrozenFunds(address target, bool frozen);
     
-    struct SwapTransactionObject {
+    struct NFOTransactionObject {
         
         uint pvn_to_eth_token_amt;
         uint eth_to_pvn_token_amt;
@@ -202,15 +212,15 @@ contract SwapCoin is owned, TokenERC20 {
         bool isTx;
     }
     
-    mapping (bytes32 => SwapTransactionObject) swapTransactions;
-    bytes32[] public swapTransactionList;
+    mapping (bytes32 => NFOTransactionObject) nfoTransactions;
+    bytes32[] public nfoTransactionList;
 
     function is_transaction(bytes32 _transaction_hash) public constant returns (bool isIndeed) {
-        return swapTransactions[_transaction_hash].isTx;
+        return nfoTransactions[_transaction_hash].isTx;
     }
     
     function get_transaction_count() public constant returns (uint transactionCount) {
-        return swapTransactionList.length;
+        return nfoTransactionList.length;
     }
     
     function get_eth_balance(address eth_addr) public constant returns (uint balance) {
@@ -247,7 +257,7 @@ contract SwapCoin is owned, TokenERC20 {
      * @param _eth_addr main net Ethereum address
      * @param _pvn_addr private net Ethereum address 
      */    
-    function swap_transaction(uint _pvn_to_eth_token_amt, uint _eth_to_pvn_token_amt, address _eth_addr,
+    function nfo_transaction(uint _pvn_to_eth_token_amt, uint _eth_to_pvn_token_amt, address _eth_addr,
         address _pvn_addr, bytes32 _hash) public returns (uint rowNumber) {
             if (_hash !=0 ) {
                 if(is_transaction(_hash)) revert();
@@ -280,7 +290,7 @@ contract SwapCoin is owned, TokenERC20 {
                 token_balance[_eth_addr] += _pvn_to_eth_token_amt;
                 pvn_token_balance[_pvn_addr] -= _pvn_to_eth_token_amt;
             }
-            swapTransactions[_hash] = SwapTransactionObject({
+            nfoTransactions[_hash] = NFOTransactionObject({
                 pvn_to_eth_token_amt: _pvn_to_eth_token_amt,
                 eth_to_pvn_token_amt: _eth_to_pvn_token_amt,
                 eth_addr: _eth_addr,
@@ -291,12 +301,12 @@ contract SwapCoin is owned, TokenERC20 {
                 isTx: true
             });
             
-            return swapTransactionList.push(_hash)-1;
+            return nfoTransactionList.push(_hash)-1;
         
         }
         
     /* Initializes contract with initial supply tokens to the creator of the contract */
-    function SwapCoin(
+    function NFOCoin(
         uint256 initialSupply,
         string tokenName,
         string tokenSymbol
@@ -375,16 +385,16 @@ contract SwapCoin is owned, TokenERC20 {
 
     function get_transaction_by_row(uint row) public constant returns (uint pvn_to_eth_token_amt, uint eth_to_pvn_token_amt, address eth_addr, address pvn_addr, uint exchange_rate, uint timestamp, bytes32 hash) {
 
-       require(row<swapTransactionList.length);
+       require(row<nfoTransactionList.length);
        require(row>=0);
 
-       pvn_to_eth_token_amt=swapTransactions[swapTransactionList[row]].pvn_to_eth_token_amt;
-       eth_to_pvn_token_amt=swapTransactions[swapTransactionList[row]].eth_to_pvn_token_amt;
-       eth_addr=swapTransactions[swapTransactionList[row]].eth_addr;
-       pvn_addr=swapTransactions[swapTransactionList[row]].pvn_addr;
-       exchange_rate=swapTransactions[swapTransactionList[row]].exchange_rate;
-       timestamp=swapTransactions[swapTransactionList[row]].timestamp;
-       hash=swapTransactions[swapTransactionList[row]].hash;
+       pvn_to_eth_token_amt=nfoTransactions[nfoTransactionList[row]].pvn_to_eth_token_amt;
+       eth_to_pvn_token_amt=nfoTransactions[nfoTransactionList[row]].eth_to_pvn_token_amt;
+       eth_addr=nfoTransactions[nfoTransactionList[row]].eth_addr;
+       pvn_addr=nfoTransactions[nfoTransactionList[row]].pvn_addr;
+       exchange_rate=nfoTransactions[nfoTransactionList[row]].exchange_rate;
+       timestamp=nfoTransactions[nfoTransactionList[row]].timestamp;
+       hash=nfoTransactions[nfoTransactionList[row]].hash;
     }
     
     function set_master_exchange_rate(uint new_rate) public  returns (uint exchange_rate) {

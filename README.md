@@ -25,16 +25,16 @@ DDASH is a protocol for information exchange across Ethereum networks.
 
 ### Our goal is to build open economies for information exchange within and among organizations.
 
-## SwapCoin
-SwapCoin is the utility token that powers DDASH, enabling the exchange of information and value across Ethereum networks. SwapCoin is based on the ERC20 standard but differs slightly in the nomenclature of its methods. The SWAP ABI and contract are located in the source directory and can be directly inspected at address 0xeD8C634aC8C2fa3694C32Cb01b96A6912f8a7738.
+## NFO Coin
+NFO Coin is the utility token that powers DDASH, enabling the exchange of information and value across Ethereum networks. NFO Coin is based on the ERC20 standard but differs slightly in the nomenclature of its methods. The NFO ABI and contract are located in the source directory and can be directly inspected at address 0x3100047369b54c34042B9DC138C02A0567D90A7a on the Ethereum main network.
 
 ### totalSupply: 10,000,000
-### tokenName: SwapCoin
-### tokenSymbol: SX
+### tokenName: NFO Coin
+### tokenSymbol: NFO
 
-There are 10,000,000 SwapCoin in circulation, which can be exchanged for Ether at a rate of 1,000 SwapCoin per 1 Ether.
+There are 10,000,000 NFO Coin in circulation, which can be exchanged for Ether at a rate of 1,000 NFO Coin per 1 Ether.
 
-SwapCoin and Ether can be exchanged using the DDASH client, which can be launched by running 
+NFO Coin and Ether can be exchanged using the DDASH client, which can be launched by running 
 ```
 python3 gui.py 
 ```
@@ -102,12 +102,12 @@ The directory structure is important because DDASH and the DDASH Networking Util
 ```
 Save Ethereum contracts in the *source* directory with the .sol extension.
 
-## How to acquire SwapCoin
-Use the DDASH GUI to exchange Ether for SwapCoin. 
-![SwapCoin](https://s3-us-west-1.amazonaws.com/ddash/swapcoin.png)
+## How to acquire NFO Coin
+Use the DDASH GUI to exchange Ether for NFO Coin. 
+![NFO Coin](https://s3-us-west-1.amazonaws.com/ddash/swapcoin.png)
 
 ## Toggling between contracts
-DDASH currently interfaces with the SwapCoin contract (*swap2.sol*) and the Manifesto contract (*manifesto.sol*). Toggle between contracts using the "Contract" menu.
+DDASH currently interfaces with the NFO Coin contract (*nfocoin.sol*) and the Manifesto contract (*manifesto.sol*). Toggle between contracts using the "Contract" menu.
 
 The Manifesto contract allows participants to create a manifesto through a transparent voting process. Anyone can submit and vote on proposals.
 
