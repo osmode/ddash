@@ -1,5 +1,5 @@
-from tkinter import *
 from tkinter import simpledialog, messagebox
+from tkinter import *
 import subprocess, os
 from subprocess import call
 import sys, datetime
@@ -32,7 +32,7 @@ NFO_TX_OPTIONS = [
 ]
 
 ACCOUNT_OPTIONS = {}
-
+account_option = None
 
 '''
 intro = r"""
@@ -72,141 +72,9 @@ class TwinPeaks:
 		self.network=None
 		self.last_account_index = 0 
 		self.last_nfo_tx_amount = 0
-
-		self.intro_label = Label(text=intro,font="Courier 72")
-		self.intro_label.grid(row=0,columnspan=2,column=0)
-
-		self.address_label = Label(text="Your Ethereum address: ")
-		self.address_label.grid(row=1, columnspan=2)
-		self.address_label.grid_remove()
-		self.address_entry = Entry(self.master)  
-
-		self.address_entry.grid(row=2, columnspan=2)
-		self.address_entry.grid_remove()
-
-		self.balance_label = Label(text="Ether Balance: ")
-		self.balance_label.grid(row=3, column=1)
-		self.balance_label.grid_remove()
-
-		self.nfocoin_balance_label = Label(text="NFO Coin Balance: ")
-		self.nfocoin_balance_label.grid(row=3, column=0,padx=100,pady=100)
-		self.nfocoin_balance_label.grid_remove()
-
-		self.manifesto_address_label = Label(text="Manifesto.sol address:")
-		self.manifesto_address_label.grid(row=2,column=0)
-		self.manifesto_address_label.grid_remove()
-		self.manifesto_address_entry = Entry(self.master)
-		self.manifesto_address_entry.grid(row=2,column=1,columnspan=3)
-		self.manifesto_address_entry.grid_remove() 
-
-		self.proposals_scrollbar = Scrollbar(self.master) 
-		self.proposals_scrollbar.grid(row=3, column=0)
-		self.proposals_text = Text(self.master, wrap=WORD, yscrollcommand=self.proposals_scrollbar.set,height=6,borderwidth=1)
-		self.proposals_text.insert(END,"Loading proposals...")
-
-		self.proposals_text.grid(row=3, column=0)
-		self.proposals_scrollbar.configure(command=self.proposals_text.yview)
-		self.proposals_text.grid_remove()
-		self.proposals_scrollbar.grid_remove() 
-
-		self.new_proposal_label = Label(text="New Proposal:")
-		self.new_proposal_label.grid(row=4,column=0)
-		self.new_proposal_label.grid_remove()
-		self.new_proposal_scrollbar = Scrollbar(self.master)
-		self.new_proposal_scrollbar.grid(row=4,column=0)
-		self.new_proposal_text = Text(self.master, wrap=WORD, yscrollcommand=self.proposals_scrollbar.set,height=5)
-		self.new_proposal_text.insert(END,"Enter a new proposal here...")
-		self.new_proposal_text.grid(row=4,column=0)
-		self.new_proposal_scrollbar.grid_remove()
-		self.new_proposal_text.grid_remove() 
-		self.new_proposal_button = Button(self.master, text="Submit Proposal", command=self.handle_new_proposal)
-		self.new_proposal_button.grid(row=4,column=1)
-		self.new_proposal_button.grid_remove()
-
-		self.vote_proposalID_label = Label(text="ProposalID: ")
-		self.vote_proposalID_label.grid(row=5,column=0)
-		self.vote_proposalID_label.grid_remove()
-		self.vote_proposalID_entry = Entry(self.master)
-		self.vote_proposalID_entry.grid(row=5,column=1)
-		self.vote_proposalID_entry.grid_remove()
-		self.vote_label = Label(text="Vote (yes/no):")
-		self.vote_label.grid(row=5,column=2)
-		self.vote_label.grid_remove()
-		self.vote_entry = Entry(self.master)
-		self.vote_entry.grid(row=5,column=3)
-		self.vote_entry.grid_remove()
-
-		self.vote_button = Button(self.master, text="Submit Vote",command=self.handle_vote)
-		self.vote_button.grid(row=5,column=4)
-		self.vote_button.grid_remove()
-
-		self.execute_proposal_label = Label(text="Execute proposalD:")
-		self.execute_proposal_label.grid(row=6,column=0)
-		self.execute_proposal_label.grid_remove()
-		self.execute_proposal_entry = Entry(self.master)
-		self.execute_proposal_entry.grid(row=6,column=1)
-		self.execute_proposal_entry.grid_remove()
-		self.execute_proposal_button = Button(self.master, text="Execute Proposal",command=self.handle_execute_proposal)
-		self.execute_proposal_button.grid(row=6,column=2)
-		self.execute_proposal_button.grid_remove()
-
-		self.manifesto_gas_label = Label(text="Gas: ")
-		self.manifesto_gas_label.grid(row=7,column=0)
-		self.manifesto_gas_label.grid_remove()
-		self.manifesto_gas_entry = Entry(self.master)
-		self.manifesto_gas_entry.grid(row=7,column=1)
-		self.manifesto_gas_entry.grid_remove()
-		self.manifesto_set_gas_button = Button(self.master, text="Set Gas Amount",command=self.handle_set_gas)
-		self.manifesto_set_gas_button.grid(row=7,column=2)
-		self.manifesto_set_gas_button.grid_remove()
-
-		self.nfo_tx_variable = StringVar(self.master)
-		self.nfo_tx_variable.set(NFO_TX_OPTIONS[0])
-				
-		self.nfo_tx_option = OptionMenu(self.master, self.nfo_tx_variable, *NFO_TX_OPTIONS, command=self.nfotxdropdown) 
-
-		#self.nfo_tx_option.grid(row=5, column=0)
-		self.buy_nfocoin_label = Label(text="Buy NFO Coin with this amount of Ether (in wei = 1e18 Ether): ")
-		self.buy_nfocoin_label.grid(row=5,column=0, ipadx=10, ipady=10)
-		self.buy_nfocoin_label.grid_remove()
-
-		self.nfo_tx_entry = Entry(self.master)
-		self.nfo_tx_entry.grid(row=6, column=0)
-		self.nfo_tx_entry.grid_remove()
-		self.gas_label = Label(text="Gas:")
-		self.gas_label.grid(row=5,column=1)
-		self.gas_label.grid_remove()
-	
-		self.gas_entry = Entry(self.master)
-		self.gas_entry.grid(row=6,column=1)
-		self.gas_entry.insert(0, "62136")
-		self.gas_entry.grid_remove()
-
-		self.account_label = Label(text="Account: ",padx=20,pady=40)
-		self.account_label.grid(row=7,column=0)
-		self.account_label.grid_remove()
-		self.new_account_button = Button(self.master, text="New Account", command=self.handle_new_account)
-		self.new_account_button.grid(row=8,column=0)
-		self.new_account_button.grid_remove()
-		self.unlock_account_button = Button(self.master, text="Unlock Account", command=self.handle_unlock_account)
-		self.unlock_account_button.grid(row=8, column=1)
-		self.unlock_account_button.grid_remove()
-
-		self.network_label = Label(text="Network: ")
-		self.network_label.grid(row=9, pady=20 )
-
-		self.network_variable = StringVar(self.master)
+		self.network_variable = StringVar()
 		self.network_variable.set(NETWORK_OPTIONS[1])
-		self.network_option = OptionMenu(self.master, self.network_variable, *NETWORK_OPTIONS, command=self.dropdown)
-		self.network_option.grid(row=9,column=1,pady=20)
-
-		self.launch_button = Button(master, text="Launch", command=self.launch)
-		self.launch_button.grid(row=14, column=1)
-
-		self.close_button = Button(master, text="Close", command=self.close,
-			pady=20)
-		self.close_button.grid(row=14, column=0,pady=20)
-
+		self.account_variable = StringVar(self.master)
 		self.bci = None
 		self.fsi = None
 		self.nfointerface = None
@@ -271,7 +139,7 @@ class TwinPeaks:
 				pass
 
 	def handle_set_gas(self):
-		new_gas = self.manifesto_gas_entry.get()
+		new_gas = manifesto_gas_entry.get()
 		if new_gas:
 			print("Setting gas to: ",new_gas)
 			new_gas=int(new_gas)
@@ -396,10 +264,12 @@ class TwinPeaks:
 				self.nfointerface.load_contract(mainnet=True, contract_name="nfocoin", contract_address=mainnet_nfo_address)
 
 		ACCOUNT_OPTIONS = self.bci.eth_accounts
-		self.account_variable = StringVar(self.master)
 		self.account_variable.set(ACCOUNT_OPTIONS[0])
-		self.account_option = OptionMenu(self.master, self.account_variable, *ACCOUNT_OPTIONS, command=self.handle_account_dropdown)
-		self.account_option.grid(row=7,column=1,pady=20)
+
+		# ugly hack
+		global account_option
+		account_option = OptionMenu(account_frame, self.account_variable, *ACCOUNT_OPTIONS, command=self.handle_account_dropdown)
+		account_option.grid(row=7,column=1,pady=20)
 
 
 	def close(self):
@@ -421,85 +291,105 @@ class TwinPeaks:
 		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
 
 
-		self.manifesto_address_label.grid()
-		self.manifesto_address_entry.grid()
-		self.proposals_scrollbar.grid()
-		self.proposals_text.grid()
-		self.new_proposal_label.grid()
-		self.new_proposal_scrollbar.grid()
-		self.new_proposal_text.grid() 
-		self.new_proposal_button.grid()
-		self.vote_proposalID_label.grid()
-		self.vote_proposalID_entry.grid()
-		self.vote_label.grid()
-		self.vote_entry.grid()
-		self.vote_button.grid()
-		self.execute_proposal_label.grid()
-		self.execute_proposal_entry.grid()
-		self.execute_proposal_button.grid() 
-		self.manifesto_gas_label.grid()
-		self.manifesto_gas_entry.grid()
-		self.manifesto_set_gas_button.grid()
+		manifesto_address_label.grid()
+		manifesto_address_entry.grid()
+		proposals_scrollbar.grid()
+		proposals_text.grid()
+		new_proposal_label.grid()
+		new_proposal_scrollbar.grid()
+		new_proposal_text.grid() 
+		new_proposal_button.grid()
+		vote_proposalID_label.grid()
+		vote_proposalID_entry.grid()
+		vote_label.grid()
+		vote_entry.grid()
+		vote_button.grid()
+		execute_proposal_label.grid()
+		execute_proposal_entry.grid()
+		execute_proposal_button.grid() 
+		manifesto_gas_label.grid()
+		manifesto_gas_entry.grid()
+		manifesto_set_gas_button.grid()
+
+		top_frame.grid()
+		manifesto_frame.grid()
+		network_frame.grid()
 
 	def nfocoin_context(self):
 		if not self.ready:
 			return
 
-		self.address_label.grid()
-		self.address_entry.grid()
-		self.balance_label.grid()
-		self.nfocoin_balance_label.grid()
-		self.buy_nfocoin_label.grid()
-		self.nfo_tx_entry.grid()
-		self.gas_label.grid()
-		self.gas_entry.grid()
-		self.account_label.grid()
-		self.new_account_button.grid()
-		self.unlock_account_button.grid()
-		self.network_label.grid()
-		self.close_button.grid()
-		self.launch_button.grid()
+		address_label.grid()
+		address_entry.grid()
+		balance_label.grid()
+		nfocoin_balance_label.grid()
+		buy_nfocoin_label.grid()
+		nfo_tx_entry.grid()
+		gas_label.grid()
+		gas_entry.grid()
+		account_label.grid()
+		new_account_button.grid()
+		unlock_account_button.grid()
+		network_label.grid()
+		close_button.grid()
+		launch_button.grid()
 
+		top_frame.grid()
+		center_frame.grid()
+		transaction_frame.grid()
+		account_frame.grid()
+		account_frame.grid()
+		network_frame.grid()
 	
 	def clear_screen(self):
 		if not self.ready:
 			return
 
-		self.proposals_scrollbar.grid_remove() 
-		self.proposals_text.grid_remove()
-		self.manifesto_address_label.grid_remove()
-		self.manifesto_address_entry.grid_remove()
-		self.new_proposal_scrollbar.grid_remove()
-		self.new_proposal_text.grid_remove()
-		self.new_proposal_label.grid_remove()
-		self.new_proposal_button.grid_remove()
-		self.vote_proposalID_label.grid_remove()
-		self.vote_proposalID_entry.grid_remove()
-		self.vote_label.grid_remove()
-		self.vote_entry.grid_remove()
-		self.vote_button.grid_remove()
-		self.execute_proposal_label.grid_remove()
-		self.execute_proposal_entry.grid_remove()
-		self.execute_proposal_button.grid_remove() 
-		self.manifesto_gas_label.grid_remove()
-		self.manifesto_gas_entry.grid_remove()
-		self.manifesto_set_gas_button.grid_remove()
+		proposals_scrollbar.grid_remove() 
+		proposals_text.grid_remove()
+		manifesto_address_label.grid_remove()
+		manifesto_address_entry.grid_remove()
+		new_proposal_scrollbar.grid_remove()
+		new_proposal_text.grid_remove()
+		new_proposal_label.grid_remove()
+		new_proposal_button.grid_remove()
+		vote_proposalID_label.grid_remove()
+		vote_proposalID_entry.grid_remove()
+		vote_label.grid_remove()
+		vote_entry.grid_remove()
+		vote_button.grid_remove()
+		execute_proposal_label.grid_remove()
+		execute_proposal_entry.grid_remove()
+		execute_proposal_button.grid_remove() 
+		manifesto_gas_label.grid_remove()
+		manifesto_gas_entry.grid_remove()
+		manifesto_set_gas_button.grid_remove()
 
-		self.address_label.grid_remove()
-		self.address_entry.grid_remove()
-		self.balance_label.grid_remove()
-		self.nfocoin_balance_label.grid_remove()
-		self.buy_nfocoin_label.grid_remove()
-		self.nfo_tx_entry.grid_remove()
-		self.gas_label.grid_remove()
-		self.gas_entry.grid_remove()
-		self.account_label.grid_remove()
-		self.new_account_button.grid_remove()
-		self.unlock_account_button.grid_remove()
-		self.network_label.grid_remove()
-		self.account_option.grid_remove()
-		self.network_option.grid_remove()
-		self.launch_button.grid_remove()
+		address_label.grid_remove()
+		address_entry.grid_remove()
+		balance_label.grid_remove()
+		nfocoin_balance_label.grid_remove()
+		buy_nfocoin_label.grid_remove()
+		nfo_tx_entry.grid_remove()
+		gas_label.grid_remove()
+		gas_entry.grid_remove()
+		account_label.grid_remove()
+		new_account_button.grid_remove()
+		unlock_account_button.grid_remove()
+		network_label.grid_remove()
+		account_option.grid_remove()
+		network_option.grid_remove()
+		launch_button.grid_remove()
+		manifesto_frame.grid_remove()
+
+		# clear frames
+		top_frame.grid_remove()
+		center_frame.grid_remove()
+		transaction_frame.grid_remove()
+		account_frame.grid_remove()
+		network_frame.grid_remove()
+
+		gif_label.grid_remove()
 	
 	def clock(self):
 
@@ -515,10 +405,10 @@ class TwinPeaks:
 
 		if hasattr(self,'manifestointerface'):
 			if len(self.manifestointerface.eth_accounts)==0:
-				self.address_entry.delete(0, END)
-				self.address_entry.insert(0, "No Ethereum account found.")
+				address_entry.delete(0, END)
+				address_entry.insert(0, "No Ethereum account found.")
 				#self.address_label.configure(text="No Ethereum account found.")
-				self.balance_label.configure(text="Balance: 0 Ether")
+				balance_label.configure(text="Balance: 0 Ether")
 
 				answer = messagebox.askyesno("DDASH","I don't see any Ethereum accounts. Would you like to create one?")
 				if answer:
@@ -539,8 +429,8 @@ class TwinPeaks:
 	
 
 			self.manifestointerface.load_contract(contract_name='manifesto', contract_address=blackswan_manifesto_address,mainnet=False)
-			self.manifesto_address_entry.delete(0,END)
-			self.manifesto_address_entry.insert(0, self.manifestointerface.tx['to'])
+			manifesto_address_entry.delete(0,END)
+			manifesto_address_entry.insert(0, self.manifestointerface.tx['to'])
 
 			num_proposals = self.manifestointerface.get_proposal_count()
 			text = ""
@@ -556,24 +446,24 @@ class TwinPeaks:
 				text+="Number of votes: "+str(p[4])+"\n\n"
 				i+=1
 
-			self.proposals_text.delete(1.0,END)
-			self.proposals_text.insert(1.0, text)
+			proposals_text.delete(1.0,END)
+			proposals_text.insert(1.0, text)
 			
 			# populate default gas price
 			# note this is  manually set - need a way to automatically calculate
-			if not self.manifesto_gas_entry.get():
-				self.manifesto_gas_entry.delete(0,END)
-				self.manifesto_gas_entry.insert(0,"62136")
+			if not manifesto_gas_entry.get():
+				manifesto_gas_entry.delete(0,END)
+				manifesto_gas_entry.insert(0,"62136")
 
 		if hasattr(self,'nfointerface'):
 			if self.bci:
-				self.balance_label.configure(text="Ether Balance:\n "+str(self.bci.get_balance()))
-				self.nfocoin_balance_label.configure(text="NFO Coin Balance:\n "+str(self.nfointerface.my_token_balance()))
+				balance_label.configure(text="Ether Balance:\n "+str(self.bci.get_balance()))
+				nfocoin_balance_label.configure(text="NFO Coin Balance:\n "+str(self.nfointerface.my_token_balance()))
 
 			if self.nfointerface:
 				if len(self.nfointerface.eth_accounts) >0:
-					self.address_entry.delete(0,END)
-					self.address_entry.insert(0,self.nfointerface.eth_accounts[self.nfointerface.account_index])
+					address_entry.delete(0,END)
+					address_entry.insert(0,self.nfointerface.eth_accounts[self.nfointerface.account_index])
 
 
 
@@ -595,9 +485,15 @@ def About():
 	print("This is a simple example of a menu")
     
 root = Tk()
+root.geometry('{}x{}'.format(1000, 800))
+
 twinpeaks = TwinPeaks(root)
 menubar = Menu(root)
 root.config(menu=menubar)
+
+# layout all of the main containers
+root.grid_rowconfigure(1, weight=1)
+root.grid_columnconfigure(0, weight=1)
 
 menubar.add_command(label="Hello!",command=root.quit)
 menubar.add_command(label="Quit!", command=root.quit)
@@ -613,5 +509,181 @@ helpmenu = Menu(menubar)
 menubar.add_cascade(label="Help", menu=helpmenu)
 helpmenu.add_command(label="About...", command=About)
 
+# the artwork
+
+# frames
+gif_path = os.getcwd()+'/images/ss.gif'
+frames = [PhotoImage(file=gif_path,format="gif -index %i" %(i)) for i in range(36)]
+gif_label = Label(root) #, image=frames[0])
+
+def update(ind):
+
+	frame = frames[ind%36]
+	gif_label.configure(image=frame)
+	if ind==0:
+		gif_label.grid(row=1,column=0)
+
+	ind+=1
+
+	root.after(100,update,ind)
+
+
+manifesto_frame = Frame(root) 
+manifesto_frame.grid(row=1,stick="ew")
+manifesto_frame.grid_remove()
+
+top_frame = Frame(root, bg='white', width=1000, height=200, relief="sunken")
+top_frame.grid(row=0, sticky="ew")
+
+
+#top_frame.grid_remove()
+center_frame = Frame(root, bg='white', width=1000, height=200,padx=40, pady=40, relief="sunken")
+center_frame.grid(row=1,sticky="ew")
+center_frame.grid_remove()
+transaction_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken", borderwidth=2)
+transaction_frame.grid(row=2,sticky="ew")
+transaction_frame.grid_remove()
+account_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken")
+account_frame.grid(row=3,sticky="ew")
+account_frame.grid_remove()
+network_frame = Frame(root, bg='white', width=1000, height=100,padx=200, pady=20, relief="sunken",borderwidth=2)
+network_frame.grid(row=4,sticky="ew")
+#network_frame.grid_remove()
+
+# arrange elements within frames
+
+## top frame
+intro_label = Label(top_frame, text=intro,font="Courier 60")
+intro_label.grid(row=0,columnspan=2,column=0)
+
+## center frame
+address_label = Label(center_frame, text="Your Ethereum address: ")
+address_label.grid(row=1, columnspan=2)
+address_label.grid_remove()
+address_entry = Entry(center_frame)  
+address_entry.grid(row=2, columnspan=3)
+address_entry.grid_remove()
+
+balance_label = Label(center_frame,text="Ether Balance: ")
+balance_label.grid(row=3, column=1)
+balance_label.grid_remove()
+nfocoin_balance_label = Label(center_frame,text="NFO Coin Balance: ")
+nfocoin_balance_label.grid(row=3, column=0,padx=10,pady=10)
+nfocoin_balance_label.grid_remove()
+
+## transaction fraome
+nfo_tx_entry = Entry(transaction_frame) 
+nfo_tx_entry.grid(row=6, column=0)
+nfo_tx_entry.grid_remove()
+gas_label = Label(transaction_frame,text="Gas:")
+gas_label.grid(row=5,column=1)
+gas_label.grid_remove()
+gas_entry = Entry(transaction_frame)
+gas_entry.grid(row=6,column=1)
+gas_entry.insert(0, "62136")
+gas_entry.grid_remove()
+
+nfo_tx_variable = StringVar()
+nfo_tx_variable.set(NFO_TX_OPTIONS[0])
+nfo_tx_option = OptionMenu(transaction_frame, nfo_tx_variable, *NFO_TX_OPTIONS, command=twinpeaks.nfotxdropdown) 
+
+#self.nfo_tx_option.grid(row=5, column=0)
+buy_nfocoin_label = Label(transaction_frame,text="Buy NFO Coin with this amount of Ether (in wei = 1e18 Ether): ")
+buy_nfocoin_label.grid(row=5,column=0, ipadx=10, ipady=10)
+buy_nfocoin_label.grid_remove()
+
+account_label = Label(account_frame, text="Account: ",padx=20,pady=40)
+account_label.grid(row=7,column=0)
+account_label.grid_remove()
+
+new_account_button = Button(account_frame, text="New Account", command=twinpeaks.handle_new_account)
+new_account_button.grid(row=8,column=0)
+new_account_button.grid_remove()
+unlock_account_button = Button(account_frame, text="Unlock Account", command=twinpeaks.handle_unlock_account)
+unlock_account_button.grid(row=8, column=1)
+unlock_account_button.grid_remove()
+
+network_label = Label(network_frame, text="Network: ", bg='white')
+network_label.grid(row=9 )
+
+network_option = OptionMenu(network_frame, twinpeaks.network_variable, *NETWORK_OPTIONS, command=twinpeaks.dropdown)
+network_option.grid(row=9,column=1,pady=20)
+
+launch_button = Button(network_frame, text="Launch", command=twinpeaks.launch, bg='white')
+launch_button.grid(row=14, column=1)
+
+close_button = Button(network_frame, text="Close", command=twinpeaks.close, bg='white' )
+close_button.grid(row=14, column=0)
+
+# MANIFESTO layout
+manifesto_address_label = Label(manifesto_frame,text="Manifesto.sol address:")
+manifesto_address_label.grid(row=2,column=0)
+manifesto_address_label.grid_remove()
+manifesto_address_entry = Entry(manifesto_frame)
+manifesto_address_entry.grid(row=2,column=1,columnspan=3)
+manifesto_address_entry.grid_remove() 
+
+proposals_scrollbar = Scrollbar(manifesto_frame) 
+proposals_scrollbar.grid(row=3, column=0)
+proposals_text = Text(manifesto_frame, wrap=WORD, yscrollcommand=proposals_scrollbar.set,height=6,borderwidth=1)
+proposals_text.insert(END,"Loading proposals...")
+
+proposals_text.grid(row=3, column=0)
+proposals_scrollbar.configure(command=proposals_text.yview)
+proposals_text.grid_remove()
+proposals_scrollbar.grid_remove() 
+
+new_proposal_label = Label(manifesto_frame,text="New Proposal:")
+new_proposal_label.grid(row=4,column=0)
+new_proposal_label.grid_remove()
+new_proposal_scrollbar = Scrollbar(manifesto_frame)
+new_proposal_scrollbar.grid(row=4,column=0)
+new_proposal_text = Text(manifesto_frame, wrap=WORD, yscrollcommand=proposals_scrollbar.set,height=5)
+new_proposal_text.insert(END,"Enter a new proposal here...")
+new_proposal_text.grid(row=4,column=0)
+new_proposal_scrollbar.grid_remove()
+new_proposal_text.grid_remove() 
+new_proposal_button = Button(manifesto_frame, text="Submit Proposal", command=twinpeaks.handle_new_proposal)
+new_proposal_button.grid(row=4,column=1)
+new_proposal_button.grid_remove()
+
+vote_proposalID_label = Label(manifesto_frame, text="ProposalID: ")
+vote_proposalID_label.grid(row=5,column=0)
+vote_proposalID_label.grid_remove()
+vote_proposalID_entry = Entry(manifesto_frame)
+vote_proposalID_entry.grid(row=5,column=1)
+vote_proposalID_entry.grid_remove()
+vote_label = Label(manifesto_frame, text="Vote (yes/no):")
+vote_label.grid(row=5,column=2)
+vote_label.grid_remove()
+vote_entry = Entry(manifesto_frame)
+vote_entry.grid(row=5,column=3)
+vote_entry.grid_remove()
+
+vote_button = Button(manifesto_frame, text="Submit Vote",command=twinpeaks.handle_vote)
+vote_button.grid(row=5,column=4)
+vote_button.grid_remove()
+
+execute_proposal_label = Label(manifesto_frame, text="Execute proposalD:")
+execute_proposal_label.grid(row=6,column=0)
+execute_proposal_label.grid_remove()
+execute_proposal_entry = Entry(manifesto_frame)
+execute_proposal_entry.grid(row=6,column=1)
+execute_proposal_entry.grid_remove()
+execute_proposal_button = Button(manifesto_frame, text="Execute Proposal",command=twinpeaks.handle_execute_proposal)
+execute_proposal_button.grid(row=6,column=2)
+execute_proposal_button.grid_remove()
+
+manifesto_gas_label = Label(manifesto_frame, text="Gas: ")
+manifesto_gas_label.grid(row=7,column=0)
+manifesto_gas_label.grid_remove()
+manifesto_gas_entry = Entry(manifesto_frame)
+manifesto_gas_entry.grid(row=7,column=1)
+manifesto_gas_entry.grid_remove()
+manifesto_set_gas_button = Button(manifesto_frame, text="Set Gas Amount",command=twinpeaks.handle_set_gas)
+manifesto_set_gas_button.grid(row=7,column=2)
+manifesto_set_gas_button.grid_remove()
+
+root.after(0,update,0)
 root.mainloop()
 
