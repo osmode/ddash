@@ -3,7 +3,7 @@
 	::: IPFS <> blockchain interface				:::
 '''
 
-import ipfsapi, os, json
+import os, json
 from web3 import Web3, HTTPProvider, IPCProvider
 from random import randint
 
