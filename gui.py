@@ -70,6 +70,7 @@ class TwinPeaks:
 		self.master = master
 		master.title("DDASH")
 		self.network=None
+		self.context = "home"
 		self.last_account_index = 0 
 		self.last_nfo_tx_amount = 0
 		self.network_variable = StringVar()
@@ -280,7 +281,7 @@ class TwinPeaks:
 	def manifesto_context(self):
 		if not self.ready:
 			return
-
+		self.context = "manifesto"
 		self.manifestointerface = ManifestoInterface(mainnet=False)
 		self.manifestointerface.load_contract(mainnet=False)
 
@@ -318,7 +319,7 @@ class TwinPeaks:
 	def nfocoin_context(self):
 		if not self.ready:
 			return
-
+		self.context="nfocoin"
 		address_label.grid()
 		address_entry.grid()
 		balance_label.grid()
@@ -520,8 +521,10 @@ def update(ind):
 
 	frame = frames[ind%36]
 	gif_label.configure(image=frame)
-	if ind==0:
+	if ind%36==0 and twinpeaks.context=="home":
 		gif_label.grid(row=1,column=0)
+	elif twinpeaks.context != "home" and ind%36==0:
+		gif_label.grid_remove()
 
 	ind+=1
 

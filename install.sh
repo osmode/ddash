@@ -26,8 +26,7 @@ Your choice> " choice
 	echo ""
 	os="$(uname -s)"
 	if [ "$os" = 'Darwin' ]; then
-		echo "It appears you're installing DDASH on a Mac. Mac Installer is still experimental."
-		#read -p "Would you like to install Homebrew? Enter Y/n: " answer1
+		echo "It appears you're installing DDASH on a Mac."
 
 		while true; do
 		read -p "Would you like to install Homebrew? Enter Y/n: " answer1
@@ -40,7 +39,19 @@ Your choice> " choice
 		    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 		    brew update
 		fi
-		 
+
+		while true; do
+		read -p "Would you like to install Python3? Enter Y/n: " answer_python3
+			if [[ "$answer_python3" = 'y' ]] || [[ "$answer_python3" = 'Y' ]] || [[ "$answer_python3" = 'n' ]] || [[ "$answer_python3" = 'N' ]]; then
+				break
+			fi
+	
+	 
+		done
+		if [[ "$answer_python3" = 'y' ]] || [[ "$answer_python3" == 'Y' ]]; then
+			brew install python3
+		fi
+
 		while true; do
 		read -p "Would you like to install the Go compiler? Enter Y/n: " answer2
 			if [[ "$answer2" = 'y' ]] || [[ "$answer2" = 'Y' ]] || [[ "$answer2" = 'N' ]] || [[ "$answer2" = 'n' ]]; then
@@ -115,11 +126,10 @@ Your choice> " choice
 	#    rm go-ipfs_v0.4.10_linux-386.tar.gz
 	#fi
 
-	apt-get update
 	#ipfs init
 	pip3 install web3
 	#pip3 install ipfsapi
-	pip3 install python-gnupg
+	#pip3 install python-gnupg
 
 
 	if [ ! -d $pwd/ddash ]; then
