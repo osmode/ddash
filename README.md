@@ -27,7 +27,7 @@ DDASH is a protocol for information exchange across Ethereum networks.
 ### Our goal is to build open economies for information exchange within and among organizations.
 
 ## NFO Coin
-NFO Coin is the utility token that powers DDASH, enabling the exchange of information and value across Ethereum networks. NFO Coin is based on the ERC20 standard but differs slightly in the nomenclature of its methods. The NFO ABI and contract are located in the source directory and can be directly inspected at address 0x3100047369b54c34042B9DC138C02A0567D90A7a on the Ethereum main network.
+NFO Coin is the utility token that powers DDASH, enabling the exchange of information and value across Ethereum networks. NFO Coin is based on the ERC20 standard. The NFO ABI and contract are located in the source directory and can be directly inspected at address 0x3100047369b54c34042B9DC138C02A0567D90A7a on the Ethereum main network.
 
 ### totalSupply: 10,000,000
 ### tokenName: NFO Coin
