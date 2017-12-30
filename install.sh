@@ -22,7 +22,8 @@ Your choice> " choice
     if [ "$choice" = 1 ]; then
 	tmux kill-session -t geth
 	#tmux kill-session -t ipfs
-	echo DDASH will now attempt to install necessary dependencies on your machine.
+	echo -e "\033[1;32mDDASH will now attempt to install necessary dependencies on your machine. \033[0m"
+
 	echo ""
 	os="$(uname -s)"
 	if [ "$os" = 'Darwin' ]; then
@@ -235,5 +236,7 @@ Your choice> " choice
     fi
 done
 
-echo Congratulations! DDASH has been installed on your machine. I will now attempt to start the GUI.
+echo -e "\033[1;32mCongratulations! DDASH has been installed on your machine. I will now attempt to start the GUI. \033[0m"
+
 python3 gui.py
+
