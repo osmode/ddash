@@ -22,7 +22,7 @@ Your choice> " choice
     if [ "$choice" = 1 ]; then
 	tmux kill-session -t geth
 	#tmux kill-session -t ipfs
-	echo Installing dependencies...
+	echo DDASH will now attempt to install necessary dependencies on your machine.
 	echo ""
 	os="$(uname -s)"
 	if [ "$os" = 'Darwin' ]; then
@@ -48,7 +48,7 @@ Your choice> " choice
 	
 	 
 		done
-		if [[ "$answer_python3" = 'y' ]] || [[ "$answer_python3" == 'Y' ]]; then
+		if [[ "$answer_python3" = 'y' ]] || [[ "$answer_python3" = 'Y' ]]; then
 			brew install python3
 		fi
 
@@ -145,16 +145,16 @@ Your choice> " choice
 	#echo "[" >> $PWD/ddash/data/static-nodes.json
 	#echo "]" >> $PWD/ddash/data/static-nodes.json
 
-	read -p "Please specify chainId (or leave blank for blackswan): " chainId
+	read -p "Please specify chainId (or leave blank for default): " chainId
 	if [ -z $chainId ]; then
 		chainId=32
 	fi		
 	read -p "Please specify mining difficulty (or leave blank for default): " diff
-	read -p "Please specify nonce (or leave blank for blackswan): " nonce
+	read -p "Please specify nonce (or leave blank for default): " nonce
 	if [ -z $nonce ]; then
 		nonce=32
 	fi
-	read -p "Please specify a gas limit (leave leave blank for 0x5FDFB0): " gaslimit
+	read -p "Please specify a gas limit (leave leave blank for default value 0x5FDFB0): " gaslimit
 
 	if [ -f $PWD/ddash/genesis.json ]; then
 	    rm $PWD/ddash/genesis.json
@@ -173,7 +173,7 @@ Your choice> " choice
 
 	# if no difficulty is specified, use default
 	if [ -z $diff ]; then
-	    echo "No difficulty specified. Using default..."
+	    echo "No difficulty specified. Using default."
 	    echo "  \"difficulty\" : \"0xF4240\", " >> $pwd/ddash/genesis.json
 	else
 	    echo User-defined difficulty: "$diff"
@@ -224,8 +224,7 @@ Your choice> " choice
 
     if [ "$choice" = 2 ]; then
 	rm -r $PWD/ddash/data/geth
-	rm -r $PWD/ddash/keystore
-	rm $PWD/ddash/data/history
+	rm -r $PWD/ddash/data_mainnet/geth
 	rm $pwd/ddash/genesis.json
 	rm $PWD/ddash/nodeInfo.ds
 	echo Chain and account data cleared from $pwd/ddash/data/geth. Genesis file deleted.
@@ -234,5 +233,7 @@ Your choice> " choice
     if [[ "$choice" = 3 ]] || [[ "$choice" == "exit" ]] || [[ "$choice" == "quit" ]]; then
 	exit
     fi
-
 done
+
+echo Congratulations! DDASH has been installed on your machine. I will now attempt to start the GUI.
+python3 gui.py
