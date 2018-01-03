@@ -113,12 +113,12 @@ class TwinPeaks:
 		if choice == NFO_TX_OPTIONS[0]: # Buy NFO Coin
 			print("Trying to purchase tokens using ",amount," Ether.")
 			self.last_nfo_tx_amount = amount
-			tx = self.nfointerface.buy_tokens(self.gas_entry.get())
+			tx = self.nfointerface.buy_tokens(gas_entry.get())
 			return tx
 
 			try:
-				self.nfointerface.tx['gas'] = 100000
-				self.nfointerface.set_gas(self.gas_entry.get())
+				self.nfointerface.tx['gas'] = 50000
+				self.nfointerface.set_gas(gas_entry.get())
 				tx = self.nfointerface.buy_tokens(amount)
 			except:
 				tx = None
@@ -135,8 +135,8 @@ class TwinPeaks:
 			return tx
 
 			try:
-				self.nfointerface.set_gas(self.gas_entry.get())
-				tx = self.nfointerface.sell_tokens(self.gas_entry.get())
+				self.nfointerface.set_gas(gas_entry.get())
+				tx = self.nfointerface.sell_tokens(gas_entry.get())
 			except:
 				tx = None
 				print("Failed to sell tokens")
@@ -145,7 +145,6 @@ class TwinPeaks:
 	def handle_set_gas(self):
 		new_gas = manifesto_gas_entry.get()
 		if new_gas:
-			print("Setting gas to: ",new_gas)
 			new_gas=int(new_gas)
 			self.manifestointerface.set_gas(new_gas)
 
@@ -289,8 +288,8 @@ class TwinPeaks:
 		selection = widget.curselection()
 		value = widget.get(selection[0])
 		row = proposalID = selection[0]
-		print("selection: ",selection[0])
-		print("value: ",value)
+		#print("selection: ",selection[0])
+		#print("value: ",value)
 		
 		text = ""
 		p = twinpeaks.manifestointerface.get_proposal_by_row(row)
@@ -322,6 +321,7 @@ class TwinPeaks:
 		self.context = "manifesto"
 		self.manifestointerface = ManifestoInterface(mainnet=False)
 		self.manifestointerface.load_contract(mainnet=False)
+		root.geometry('{}x{}'.format(950, 550))
 
 		if not self.manifestointerface.ethereum_acc_pass:
 			answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
@@ -363,6 +363,8 @@ class TwinPeaks:
 		if not self.ready:
 			return
 		self.context="nfocoin"
+		root.geometry('{}x{}'.format(1000, 800))
+
 		address_label.grid()
 		address_entry.grid()
 		balance_label.grid()
@@ -473,10 +475,20 @@ class TwinPeaks:
 						self.manifestointerface.ethereum_acc_pass=answer
 	
 
-			self.manifestointerface.load_contract(contract_name='manifesto', contract_address=blackswan_manifesto_address,mainnet=False)
-			manifesto_address_entry.delete(0,END)
-			manifesto_address_entry.insert(0, self.manifestointerface.tx['to'])
+			print("manifesto_address_entry: ",manifesto_address_entry.get())
 
+			self.manifestointerface.load_contract(contract_name='manifesto', contract_address=self.manifestointerface.is_valid_contract_address(manifesto_address_entry.get()) or blackswan_manifesto_address,mainnet=False)
+
+			if not self.manifestointerface.is_valid_contract_address(manifesto_address_entry.get()):
+				manifesto_address_entry.delete(0,END)
+				manifesto_address_entry.insert(0, blackswan_manifesto_address)
+
+			# BOOKMARK 
+			if self.manifestointerface.last_contract_address != manifesto_address_entry.get():
+				l.delete(0, END)
+				new_proposal_label.configure(text="")
+				PROPOSALS.clear() 	
+				self.manifestointerface.last_contract_address = self.manifestointerface.tx['to']
 			num_proposals = self.manifestointerface.get_proposal_count()
 			text = ""
 			text+="Number of proposals: "+str(num_proposals)+"\n\n"
@@ -497,13 +509,12 @@ class TwinPeaks:
 
 				i+=1
 
-			#proposals_text.delete(1.0,END)
-			#proposals_text.insert(1.0, text)
-			# populate default gas price
-			# note this is  manually set - need a way to automatically calculate
 			if not manifesto_gas_entry.get():
 				manifesto_gas_entry.delete(0,END)
 				manifesto_gas_entry.insert(0,"70000")
+
+			if manifesto_gas_entry.get():
+				self.manifestointerface.set_gas(int(manifesto_gas_entry.get()))
 
 		if hasattr(self,'nfointerface'):
 			if self.bci:
@@ -517,7 +528,7 @@ class TwinPeaks:
 
 
 
-		self.master.after(30000,self.clock)
+		self.master.after(10000,self.clock)
 
 def Manifesto():
 	if twinpeaks.network != "blackswan":
@@ -535,7 +546,7 @@ def About():
 	print("This is a simple example of a menu")
     
 root = Tk()
-root.geometry('{}x{}'.format(1000, 800))
+root.geometry('{}x{}'.format(1000, 600))
 
 twinpeaks = TwinPeaks(root)
 menubar = Menu(root)
@@ -668,10 +679,11 @@ close_button.grid(row=10, column=6, sticky="e")
 
 # MANIFESTO layout
 manifesto_address_label = Label(manifesto_frame,text="Manifesto.sol address:")
-manifesto_address_label.grid(row=2,column=0,sticky=NE)
+manifesto_address_label.grid(row=2,column=0,sticky=NW)
 manifesto_address_label.grid_remove()
 manifesto_address_entry = Entry(manifesto_frame)
-manifesto_address_entry.grid(row=2,column=1,columnspan=3,sticky=NW)
+manifesto_address_entry.grid(row=2,column=0,columnspan=3)
+manifesto_address_entry.config(width=40)
 manifesto_address_entry.grid_remove() 
 
 proposals_scrollbar = Scrollbar(manifesto_frame) 
@@ -684,7 +696,6 @@ proposals_text = Text(manifesto_frame, wrap=WORD, yscrollcommand=proposals_scrol
 #proposals_text.grid_remove()
 #proposals_scrollbar.grid_remove() 
 
-# BOOKMARK
 l = Listbox(manifesto_frame, width=5, height=10)
 l.bind("<<ListboxSelect>>", twinpeaks.onProposalClick)
 l.grid(column=0,row=3,sticky=(N,W,E,S))

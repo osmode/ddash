@@ -16,6 +16,7 @@ class BCInterface:
 	# by default
 
 	def __init__(self,host='localhost',port=5001,mainnet=False):
+		self.last_contract_address = None
 		self.last_hash_added = None
 		#self.api = ipfsapi.connect(host='127.0.0.1',port=port)
 		# self.web3 = Web3(HTTPProvider('http://localhost:8545'))
@@ -225,6 +226,12 @@ class BCInterface:
 		print("Decreasing gas to ", new_gas_value)
 		self.tx['gas'] = new_gas_value
 		return new_gas_value
+
+	def is_valid_contract_address(self, addr):
+		if len(addr) == 42:
+			return addr
+		else:
+			return False
 
 
 

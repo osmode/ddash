@@ -26,9 +26,9 @@ class ManifestoInterface(BCInterface):
 	# contract_name is without the sol extension
 	def load_contract(self, mainnet, contract_name='manifesto', contract_address=None):
 	
-		if mainnet:
+		if mainnet and not contract_address:
 			contract_address = mainnet_manifesto_address
-		else:
+		if not mainnet and not contract_address:
 			contract_address = blackswan_manifesto_address
 
 		sender_address = self.eth_accounts[self.account_index]
@@ -125,7 +125,6 @@ class ManifestoInterface(BCInterface):
 	'''
 
 	def set_gas(self, value):
-		print("Setting gas to: ",value)
 		if 'gas' not in self.tx.keys():
 			self.tx['gas'] = value 
 		self.tx['gas'] = value
