@@ -143,7 +143,7 @@ class TwinPeaks:
 				pass
 
 	def handle_set_gas(self):
-		new_gas = manifesto_gas_entry.get()
+		new_gas = gas_entry.get()
 		if new_gas:
 			new_gas=int(new_gas)
 			self.manifestointerface.set_gas(new_gas)
@@ -233,7 +233,6 @@ class TwinPeaks:
 	def launch(self):
 
 		self.ready = True
-		self.nfocoin_context()
 
 		choice = self.network_variable.get()
 
@@ -276,6 +275,11 @@ class TwinPeaks:
 
 		ACCOUNT_OPTIONS = self.bci.eth_accounts
 		self.account_variable.set(ACCOUNT_OPTIONS[0])
+		messagebox.showinfo("Success", "You are connected to "+self.network+". Select a contract from the top menu bar.")
+		current_network_label.config(text="You are connected to "+self.network)
+		network_label.grid_remove()
+		network_option.grid_remove()
+		launch_button.grid_remove()
 
 		# ugly hack
 		global account_option
@@ -319,8 +323,9 @@ class TwinPeaks:
 		if not self.ready:
 			return
 		self.context = "manifesto"
-		self.manifestointerface = ManifestoInterface(mainnet=False)
-		self.manifestointerface.load_contract(mainnet=False)
+		if not hasattr(self, 'manifestointerface'):
+			self.manifestointerface = ManifestoInterface(mainnet=False)
+			self.manifestointerface.load_contract(mainnet=False)
 		root.geometry('{}x{}'.format(950, 700))
 
 		if not self.manifestointerface.ethereum_acc_pass:
@@ -332,27 +337,19 @@ class TwinPeaks:
 
 		manifesto_address_label.grid()
 		manifesto_address_entry.grid()
-		#proposals_scrollbar.grid()
-		#proposals_text.grid()
 		l.grid()
 		new_proposal_label.grid()
 		new_proposal_text.grid() 
 		new_proposal_button.grid()
-		#vote_proposalID_label.grid()
-		#vote_proposalID_entry.grid()
-		#vote_label.grid()
-		#vote_entry.grid()
 		vote_button.grid()
-		#execute_proposal_label.grid()
-		#execute_proposal_entry.grid()
-		#execute_proposal_button.grid() 
-		manifesto_gas_label.grid()
-		manifesto_gas_entry.grid()
-		manifesto_set_gas_button.grid()
+		current_network_label.grid()
+		current_network_label.config(text="Your are connected to "+self.network)
+		gas_label.grid()
+		gas_entry.grid()
+		set_gas_button.grid()
 
 		vote_yes_radio.grid()
 		vote_no_radio.grid()
-		#more_info_label.grid()
 
 		top_frame.grid()
 		manifesto_frame.grid()
@@ -362,7 +359,7 @@ class TwinPeaks:
 		if not self.ready:
 			return
 		self.context="nfocoin"
-		root.geometry('{}x{}'.format(1000, 800))
+		root.geometry('{}x{}'.format(1000, 700))
 
 		address_label.grid()
 		address_entry.grid()
@@ -375,17 +372,23 @@ class TwinPeaks:
 		account_label.grid()
 		new_account_button.grid()
 		unlock_account_button.grid()
-		network_label.grid()
+		#network_label.grid()
 		close_button.grid()
-		launch_button.grid()
+		#launch_button.grid()
 
 		top_frame.grid()
 		center_frame.grid()
 		transaction_frame.grid()
-		account_frame.grid()
-		account_frame.grid()
-		network_frame.grid()
-	
+		#account_frame.grid()
+		network_frame.grid() 
+			
+		current_network_label.grid()
+		current_network_label.config(text="Your are connected to "+self.network)
+		gas_label.grid()
+		gas_entry.grid()
+		set_gas_button.grid()
+
+
 	def clear_screen(self):
 		if not self.ready:
 			return
@@ -407,9 +410,9 @@ class TwinPeaks:
 		execute_proposal_label.grid_remove()
 		execute_proposal_entry.grid_remove()
 		execute_proposal_button.grid_remove() 
-		manifesto_gas_label.grid_remove()
-		manifesto_gas_entry.grid_remove()
-		manifesto_set_gas_button.grid_remove()
+		gas_label.grid_remove()
+		gas_entry.grid_remove()
+		set_gas_button.grid_remove()
 
 		address_label.grid_remove()
 		address_entry.grid_remove()
@@ -507,12 +510,12 @@ class TwinPeaks:
 
 				i+=1
 
-			if not manifesto_gas_entry.get():
-				manifesto_gas_entry.delete(0,END)
-				manifesto_gas_entry.insert(0,"70000")
+			if not gas_entry.get():
+				gas_entry.delete(0,END)
+				gas_entry.insert(0,"70000")
 
-			if manifesto_gas_entry.get():
-				self.manifestointerface.set_gas(int(manifesto_gas_entry.get()))
+			if gas_entry.get():
+				self.manifestointerface.set_gas(int(gas_entry.get()))
 
 		if hasattr(self,'nfointerface'):
 			if self.bci:
@@ -524,6 +527,15 @@ class TwinPeaks:
 					address_entry.delete(0,END)
 					address_entry.insert(0,self.nfointerface.eth_accounts[self.nfointerface.account_index])
 
+			try:
+				if not gas_entry.get():
+					gas_entry.delete(0,END)
+					gas_entry.insert(0,"70000")
+
+				if _gas_entry.get():
+					self.nfointerface.set_gas(int(gas_entry.get()))
+			except:
+				pass
 
 
 		self.master.after(10000,self.clock)
@@ -601,12 +613,12 @@ center_frame = Frame(root, bg='white')
 center_frame.grid(row=1,sticky="new", padx=(50,10) )
 center_frame.grid_remove()
 transaction_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken", borderwidth=2)
-transaction_frame.grid(row=2,sticky="ew", padx=(50,50))
+transaction_frame.grid(row=2,sticky="new", padx=(50,50), pady=(50,50))
 transaction_frame.grid_remove()
 account_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken")
 account_frame.grid(row=3,sticky="ew")
 account_frame.grid_remove()
-network_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken",borderwidth=2)
+network_frame = Frame(root, bg='#edffef', width=1000, height=100,padx=40, pady=20, relief="sunken",borderwidth=2)
 network_frame.grid(row=4,sticky="ew")
 #network_frame.grid_remove()
 
@@ -635,14 +647,6 @@ nfocoin_balance_label.grid_remove()
 nfo_tx_entry = Entry(transaction_frame) 
 nfo_tx_entry.grid(row=6, column=0)
 nfo_tx_entry.grid_remove()
-gas_label = Label(transaction_frame,text="Gas:")
-gas_label.grid(row=5,column=1)
-gas_label.grid_remove()
-gas_entry = Entry(transaction_frame)
-gas_entry.grid(row=6,column=1)
-gas_entry.insert(0, "62136")
-gas_entry.grid_remove()
-
 nfo_tx_variable = StringVar()
 nfo_tx_variable.set(NFO_TX_OPTIONS[0])
 nfo_tx_option = OptionMenu(transaction_frame, nfo_tx_variable, *NFO_TX_OPTIONS, command=twinpeaks.nfotxdropdown) 
@@ -763,15 +767,18 @@ execute_proposal_button = Button(manifesto_frame, text="Execute Proposal",comman
 execute_proposal_button.grid(row=6,column=2)
 execute_proposal_button.grid_remove()
 
-manifesto_gas_label = Label(network_frame, text="Gas: ")
-manifesto_gas_label.grid(row=10,column=1, sticky="se")
-manifesto_gas_label.grid_remove()
-manifesto_gas_entry = Entry(network_frame)
-manifesto_gas_entry.grid(row=10,column=2, sticky=W)
-manifesto_gas_entry.grid_remove()
-manifesto_set_gas_button = Button(network_frame, text="Set Gas Amount",command=twinpeaks.handle_set_gas)
-manifesto_set_gas_button.grid(row=10,column=3,sticky=E)
-manifesto_set_gas_button.grid_remove()
+current_network_label = Label(network_frame, text="")
+current_network_label.grid(row=9,column=2,sticky='se')
+
+gas_label = Label(network_frame, text="Gas: ")
+gas_label.grid(row=10,column=1, sticky="se")
+gas_label.grid_remove()
+gas_entry = Entry(network_frame)
+gas_entry.grid(row=10,column=2, sticky=W)
+gas_entry.grid_remove()
+set_gas_button = Button(network_frame, text="Set Gas Amount",command=twinpeaks.handle_set_gas)
+set_gas_button.grid(row=10,column=3,sticky=E)
+set_gas_button.grid_remove()
 
 root.after(0,update,0)
 root.mainloop()
