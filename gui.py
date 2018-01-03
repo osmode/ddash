@@ -1,5 +1,7 @@
 from tkinter import simpledialog, messagebox
 from tkinter import *
+from tkinter.font import Font
+from tkinter import ttk
 import subprocess, os
 from subprocess import call
 import sys, datetime
@@ -10,6 +12,7 @@ from fsinterface import *
 from nfointerface import *
 from manifestointerface import *
 from getpass import getpass
+import time
 
 
 # Flags to instruct DDASH to broadcast enode address to blockchain
@@ -34,6 +37,8 @@ NFO_TX_OPTIONS = [
 ACCOUNT_OPTIONS = {}
 account_option = None
 
+PROPOSALS = []
+
 '''
 intro = r"""
 
@@ -47,9 +52,7 @@ intro = r"""
    ::: Distributed Data Sharing Hyperledger :::
 """
 '''
-intro = r"""
-   ddash   
-"""
+intro = r"""ddash"""
 
 def get_value_from_index(input_phrase,index,convert_to='integer'):
     input_phrase = input_phrase.split()
@@ -154,16 +157,24 @@ class TwinPeaks:
 			self.manifestointerface.executeProposal(int(proposalID))
 
 	def handle_vote(self):
-		proposalID = self.vote_proposalID_entry.get()
-		vote = self.vote_entry.get()
-		vote = vote.lower()
+		proposalID = vote_proposalID_entry.get()
+		if vote_choice.get() == "yes": vote = "yes"
+		elif vote_choice.get() == "no": vote = "no"
+		else: vote = None
+
+		if vote:
+			index = PROPOSALS.index(l.get(ACTIVE)) 
+		
+		proposalID = index
+		#vote = vote_entry.get()
+		#vote = vote.lower()
 		print("proposalID: ",proposalID)
 		print("vote: ",vote)
 		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
 
-		if vote[0]=='y':
+		if vote=='yes':
 			self.manifestointerface.vote(int(proposalID),True)
-		if vote[0]=='n':
+		if vote=='no':
 			self.manifestointerface.vote(int(proposalID),False)
 		
 
@@ -172,7 +183,7 @@ class TwinPeaks:
 	Responds to button when clicked to submit new proposal
 	'''
 	def handle_new_proposal(self):
-		description = self.new_proposal_text.get(1.0,END)
+		description = new_proposal_text.get(1.0,END)
 		print("New Proposal: ",description)
 		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
 		self.manifestointerface.new_proposal(description)
@@ -273,6 +284,33 @@ class TwinPeaks:
 		account_option.grid(row=7,column=1,pady=20)
 
 
+	def onProposalClick(self, event):
+		widget = event.widget
+		selection = widget.curselection()
+		value = widget.get(selection[0])
+		row = proposalID = selection[0]
+		print("selection: ",selection[0])
+		print("value: ",value)
+		
+		text = ""
+		p = twinpeaks.manifestointerface.get_proposal_by_row(row)
+		text+="Proposal ID: "+str(row)+"\n"
+		text+="Proposal description: "+p[0].strip()+"\n"
+		text+="Current time: "+str(time.time()).split('.')[0] +"\n"
+
+		if time.time() > p[1]:
+			text+="Status: Expired\n"
+		else:
+			text+="Status: Voting period open\n"
+
+		text+="Voting deadline: "+str(p[1])+"\n"
+		#text+="Executed: "+str(p[2])+"\n"
+		text+="Passed: "+str(p[3])+"\n"
+		text+="Number of votes: "+str(p[4])+"\n\n"
+		
+		new_proposal_label.configure(text=text)
+
+
 	def close(self):
 		process=subprocess.Popen("tmux kill-session -t geth".split())
 		#process=subprocess.Popen("tmux kill-session -t ipfs".split())
@@ -294,23 +332,28 @@ class TwinPeaks:
 
 		manifesto_address_label.grid()
 		manifesto_address_entry.grid()
-		proposals_scrollbar.grid()
-		proposals_text.grid()
+		#proposals_scrollbar.grid()
+		#proposals_text.grid()
+		l.grid()
 		new_proposal_label.grid()
 		new_proposal_scrollbar.grid()
 		new_proposal_text.grid() 
 		new_proposal_button.grid()
-		vote_proposalID_label.grid()
-		vote_proposalID_entry.grid()
-		vote_label.grid()
-		vote_entry.grid()
+		#vote_proposalID_label.grid()
+		#vote_proposalID_entry.grid()
+		#vote_label.grid()
+		#vote_entry.grid()
 		vote_button.grid()
-		execute_proposal_label.grid()
-		execute_proposal_entry.grid()
-		execute_proposal_button.grid() 
+		#execute_proposal_label.grid()
+		#execute_proposal_entry.grid()
+		#execute_proposal_button.grid() 
 		manifesto_gas_label.grid()
 		manifesto_gas_entry.grid()
 		manifesto_set_gas_button.grid()
+
+		vote_yes_radio.grid()
+		vote_no_radio.grid()
+		#more_info_label.grid()
 
 		top_frame.grid()
 		manifesto_frame.grid()
@@ -346,8 +389,10 @@ class TwinPeaks:
 		if not self.ready:
 			return
 
-		proposals_scrollbar.grid_remove() 
-		proposals_text.grid_remove()
+		gif_label.grid_remove()
+		#proposals_scrollbar.grid_remove() 
+		#proposals_text.grid_remove()
+		l.grid_remove()
 		manifesto_address_label.grid_remove()
 		manifesto_address_entry.grid_remove()
 		new_proposal_scrollbar.grid_remove()
@@ -390,7 +435,6 @@ class TwinPeaks:
 		account_frame.grid_remove()
 		network_frame.grid_remove()
 
-		gif_label.grid_remove()
 	
 	def clock(self):
 
@@ -445,16 +489,21 @@ class TwinPeaks:
 				text+="Executed: "+str(p[2])+"\n"
 				text+="Passed: "+str(p[3])+"\n"
 				text+="Number of votes: "+str(p[4])+"\n\n"
+
+				#l.delete('end') 
+				if p[0] not in PROPOSALS:
+					l.insert('end', p[0])
+					PROPOSALS.append(p[0])
+
 				i+=1
 
-			proposals_text.delete(1.0,END)
-			proposals_text.insert(1.0, text)
-			
+			#proposals_text.delete(1.0,END)
+			#proposals_text.insert(1.0, text)
 			# populate default gas price
 			# note this is  manually set - need a way to automatically calculate
 			if not manifesto_gas_entry.get():
 				manifesto_gas_entry.delete(0,END)
-				manifesto_gas_entry.insert(0,"62136")
+				manifesto_gas_entry.insert(0,"70000")
 
 		if hasattr(self,'nfointerface'):
 			if self.bci:
@@ -532,24 +581,23 @@ def update(ind):
 
 
 manifesto_frame = Frame(root) 
-manifesto_frame.grid(row=1,stick="ew")
+manifesto_frame.grid(row=1,stick="ew",padx=(100,10), sticky=NW)
 manifesto_frame.grid_remove()
 
-top_frame = Frame(root, bg='white', width=1000, height=200, relief="sunken")
-top_frame.grid(row=0, sticky="ew")
-
+top_frame = Frame(root, bg='white', width=1000, height=150, relief="sunken")
+top_frame.grid(row=0, sticky="sew", padx=(50,10), pady=(50,10))
 
 #top_frame.grid_remove()
-center_frame = Frame(root, bg='white', width=1000, height=200,padx=40, pady=40, relief="sunken")
-center_frame.grid(row=1,sticky="ew")
+center_frame = Frame(root, bg='white')
+center_frame.grid(row=1,sticky="new", padx=(50,10) )
 center_frame.grid_remove()
 transaction_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken", borderwidth=2)
-transaction_frame.grid(row=2,sticky="ew")
+transaction_frame.grid(row=2,sticky="ew", padx=(50,50))
 transaction_frame.grid_remove()
 account_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken")
 account_frame.grid(row=3,sticky="ew")
 account_frame.grid_remove()
-network_frame = Frame(root, bg='white', width=1000, height=100,padx=200, pady=20, relief="sunken",borderwidth=2)
+network_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken",borderwidth=2)
 network_frame.grid(row=4,sticky="ew")
 #network_frame.grid_remove()
 
@@ -613,41 +661,73 @@ network_option = OptionMenu(network_frame, twinpeaks.network_variable, *NETWORK_
 network_option.grid(row=9,column=1,pady=20)
 
 launch_button = Button(network_frame, text="Launch", command=twinpeaks.launch, bg='white')
-launch_button.grid(row=14, column=1)
+launch_button.grid(row=10, column=1)
 
-close_button = Button(network_frame, text="Close", command=twinpeaks.close, bg='white' )
-close_button.grid(row=14, column=0)
+close_button = Button(network_frame, text="Exit", command=twinpeaks.close, bg='white' )
+close_button.grid(row=10, column=6, sticky="e")
 
 # MANIFESTO layout
 manifesto_address_label = Label(manifesto_frame,text="Manifesto.sol address:")
-manifesto_address_label.grid(row=2,column=0)
+manifesto_address_label.grid(row=2,column=0,sticky=NE)
 manifesto_address_label.grid_remove()
 manifesto_address_entry = Entry(manifesto_frame)
-manifesto_address_entry.grid(row=2,column=1,columnspan=3)
+manifesto_address_entry.grid(row=2,column=1,columnspan=3,sticky=NW)
 manifesto_address_entry.grid_remove() 
 
 proposals_scrollbar = Scrollbar(manifesto_frame) 
 proposals_scrollbar.grid(row=3, column=0)
 proposals_text = Text(manifesto_frame, wrap=WORD, yscrollcommand=proposals_scrollbar.set,height=6,borderwidth=1)
-proposals_text.insert(END,"Loading proposals...")
+#proposals_text.insert(END,"Loading proposals...")
 
-proposals_text.grid(row=3, column=0)
-proposals_scrollbar.configure(command=proposals_text.yview)
-proposals_text.grid_remove()
-proposals_scrollbar.grid_remove() 
+#proposals_text.grid(row=3, column=0)
+#proposals_scrollbar.configure(command=proposals_text.yview)
+#proposals_text.grid_remove()
+#proposals_scrollbar.grid_remove() 
 
-new_proposal_label = Label(manifesto_frame,text="New Proposal:")
-new_proposal_label.grid(row=4,column=0)
+# BOOKMARK
+l = Listbox(manifesto_frame, width=5, height=10)
+l.bind("<<ListboxSelect>>", twinpeaks.onProposalClick)
+l.grid(column=0,row=3,sticky=(N,W,E,S))
+s = Scrollbar(manifesto_frame, orient=VERTICAL)
+s.config(command=l.yview)
+s.grid(row=3, column=0, sticky=(N,E,S))
+l['yscrollcommand'] = s.set
+
+more_info_label = Label(manifesto_frame, text="ProposalID: \nVotes: ")
+more_info_label.grid(row=4, column=0)
+more_info_label.grid_remove()
+vote_label = Label(manifesto_frame, text="Vote: ")
+vote_label.grid(row=2,column=1)
+vote_label.grid_remove()
+
+vote_choice = StringVar() 
+vote_yes_radio = Radiobutton(manifesto_frame, indicatoron=0, text="yes", variable=vote_choice, value='yes')
+vote_yes_radio.grid(row=3,column=3,sticky=W)
+vote_yes_radio.grid_remove()
+vote_no_radio = Radiobutton(manifesto_frame, text="no", variable=vote_choice, value='no',indicatoron=0)
+vote_no_radio.grid(row=3,column=2,sticky=E)
+vote_no_radio.grid_remove()
+
+vote_button = Button(manifesto_frame, text="Vote", command=twinpeaks.handle_vote)
+vote_button.grid(row=3,column=1,sticky=E)
+vote_button.grid_remove()
+
+#ttk.Sizegrip().grid(column=1, row=4, sticky=(S,E))
+
+new_proposal_label = Label(manifesto_frame,text="", justify=LEFT)
+new_proposal_label.grid(row=4,column=0, sticky=W)
 new_proposal_label.grid_remove()
 new_proposal_scrollbar = Scrollbar(manifesto_frame)
 new_proposal_scrollbar.grid(row=4,column=0)
-new_proposal_text = Text(manifesto_frame, wrap=WORD, yscrollcommand=proposals_scrollbar.set,height=5)
+new_proposal_text = Text(manifesto_frame, wrap=WORD, yscrollcommand=proposals_scrollbar.set,height=5,borderwidth=1)
+myFont = Font(family="Arial", size=14)
+new_proposal_text.configure(font=myFont)
 new_proposal_text.insert(END,"Enter a new proposal here...")
-new_proposal_text.grid(row=4,column=0)
+new_proposal_text.grid(row=5,column=0)
 new_proposal_scrollbar.grid_remove()
 new_proposal_text.grid_remove() 
 new_proposal_button = Button(manifesto_frame, text="Submit Proposal", command=twinpeaks.handle_new_proposal)
-new_proposal_button.grid(row=4,column=1)
+new_proposal_button.grid(row=6,column=0,sticky=W )
 new_proposal_button.grid_remove()
 
 vote_proposalID_label = Label(manifesto_frame, text="ProposalID: ")
@@ -663,9 +743,9 @@ vote_entry = Entry(manifesto_frame)
 vote_entry.grid(row=5,column=3)
 vote_entry.grid_remove()
 
-vote_button = Button(manifesto_frame, text="Submit Vote",command=twinpeaks.handle_vote)
-vote_button.grid(row=5,column=4)
-vote_button.grid_remove()
+#vote_button = Button(manifesto_frame, text="Submit Vote",command=twinpeaks.handle_vote)
+#vote_button.grid(row=5,column=4)
+#vote_button.grid_remove()
 
 execute_proposal_label = Label(manifesto_frame, text="Execute proposalD:")
 execute_proposal_label.grid(row=6,column=0)
@@ -677,14 +757,14 @@ execute_proposal_button = Button(manifesto_frame, text="Execute Proposal",comman
 execute_proposal_button.grid(row=6,column=2)
 execute_proposal_button.grid_remove()
 
-manifesto_gas_label = Label(manifesto_frame, text="Gas: ")
-manifesto_gas_label.grid(row=7,column=0)
+manifesto_gas_label = Label(network_frame, text="Gas: ")
+manifesto_gas_label.grid(row=10,column=1, sticky="se")
 manifesto_gas_label.grid_remove()
-manifesto_gas_entry = Entry(manifesto_frame)
-manifesto_gas_entry.grid(row=7,column=1)
+manifesto_gas_entry = Entry(network_frame)
+manifesto_gas_entry.grid(row=10,column=2, sticky=W)
 manifesto_gas_entry.grid_remove()
-manifesto_set_gas_button = Button(manifesto_frame, text="Set Gas Amount",command=twinpeaks.handle_set_gas)
-manifesto_set_gas_button.grid(row=7,column=2)
+manifesto_set_gas_button = Button(network_frame, text="Set Gas Amount",command=twinpeaks.handle_set_gas)
+manifesto_set_gas_button.grid(row=10,column=3,sticky=E)
 manifesto_set_gas_button.grid_remove()
 
 root.after(0,update,0)

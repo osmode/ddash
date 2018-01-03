@@ -142,15 +142,15 @@ class NFOInterface(BCInterface):
 	'''
 	def my_token_balance(self):
 		token_balance = self.contract.call().get_token_balance(self.eth_accounts[self.account_index])
-		print("Your Ethereum address: ",self.eth_accounts[self.account_index])
-		print("Your NFOCoin balance: ",token_balance)
+		#print("Your Ethereum address: ",self.eth_accounts[self.account_index])
+		#print("Your NFOCoin balance: ",token_balance)
 		
 		return token_balance
 
 	def get_token_balance(self, address):
 		token_balance = self.contract.call().get_token_balance(address)
-		print("Main net Ethereum address: ",address)
-		print("Main net NFOCoin balance: ",token_balance)
+		#print("Main net Ethereum address: ",address)
+		#print("Main net NFOCoin balance: ",token_balance)
 		return token_balance
 
 	def get_pvn_token_balance(self, address):
