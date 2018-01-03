@@ -373,7 +373,7 @@ class TwinPeaks:
 		new_account_button.grid()
 		unlock_account_button.grid()
 		#network_label.grid()
-		close_button.grid()
+		#close_button.grid()
 		#launch_button.grid()
 
 		top_frame.grid()
@@ -553,7 +553,8 @@ def NFOCoin():
 	twinpeaks.nfocoin_context()
 
 def About():
-	print("This is a simple example of a menu")
+	text = "DDASH\nInitial work: Omar Metwally\nomar.metwally@gmail.com\n\nhttps://github.com/osmode/ddash"
+	messagebox.showinfo("About DDASH", text)
     
 root = Tk()
 root.geometry('{}x{}'.format(1000, 600))
@@ -618,7 +619,7 @@ transaction_frame.grid_remove()
 account_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken")
 account_frame.grid(row=3,sticky="ew")
 account_frame.grid_remove()
-network_frame = Frame(root, bg='#edffef', width=1000, height=100,padx=40, pady=20, relief="sunken",borderwidth=2)
+network_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken",borderwidth=2)
 network_frame.grid(row=4,sticky="ew")
 #network_frame.grid_remove()
 
@@ -677,7 +678,7 @@ launch_button = Button(network_frame, text="Launch", command=twinpeaks.launch, b
 launch_button.grid(row=10, column=1)
 
 close_button = Button(network_frame, text="Exit", command=twinpeaks.close, bg='white' )
-close_button.grid(row=10, column=6, sticky="e")
+#close_button.grid(row=10, column=1, sticky="w")
 
 # MANIFESTO layout
 manifesto_address_label = Label(manifesto_frame,text="Manifesto.sol address:")
@@ -768,16 +769,16 @@ execute_proposal_button.grid(row=6,column=2)
 execute_proposal_button.grid_remove()
 
 current_network_label = Label(network_frame, text="")
-current_network_label.grid(row=9,column=2,sticky='se')
+current_network_label.grid(row=8,column=1,sticky='sw')
 
 gas_label = Label(network_frame, text="Gas: ")
-gas_label.grid(row=10,column=1, sticky="se")
+gas_label.grid(row=9,column=0, sticky="se")
 gas_label.grid_remove()
 gas_entry = Entry(network_frame)
-gas_entry.grid(row=10,column=2, sticky=W)
+gas_entry.grid(row=9,column=1, sticky=W)
 gas_entry.grid_remove()
 set_gas_button = Button(network_frame, text="Set Gas Amount",command=twinpeaks.handle_set_gas)
-set_gas_button.grid(row=10,column=3,sticky=E)
+set_gas_button.grid(row=9,column=2,sticky=E)
 set_gas_button.grid_remove()
 
 root.after(0,update,0)
