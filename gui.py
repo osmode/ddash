@@ -82,6 +82,7 @@ class TwinPeaks:
 		self.bci = None
 		self.fsi = None
 		self.nfointerface = None
+		self.ethereum_acc_pass = None
 
 		# self.ready changes to True when Launch button is clicked
 		self.ready = False
@@ -149,7 +150,7 @@ class TwinPeaks:
 			self.manifestointerface.set_gas(new_gas)
 
 	def handle_execute_proposal(self):
-		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
+		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
 		proposalID = self.execute_proposal_entry.get()
 		print("Attemtping to execute proposalID ",proposalID)
 		if proposalID:
@@ -169,7 +170,7 @@ class TwinPeaks:
 		#vote = vote.lower()
 		print("proposalID: ",proposalID)
 		print("vote: ",vote)
-		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
+		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
 
 		if vote=='yes':
 			self.manifestointerface.vote(int(proposalID),True)
@@ -182,9 +183,12 @@ class TwinPeaks:
 	Responds to button when clicked to submit new proposal
 	'''
 	def handle_new_proposal(self):
-		description = new_proposal_text.get(1.0,END)
+		description = new_proposal_text.get(1.0,END).strip()
 		print("New Proposal: ",description)
-		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
+		if "Enter a new proposal" in description:
+			return
+
+		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
 		self.manifestointerface.new_proposal(description)
 
 	'''
@@ -208,8 +212,10 @@ class TwinPeaks:
 		while not password:
 			password = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
 
-		self.bci.ethereum_acc_pass=password
+		self.ethereum_acc_pass=password
+		self.ethereum_acc_pass = password
 		self.bci.unlock_account(password)
+		self.manifestointerface.unlock_account(password)
 
 	'''
 	@class BCInterface @method handle_account_dropdown
@@ -328,11 +334,12 @@ class TwinPeaks:
 			self.manifestointerface.load_contract(mainnet=False)
 		root.geometry('{}x{}'.format(950, 700))
 
-		if not self.manifestointerface.ethereum_acc_pass:
+		if not self.ethereum_acc_pass:
 			answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
-			self.manifestointerface.ethereum_acc_pass=answer
+			#self.ethereum_acc_pass=answer
+			self.ethereum_acc_pass = answer
 
-		self.manifestointerface.unlock_account(self.manifestointerface.ethereum_acc_pass)
+		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
 
 
 		manifesto_address_label.grid()
@@ -354,7 +361,7 @@ class TwinPeaks:
 		top_frame.grid()
 		manifesto_frame.grid()
 		network_frame.grid()
-
+			
 	def nfocoin_context(self):
 		if not self.ready:
 			return
@@ -465,20 +472,14 @@ class TwinPeaks:
 					if answer == answer2:
 						# create new Ethereum account
 						self.manifestointerface.web3.personal.newAccount(answer)
-						self.manifestointerface.ethereum_acc_pass=answer
+						self.ethereum_acc_pass=answer
+			'''
 			else: # account(s) found
-				if self.bci.ethereum_acc_pass:
-					self.manifestointerface.ethereum_acc_pass = self.bci_ethereum_acc_pass
-				else:
-					if not self.manifestointerface.ethereum_acc_pass:
-						answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
+				if not self.ethereum_acc_pass:
+					answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
+					self.ethereum_acc_pass=answer
+			'''
 
-						self.manifestointerface.ethereum_acc_pass=answer
-	
-
-			print("manifesto_address_entry: ",manifesto_address_entry.get())
-
-			self.manifestointerface.load_contract(contract_name='manifesto', contract_address=self.manifestointerface.is_valid_contract_address(manifesto_address_entry.get()) or blackswan_manifesto_address,mainnet=False)
 
 			if not self.manifestointerface.is_valid_contract_address(manifesto_address_entry.get()):
 				manifesto_address_entry.delete(0,END)
@@ -512,10 +513,12 @@ class TwinPeaks:
 
 			if not gas_entry.get():
 				gas_entry.delete(0,END)
-				gas_entry.insert(0,"70000")
+				gas_entry.insert(0,"4000000")
 
 			if gas_entry.get():
 				self.manifestointerface.set_gas(int(gas_entry.get()))
+
+			self.manifestointerface.load_contract(contract_name='manifesto', contract_address=self.manifestointerface.is_valid_contract_address(manifesto_address_entry.get().strip()) or blackswan_manifesto_address,mainnet=False)
 
 		if hasattr(self,'nfointerface'):
 			if self.bci:
@@ -530,7 +533,10 @@ class TwinPeaks:
 			try:
 				if not gas_entry.get():
 					gas_entry.delete(0,END)
-					gas_entry.insert(0,"70000")
+					if self.network == "blackswan":
+						gas_entry.insert(0,"4000000")
+					elif self.ntwork == "mainnet":
+						gas_entry.insert(0,"70000")
 
 				if _gas_entry.get():
 					self.nfointerface.set_gas(int(gas_entry.get()))

@@ -84,6 +84,9 @@ contract Manifesto is owned {
     // shares proportionally give weight to votes 
     mapping (address => uint) sharesTokenAddress; 
 
+	// prevent duplicate proposals
+	mapping (bytes32 => bool) proposalHashes;
+
     event ProposalAdded(uint proposalID, string description);
     event Voted(uint proposalID, bool position, address voter);
     event ProposalTallied(uint proposalID, uint result, uint quorum, bool active);
@@ -181,15 +184,19 @@ contract Manifesto is owned {
     )
         returns (uint proposalID)
     {
-        
+        // prevent duplicate proposals
+		bytes32 hash = sha3(description);
+		assert( !proposalHashes[hash]); 
+
         proposalID = proposals.length++;
         Proposal storage p = proposals[proposalID];
         p.description = description;
-        p.proposalHash = sha3(description); 
+        p.proposalHash = hash;
         p.votingDeadline = now + debatingPeriodInMinutes * 1 minutes;
         p.executed = false;
         p.proposalPassed = false;
         p.numberOfVotes = 0;
+		proposalHashes[hash] = true;
         
         ProposalAdded(proposalID, description);
         numProposals = proposalID+1;

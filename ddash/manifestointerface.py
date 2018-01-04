@@ -14,7 +14,7 @@ from time import sleep
 
 #mainnet_manifesto = "0xed8c634ac8c2fa3694c32cb01b96a6912f8a7738"
 mainnet_manifesto_address = "0x0"
-blackswan_manifesto_address = "0x492267083544b1ea9801de2b8e02ba5b1bd3ca7f"
+blackswan_manifesto_address = "0x5feb7d54dc4075dbc985de74b8215171d08633df"
 
 class ManifestoInterface(BCInterface):
 
@@ -53,6 +53,8 @@ class ManifestoInterface(BCInterface):
 			print("You are now interfacing with contract at address "+contract_address)
 
 	def new_proposal(self, description):
+		print("self.contract.transact(self.tx).newProposal("+description+")")
+
 		tx = self.contract.transact(self.tx).newProposal(description)
 		return tx
 
