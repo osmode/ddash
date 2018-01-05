@@ -320,7 +320,7 @@ class TwinPeaks:
 		if not hasattr(self, 'manifestointerface'):
 			self.manifestointerface = ManifestoInterface(mainnet=False)
 			self.manifestointerface.load_contract(mainnet=False)
-		root.geometry('{}x{}'.format(950, 650))
+		root.geometry('{}x{}'.format(950, 700))
 
 		if not self.ethereum_acc_pass:
 			answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
@@ -626,7 +626,7 @@ nfocoin_balance_label.grid(row=4, column=0, sticky="w",pady=10)
 nfocoin_balance_label.grid_remove()
 
 ## transaction fraome
-buy_nfocoin_label = Label(transaction_frame,text="Buy NFO Coin with this amount of Ether in wei (1 we = 1e-18 Ether): ")
+buy_nfocoin_label = Label(transaction_frame,text="Buy NFO Coin with this amount of Ether in wei (1 wei = 1e-18 Ether): ")
 buy_nfocoin_label.grid(row=5,column=0, ipadx=10, ipady=10)
 buy_nfocoin_label.grid_remove()
 buy_nfocoin_entry = Entry(transaction_frame) 
