@@ -11,11 +11,9 @@ Distributed Data Sharing Hyperledger (DDASH)
 ---
 DDASH is a protocol for information exchange across Ethereum networks. 
 
+* Interface between private Ethereum networks and the main Ethereum network
 
-
-* Interface between private net Ether and main net Ether
-
-* Automate deployment of self-propagating Ethereum networks (no need for manual enode entry)
+* Automate deployment of private Ethereum networks (no need for manual enode entry)
 
 * Automate compilation and deployment of Ethereum contracts to any Ethereum blockchain 
 
