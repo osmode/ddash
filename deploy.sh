@@ -103,11 +103,11 @@ if [ ! -f "$output_file" ]; then
 else
 
     # deploy contract
-    echo Deploying contract "$output_file"
-    read -sp "Please enter your Ethereum account password: " pass
-    geth --exec "personal.unlockAccount(eth.accounts[0],\"$pass\");loadScript('/root/ddash/source/$contract_name.js')" --datadir=/root/ddash/data console
+    #echo Deploying contract "$output_file"
+    #read -sp "Please enter your Ethereum account password: " pass
+    #geth --exec "personal.unlockAccount(eth.accounts[0],\"$pass\");loadScript('/root/ddash/source/$contract_name.js')" --datadir=/root/ddash/data console
 
-    geth --datadir=$PWD/ddash/data --mine --minerthreads=1 console
+    #geth --datadir=$PWD/ddash/data --mine --minerthreads=1 console
 
 fi
 

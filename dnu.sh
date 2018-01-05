@@ -14,7 +14,7 @@ Welcome to the DDASH Network Utility. What would you like to do?
 1: Create new Ethereum account
 2: Show existing Ethereum accounts
 3: Start mining
-4: Compile and deploy contract
+4: Compile contract
 5: Start DDASH
 6: Show network settings
 7: Add peer

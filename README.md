@@ -107,7 +107,7 @@ DDASH currently interfaces with the NFO Coin contract (*nfocoin.sol*) and the Ma
 
 The Manifesto contract allows participants to create a manifesto through a transparent voting process. Anyone can submit and vote on proposals.
 
-![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/manifesto4.png)
+![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/manifesto5.png)
 
 ## The DDASH Command Line Interface
 ```

@@ -79,29 +79,19 @@ class TwinPeaks:
 		self.nfointerface = None
 		self.ethereum_acc_pass = None
 
-		# self.ready changes to True when Launch button is clicked
 		self.ready = False
-
-		'''
-		cmd = "./gui.sh"
-		process = subprocess.Popen('./gui.sh',stdin=subprocess.PIPE,
-			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		process.stdin.write("\n".encode())
-		process.stdin.write("\n".encode())
-		#process.stdin.write("peer count".encode())
-
-		process.stdin.close()
-		print (process.stdout.read())
-	
-		self.bci = BCInterface()
-		self.fsi = FSInterface()
-		self.contract_name='blackswan'
-		self.contract_address=blackswan_contract_address
-		self.bci.load_contract(contract_name=self.contract_name, contract_address=self.contract_address)
-		'''
+		self.last_selected_proposalID = None
 
 	def dropdown(self, value):
 		pass
+
+	def handle_tally(self):
+		if not hasattr(self, 'last_selected_proposalID'):
+			print("No proposal selected.")
+			return
+
+		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
+		self.manifestointerface.tally_votes(self.last_selected_proposalID)
 
 	def handle_buy_nfocoin(self):
 		eth_amt_in_wei = buy_nfocoin_entry.get()
@@ -280,10 +270,11 @@ class TwinPeaks:
 		selection = widget.curselection()
 		value = widget.get(selection[0])
 		row = proposalID = selection[0]
+		self.last_selected_proposalID = int(row)
 		#print("selection: ",selection[0])
 		#print("value: ",value)
 		
-		text = ""
+		text = "Proposal voting period: 60 minutes.\nNumber of votes needed to pass: 10.\n\n"
 		p = twinpeaks.manifestointerface.get_proposal_by_row(row)
 		text+="Proposal ID: "+str(row)+"\n"
 		text+="Proposal description: "+p[0].strip()+"\n"
@@ -320,7 +311,7 @@ class TwinPeaks:
 		if not hasattr(self, 'manifestointerface'):
 			self.manifestointerface = ManifestoInterface(mainnet=False)
 			self.manifestointerface.load_contract(mainnet=False)
-		root.geometry('{}x{}'.format(950, 700))
+		root.geometry('{}x{}'.format(950, 800))
 
 		if not self.ethereum_acc_pass:
 			answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
@@ -340,6 +331,7 @@ class TwinPeaks:
 		gas_label.grid()
 		gas_entry.grid()
 		set_gas_button.grid()
+		tally_button.grid() 
 
 		vote_yes_radio.grid()
 		vote_no_radio.grid()
@@ -707,6 +699,9 @@ vote_no_radio.grid_remove()
 vote_button = Button(manifesto_frame, text="Vote", command=twinpeaks.handle_vote)
 vote_button.grid(row=3,column=1,sticky=E)
 vote_button.grid_remove()
+tally_button = Button(manifesto_frame, text="Tally Votes", command=twinpeaks.handle_tally)
+tally_button.grid(row=4,column=1,sticky=W)
+tally_button.grid_remove() 
 
 #ttk.Sizegrip().grid(column=1, row=4, sticky=(S,E))
 

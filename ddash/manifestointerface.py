@@ -14,7 +14,7 @@ from time import sleep
 
 #mainnet_manifesto = "0xed8c634ac8c2fa3694c32cb01b96a6912f8a7738"
 mainnet_manifesto_address = "0x0"
-blackswan_manifesto_address = "0x5feb7d54dc4075dbc985de74b8215171d08633df"
+blackswan_manifesto_address = "0xf6e870db7475ad404e963f9ab63a9084c85257e7"
 
 class ManifestoInterface(BCInterface):
 
@@ -62,7 +62,7 @@ class ManifestoInterface(BCInterface):
 		tx = self.contract.transact(self.tx).vote(proposalID, vote)
 		return tx
 	
-	def executeProposal(self, proposalID):
+	def tally_votes(self, proposalID):
 		tx = self.contract.transact(self.tx).executeProposal(proposalID)
 		return tx
 
