@@ -249,7 +249,8 @@ contract Manifesto is owned {
 
         for (uint i = 0; i <  p.votes.length; ++i) {
             Vote storage v = p.votes[i];
-            uint voteWeight = sharesTokenAddress[v.voter];
+            //uint voteWeight = sharesTokenAddress[v.voter];
+			uint voteWeight = 1;
             quorum += voteWeight;
             if (v.inSupport) {
                 yea += voteWeight;
