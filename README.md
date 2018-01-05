@@ -24,6 +24,15 @@ DDASH is a protocol for information exchange across Ethereum networks.
 
 ### Our goal is to build open economies for information exchange within and among organizations.
 
+## Manifesto 
+The Manifesto contract allows participants to create a manifesto through a transparent voting process. Anyone can submit and vote on proposals. To interface with your own custom voting contracts (on any Ethereum network), simply replace the default Manifesto.sol address with your contract's address.
+
+
+![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/manifesto5.png)
+
+## Why DDASH?
+DDASH combines the benefits of private Ethereum networks with the benefits of the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer Ether among the main Ethereum network and private Ethereum networks.
+
 ## NFO Coin
 NFO Coin is the utility token that powers DDASH, enabling the exchange of information and value across Ethereum networks. NFO Coin is based on the ERC20 standard. The NFO ABI and contract are located in the source directory and can be directly inspected at address 0x3100047369b54c34042B9DC138C02A0567D90A7a on the Ethereum main network.
 
@@ -37,16 +46,6 @@ NFO Coin and Ether can be exchanged using the DDASH client, which can be launche
 ```
 python3 gui.py 
 ```
-
-## Why DDASH?
-DDASH combines the benefits of private Ethereum networks with the benefits of the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer Ether among the main Ethereum network and private Ethereum networks.
-
-## Prerequisites
----
-This project builds on work by the [Ethereum](https://www.ethereum.org), [web3.py](https://github.com/pipermerriam/web3.py), [IPFS](https://github.com/ipfs/ipfs) and [py-ipfs](https://github.com/ipfs/py-ipfs-api) communities. 
-
-The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs all dependencies (including the Go Ethereum client).
-
 ## Quickstart 
 DDASH, the DDASH Installer, and the DDASH Network Utility currently support Ubuntu 16.04 and Mac OS X.
 
@@ -102,14 +101,9 @@ Save Ethereum contracts in the *source* directory with the .sol extension.
 Use the DDASH GUI to exchange Ether for NFO Coin. 
 ![NFO Coin](https://s3-us-west-1.amazonaws.com/ddash/nfocoin3.png)
 
-## Toggling between contracts
-DDASH currently interfaces with the NFO Coin contract (*nfocoin.sol*) and the Manifesto contract (*manifesto.sol*). Toggle between contracts using the "Contract" menu.
-
-The Manifesto contract allows participants to create a manifesto through a transparent voting process. Anyone can submit and vote on proposals. To interface with your own custom voting contracts (on any Ethereum network), simply replace the default Manifesto.sol address with your contract's address.
-
-![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/manifesto5.png)
 
 ## The DDASH Command Line Interface
+DDASH also enables deployment of private Ethereum networks that can be joined without manually entering enode addresses via the DDASH Command Line Interface.
 ```
         _____  _____           _____ _    _ 
        |  __ \|  __ \   /\    / ____| |  | |
@@ -123,31 +117,17 @@ The Manifesto contract allows participants to create a manifesto through a trans
     Welcome to the DDASH Command Line Interface.
 
 [1]		ddash> peer count
-[2]		ddash> upload
-[3]		ddash> download
-[4]		ddash> hello
-[5]		ddash> listen
-[6]		ddash> broadcast
-[7]		ddash> quit
-[8]		ddash> show accounts
-[9]		ddash> use account 0
+[2]		ddash> listen
+[3]		ddash> broadcast
 
 ```
 The above commands:
 
 [1]  returns number of enodes found on chain
 
-[2]  upload meta-data of *share* directory's contents to blockchain 
+[2] query blockchain for peer enodes
 
-[3]  query blockchain for file meta-data
-
-[5] query blockchain for peer enodes
-
-[6] broadcast client enode to blockchain
-
-[8] enumerate Ethereum accounts
-
-[9] set current Ethereum account to zero-index account (last argument refers to account index)
+[3] broadcast client enode to blockchain
 
 
 ## Contribute
@@ -155,6 +135,11 @@ Please take a look at our [contribution documentation](https://github.com/osmode
 
 ## Code of conduct
 In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation. Read the full [Contributor Covenant](https://github.com/osmode/ddash/blob/master/docs/CODE_OF_CONDUCT.md). 
+
+## Prerequisites
+This project builds on work by the [Ethereum](https://www.ethereum.org), [web3.py](https://github.com/pipermerriam/web3.py), [IPFS](https://github.com/ipfs/ipfs) and [py-ipfs](https://github.com/ipfs/py-ipfs-api) communities. 
+
+The DDASH Installer, which currently supports Ubuntu 16.04 and Mac OS, installs all dependencies (including the Go Ethereum client).
 
 ## License
 [MIT License](https://github.com/osmode/ddash/blob/master/LICENSE) 
