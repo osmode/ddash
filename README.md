@@ -105,7 +105,7 @@ Use the DDASH GUI to exchange Ether for NFO Coin.
 ## Toggling between contracts
 DDASH currently interfaces with the NFO Coin contract (*nfocoin.sol*) and the Manifesto contract (*manifesto.sol*). Toggle between contracts using the "Contract" menu.
 
-The Manifesto contract allows participants to create a manifesto through a transparent voting process. Anyone can submit and vote on proposals.
+The Manifesto contract allows participants to create a manifesto through a transparent voting process. Anyone can submit and vote on proposals. To interface with your own custom voting contracts (on any Ethereum network), simply replace the default Manifesto.sol address with your contract's address.
 
 ![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/manifesto5.png)
 
