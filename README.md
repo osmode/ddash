@@ -102,7 +102,7 @@ Save Ethereum contracts in the *source* directory with the .sol extension.
 
 ## How to acquire NFO Coin
 Use the DDASH GUI to exchange Ether for NFO Coin. 
-![NFO Coin](https://s3-us-west-1.amazonaws.com/ddash/nfocoin.png)
+![NFO Coin](https://s3-us-west-1.amazonaws.com/ddash/nfocoin2.png)
 
 ## Toggling between contracts
 DDASH currently interfaces with the NFO Coin contract (*nfocoin.sol*) and the Manifesto contract (*manifesto.sol*). Toggle between contracts using the "Contract" menu.
