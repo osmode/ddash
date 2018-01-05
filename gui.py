@@ -29,11 +29,6 @@ NETWORK_OPTIONS = [
 	"Main Ethereum network"
 ]
 
-NFO_TX_OPTIONS = [
-	"Buy NFO Coin",
-	"Sell NFO Coin"
-]
-
 ACCOUNT_OPTIONS = {}
 account_option = None
 
@@ -71,7 +66,7 @@ def get_value_from_index(input_phrase,index,convert_to='integer'):
 class TwinPeaks:
 	def __init__(self, master):
 		self.master = master
-		master.title("DDASH")
+		master.title("ddash")
 		self.network=None
 		self.context = "home"
 		self.last_account_index = 0 
@@ -108,51 +103,40 @@ class TwinPeaks:
 	def dropdown(self, value):
 		pass
 
-	def nfotxdropdown(self, choice):
-		amount = self.nfo_tx_entry.get()
-		print("nfotxdropdown value: ",amount)
-		if choice == NFO_TX_OPTIONS[0]: # Buy NFO Coin
-			print("Trying to purchase tokens using ",amount," Ether.")
-			self.last_nfo_tx_amount = amount
-			tx = self.nfointerface.buy_tokens(gas_entry.get())
-			return tx
+	def handle_buy_nfocoin(self):
+		eth_amt_in_wei = buy_nfocoin_entry.get()
+		if not eth_amt_in_wei:
+			return
+		print("Attempting to buy "+str(eth_amt_in_wei)+" wei worth of NFO Coin")
 
-			try:
-				self.nfointerface.tx['gas'] = 50000
-				self.nfointerface.set_gas(gas_entry.get())
-				tx = self.nfointerface.buy_tokens(amount)
-			except:
-				tx = None
-				print("Failed to buy tokens")
-				pass
+		self.nfointerface.unlock_account(self.ethereum_acc_pass)
+		self.nfointerface.buy_tokens(eth_amt_in_wei)
 
-			return tx
-		if choice == NFO_TX_OPTIONS[1]: # Sell NFO Coin
-			self.nfointerface.tx['gas'] = 10000
-			print("Trying to sell ", amount, " tokens.")
-			self.last_nfo_tx_amount = amount
-			#self.nfointerface.decrease_gas(3)
-			tx = self.nfointerface.sell_tokens(self.gas_entry.get())
-			return tx
-
-			try:
-				self.nfointerface.set_gas(gas_entry.get())
-				tx = self.nfointerface.sell_tokens(gas_entry.get())
-			except:
-				tx = None
-				print("Failed to sell tokens")
-				pass
+	def handle_sell_nfocoin(self):
+		nfocoin_amt = sell_nfocoin_entry.get()
+		if not nfocoin_amt:
+			print("Please specify amount of NFO Coin to sell.")
+			return 
+		print("Attempting to sell "+str(nfocoin_amt)+" NFO Coin.")
+		self.nfointerface.unlock_account(self.ethereum_acc_pass)
+		self.nfointerface.sell_tokens(nfocoin_amt)
 
 	def handle_set_gas(self):
 		new_gas = gas_entry.get()
 		if new_gas:
 			new_gas=int(new_gas)
-			self.manifestointerface.set_gas(new_gas)
+
+			if self.context == "manifesto":
+				self.manifestointerface.set_gas(new_gas)
+			if self.context == "nfocoin":
+				self.nfointerface.set_gas(new_gas)
 
 	def handle_execute_proposal(self):
 		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
 		proposalID = self.execute_proposal_entry.get()
 		print("Attemtping to execute proposalID ",proposalID)
+		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
+
 		if proposalID:
 			self.manifestointerface.executeProposal(int(proposalID))
 
@@ -166,8 +150,6 @@ class TwinPeaks:
 			index = PROPOSALS.index(l.get(ACTIVE)) 
 		
 		proposalID = index
-		#vote = vote_entry.get()
-		#vote = vote.lower()
 		print("proposalID: ",proposalID)
 		print("vote: ",vote)
 		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
@@ -328,19 +310,23 @@ class TwinPeaks:
 	def manifesto_context(self):
 		if not self.ready:
 			return
+
 		self.context = "manifesto"
-		if not hasattr(self, 'manifestointerface'):
-			self.manifestointerface = ManifestoInterface(mainnet=False)
-			self.manifestointerface.load_contract(mainnet=False)
-		root.geometry('{}x{}'.format(950, 700))
 
 		if not self.ethereum_acc_pass:
 			answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
-			#self.ethereum_acc_pass=answer
+			self.ethereum_acc_pass = answer
+
+		if not hasattr(self, 'manifestointerface'):
+			self.manifestointerface = ManifestoInterface(mainnet=False)
+			self.manifestointerface.load_contract(mainnet=False)
+		root.geometry('{}x{}'.format(950, 650))
+
+		if not self.ethereum_acc_pass:
+			answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
 			self.ethereum_acc_pass = answer
 
 		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
-
 
 		manifesto_address_label.grid()
 		manifesto_address_entry.grid()
@@ -366,27 +352,27 @@ class TwinPeaks:
 		if not self.ready:
 			return
 		self.context="nfocoin"
-		root.geometry('{}x{}'.format(1000, 700))
+		root.geometry('{}x{}'.format(800, 800))
+
 
 		address_label.grid()
 		address_entry.grid()
 		balance_label.grid()
 		nfocoin_balance_label.grid()
 		buy_nfocoin_label.grid()
-		nfo_tx_entry.grid()
+		buy_nfocoin_entry.grid()
+		sell_nfocoin_label.grid()
+		sell_nfocoin_entry.grid()
+		sell_nfocoin_button.grid()
 		gas_label.grid()
 		gas_entry.grid()
 		account_label.grid()
 		new_account_button.grid()
 		unlock_account_button.grid()
-		#network_label.grid()
-		#close_button.grid()
-		#launch_button.grid()
 
 		top_frame.grid()
 		center_frame.grid()
 		transaction_frame.grid()
-		#account_frame.grid()
 		network_frame.grid() 
 			
 		current_network_label.grid()
@@ -394,7 +380,11 @@ class TwinPeaks:
 		gas_label.grid()
 		gas_entry.grid()
 		set_gas_button.grid()
+		buy_nfocoin_button.grid()
 
+		if not self.ethereum_acc_pass:
+			answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
+			self.ethereum_acc_pass = answer
 
 	def clear_screen(self):
 		if not self.ready:
@@ -426,7 +416,7 @@ class TwinPeaks:
 		balance_label.grid_remove()
 		nfocoin_balance_label.grid_remove()
 		buy_nfocoin_label.grid_remove()
-		nfo_tx_entry.grid_remove()
+		buy_nfocoin_entry.grid_remove()
 		gas_label.grid_remove()
 		gas_entry.grid_remove()
 		account_label.grid_remove()
@@ -448,21 +438,11 @@ class TwinPeaks:
 	
 	def clock(self):
 
-		#self.nfocoin_balance_label.grid_remove() 
-		#self.nfocoin_balance_label.grid()
-
 		time = datetime.datetime.now().strftime("Time: %H:%M:%S")
-		'''
-		if self.nfo_tx_entry:
-			self.nfo_tx_entry.delete(0,END)
-			self.nfo_tx_entry.insert(0,self.last_nfo_tx_amount)
-		'''
-
 		if hasattr(self,'manifestointerface'):
 			if len(self.manifestointerface.eth_accounts)==0:
 				address_entry.delete(0, END)
 				address_entry.insert(0, "No Ethereum account found.")
-				#self.address_label.configure(text="No Ethereum account found.")
 				balance_label.configure(text="Balance: 0 Ether")
 
 				answer = messagebox.askyesno("DDASH","I don't see any Ethereum accounts. Would you like to create one?")
@@ -530,19 +510,14 @@ class TwinPeaks:
 					address_entry.delete(0,END)
 					address_entry.insert(0,self.nfointerface.eth_accounts[self.nfointerface.account_index])
 
-			try:
 				if not gas_entry.get():
-					gas_entry.delete(0,END)
 					if self.network == "blackswan":
 						gas_entry.insert(0,"4000000")
-					elif self.ntwork == "mainnet":
+					elif self.network == "mainnet":
 						gas_entry.insert(0,"70000")
 
-				if _gas_entry.get():
+				if gas_entry.get():
 					self.nfointerface.set_gas(int(gas_entry.get()))
-			except:
-				pass
-
 
 		self.master.after(10000,self.clock)
 
@@ -563,7 +538,7 @@ def About():
 	messagebox.showinfo("About DDASH", text)
     
 root = Tk()
-root.geometry('{}x{}'.format(1000, 600))
+root.geometry('{}x{}'.format(500, 600))
 
 twinpeaks = TwinPeaks(root)
 menubar = Menu(root)
@@ -599,7 +574,7 @@ def update(ind):
 	frame = frames[ind%36]
 	gif_label.configure(image=frame)
 	if ind%36==0 and twinpeaks.context=="home":
-		gif_label.grid(row=1,column=0)
+		gif_label.grid(row=1,column=0, padx=20, sticky="w")
 	elif twinpeaks.context != "home" and ind%36==0:
 		gif_label.grid_remove()
 
@@ -633,35 +608,45 @@ network_frame.grid(row=4,sticky="ew")
 
 ## top frame
 intro_label = Label(top_frame, text=intro,font="Courier 60")
-intro_label.grid(row=0,columnspan=2,column=0)
-
+intro_label.grid(row=0)
 ## center frame
 address_label = Label(center_frame, text="Your Ethereum address: ")
-address_label.grid(row=1, columnspan=2)
+address_label.grid(row=1, sticky="w")
 address_label.grid_remove()
 address_entry = Entry(center_frame)  
-address_entry.grid(row=2, columnspan=3)
+address_entry.grid(row=2)
+address_entry.config(width=45)
 address_entry.grid_remove()
 
-balance_label = Label(center_frame,text="Ether Balance: ")
-balance_label.grid(row=3, column=1)
+balance_label = Label(center_frame,text="Ether Balance: " )
+balance_label.grid(row=3, column=0, sticky="w", pady=10)
 balance_label.grid_remove()
 nfocoin_balance_label = Label(center_frame,text="NFO Coin Balance: ")
-nfocoin_balance_label.grid(row=3, column=0,padx=10,pady=10)
+nfocoin_balance_label.grid(row=4, column=0, sticky="w",pady=10)
 nfocoin_balance_label.grid_remove()
 
 ## transaction fraome
-nfo_tx_entry = Entry(transaction_frame) 
-nfo_tx_entry.grid(row=6, column=0)
-nfo_tx_entry.grid_remove()
-nfo_tx_variable = StringVar()
-nfo_tx_variable.set(NFO_TX_OPTIONS[0])
-nfo_tx_option = OptionMenu(transaction_frame, nfo_tx_variable, *NFO_TX_OPTIONS, command=twinpeaks.nfotxdropdown) 
-
-#self.nfo_tx_option.grid(row=5, column=0)
-buy_nfocoin_label = Label(transaction_frame,text="Buy NFO Coin with this amount of Ether (in wei = 1e18 Ether): ")
+buy_nfocoin_label = Label(transaction_frame,text="Buy NFO Coin with this amount of Ether in wei (1 we = 1e-18 Ether): ")
 buy_nfocoin_label.grid(row=5,column=0, ipadx=10, ipady=10)
 buy_nfocoin_label.grid_remove()
+buy_nfocoin_entry = Entry(transaction_frame) 
+buy_nfocoin_entry.grid(row=6, column=0)
+buy_nfocoin_entry.config(width=50)
+buy_nfocoin_entry.grid_remove()
+buy_nfocoin_button = Button(transaction_frame, text="Buy",command=twinpeaks.handle_buy_nfocoin) 
+buy_nfocoin_button.grid(row=6,column=1,sticky="w")
+buy_nfocoin_button.grid_remove()
+
+sell_nfocoin_label = Label(transaction_frame,text="Sell this amount of NFO Coin (1000 NFO Coin = 1 Ether):")
+sell_nfocoin_label.grid(row=7,column=0, pady=40)
+sell_nfocoin_label.grid_remove()
+sell_nfocoin_entry = Entry(transaction_frame) 
+sell_nfocoin_entry.grid(row=8, column=0)
+sell_nfocoin_entry.config(width=50)
+sell_nfocoin_entry.grid_remove()
+sell_nfocoin_button = Button(transaction_frame, text="Sell", command=twinpeaks.handle_sell_nfocoin) 
+sell_nfocoin_button.grid(row=8,column=1,sticky="w")
+sell_nfocoin_button.grid_remove()
 
 account_label = Label(account_frame, text="Account: ",padx=20,pady=40)
 account_label.grid(row=7,column=0)
@@ -683,9 +668,6 @@ network_option.grid(row=9,column=1,pady=20)
 launch_button = Button(network_frame, text="Launch", command=twinpeaks.launch, bg='white')
 launch_button.grid(row=10, column=1)
 
-close_button = Button(network_frame, text="Exit", command=twinpeaks.close, bg='white' )
-#close_button.grid(row=10, column=1, sticky="w")
-
 # MANIFESTO layout
 manifesto_address_label = Label(manifesto_frame,text="Manifesto.sol address:")
 manifesto_address_label.grid(row=2,column=0,sticky=NW)
@@ -698,12 +680,6 @@ manifesto_address_entry.grid_remove()
 proposals_scrollbar = Scrollbar(manifesto_frame) 
 proposals_scrollbar.grid(row=3, column=0)
 proposals_text = Text(manifesto_frame, wrap=WORD, yscrollcommand=proposals_scrollbar.set,height=6,borderwidth=1)
-#proposals_text.insert(END,"Loading proposals...")
-
-#proposals_text.grid(row=3, column=0)
-#proposals_scrollbar.configure(command=proposals_text.yview)
-#proposals_text.grid_remove()
-#proposals_scrollbar.grid_remove() 
 
 l = Listbox(manifesto_frame, width=5, height=10)
 l.bind("<<ListboxSelect>>", twinpeaks.onProposalClick)
@@ -783,7 +759,7 @@ gas_label.grid_remove()
 gas_entry = Entry(network_frame)
 gas_entry.grid(row=9,column=1, sticky=W)
 gas_entry.grid_remove()
-set_gas_button = Button(network_frame, text="Set Gas Amount",command=twinpeaks.handle_set_gas)
+set_gas_button = Button(network_frame, text="Change Gas Amount",command=twinpeaks.handle_set_gas)
 set_gas_button.grid(row=9,column=2,sticky=E)
 set_gas_button.grid_remove()
 

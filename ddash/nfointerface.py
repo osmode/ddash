@@ -160,11 +160,10 @@ class NFOInterface(BCInterface):
 		return token_balance
 
 	def buy_tokens(self, amount):
-		print("Trying to buy ",amount," tokens...")
+		print("Trying to buy tokens worth "+str(amount)+" ether.")
 		self.tx['value'] = int(amount)
 		tx = self.contract.transact(self.tx).buy()
 		return tx
-
 
 	def sell_tokens(self, amount):
 		print("Trying to sell ",amount," tokens...")
@@ -183,7 +182,6 @@ class NFOInterface(BCInterface):
 		return tx
 
 	def set_gas(self, value):
-		print("Setting gas to: ",value)
 		if 'gas' not in self.tx.keys():
 			self.tx['gas'] = value 
 		self.tx['gas'] = value
