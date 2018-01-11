@@ -100,7 +100,7 @@ echo    }\) >> "$output_file"
 if [ ! -f "$output_file" ]; then
     echo Failed to create contract deployment script in "$output_file"
     exit 1
-else
+fi
 
     # deploy contract
     #echo Deploying contract "$output_file"
@@ -109,6 +109,5 @@ else
 
     #geth --datadir=$PWD/ddash/data --mine --minerthreads=1 console
 
-fi
 
 $SHELL
