@@ -13,7 +13,7 @@ from nfointerface import *
 from manifestointerface import *
 from nilometerinterface import *
 from getpass import getpass
-import time
+import time, atexit
 
 
 # Flags to instruct DDASH to broadcast enode address to blockchain
@@ -290,11 +290,6 @@ class TwinPeaks:
 		new_proposal_label.configure(text=text)
 
 
-	def close(self):
-		process=subprocess.Popen("tmux kill-session -t geth".split())
-		#process=subprocess.Popen("tmux kill-session -t ipfs".split())
-		self.master.quit()
-
 	def nilometer_context(self):
 		if not self.ready:
 			return
@@ -560,26 +555,25 @@ root.geometry('{}x{}'.format(500, 600))
 
 twinpeaks = TwinPeaks(root)
 menubar = Menu(root)
-root.config(menu=menubar)
-
 # layout all of the main containers
 root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)
 
-menubar.add_command(label="Hello!",command=root.quit)
-menubar.add_command(label="Quit!", command=root.quit)
 twinpeaks.clock()
 
-filemenu = Menu(menubar)
-filemenu.add_command(label="Manifesto", command=Manifesto)
-filemenu.add_command(label="NFO Coin", command=NFOCoin)
-filemenu.add_command(label="Nilometer",command=Nilometer)
-filemenu.add_separator()
-filemenu.add_command(label="Exit", command=twinpeaks.close)
-menubar.add_cascade(label="Contract", menu=filemenu)
+contractmenu = Menu(menubar)
+contractmenu.add_command(label="Manifesto", command=Manifesto)
+contractmenu.add_command(label="NFO Coin", command=NFOCoin)
+contractmenu.add_command(label="Nilometer",command=Nilometer)
+contractmenu.add_separator()
+menubar.add_cascade(label="Contract", menu=contractmenu)
+
 helpmenu = Menu(menubar)
 menubar.add_cascade(label="Help", menu=helpmenu)
 helpmenu.add_command(label="About...", command=About)
+
+
+root.config(menu=menubar)
 
 # the artwork
 
@@ -603,6 +597,13 @@ def update(ind):
 
 	root.after(100,update,ind)
 
+def on_close():
+	process=subprocess.Popen("tmux kill-session -t geth".split())
+	print("Quitting DDASH and killing geth...")
+	#process=subprocess.Popen("tmux kill-session -t ipfs".split())
+	twinpeaks.master.quit()
+	print("Done.")
+
 
 manifesto_frame = Frame(root) 
 manifesto_frame.grid(row=1,padx=(100,10), sticky=NW)
@@ -615,7 +616,6 @@ nilometer_frame.grid_remove()
 top_frame = Frame(root, bg='white', width=1000, height=150, relief="sunken")
 top_frame.grid(row=0, sticky="sew", padx=(50,10), pady=(50,10))
 
-#top_frame.grid_remove()
 center_frame = Frame(root, bg='white')
 center_frame.grid(row=1,sticky="new", padx=(50,10) )
 center_frame.grid_remove()
@@ -627,14 +627,13 @@ account_frame.grid(row=3,sticky="ew")
 account_frame.grid_remove()
 network_frame = Frame(root, bg='white', width=1000, height=100,padx=40, pady=20, relief="sunken",borderwidth=2)
 network_frame.grid(row=4,sticky="ew")
-#network_frame.grid_remove()
 
 # arrange elements within frames
 
-## top frame
+## TOP FRAME 
 intro_label = Label(top_frame, text=intro,font="Courier 60")
 intro_label.grid(row=0)
-## center frame
+## CENTER FRAME 
 address_label = Label(center_frame, text="Your Ethereum address: ")
 address_label.grid(row=1, sticky="w")
 address_label.grid_remove()
@@ -745,8 +744,6 @@ tally_button = Button(manifesto_frame, text="Tally Votes", command=twinpeaks.han
 tally_button.grid(row=4,column=1,sticky=W)
 tally_button.grid_remove() 
 
-#ttk.Sizegrip().grid(column=1, row=4, sticky=(S,E))
-
 new_proposal_label = Label(manifesto_frame,text="", justify=LEFT)
 new_proposal_label.grid(row=4,column=0, sticky=W)
 new_proposal_label.grid_remove()
@@ -800,28 +797,26 @@ lake_nasser_plot_path = os.getcwd()+'/images/lake_nasser_plot.gif'
 lake_nasser_image = PhotoImage(file=lake_nasser_plot_path)
 lake_nasser_label = Label(nilometer_frame,image=lake_nasser_image)
 lake_nasser_label.grid(row=1,column=0, padx=20, sticky="w")
-#lake_nasser_label.grid_remove()
 
 nilometer_proposal_label = Label(nilometer_frame, text="New Proposal", font="Arial 20")
 nilometer_proposal_label.grid(row=2,column=0,  sticky="w")
-#nilometer_proposal_label.grid_remove()
 water_level_label = Label(nilometer_frame, text="Minimum Nile water level in centimeters: ")
 water_level_label.grid(row=3,column=0, sticky="w")
-#water_level_label.grid_remove()
 water_level_entry = Entry(nilometer_frame)
 water_level_entry.grid(row=4, column=0, sticky="w")
 water_level_entry.config(width=20)
-#water_level_entry.grid_remove()
 supporting_amount_label = Label(nilometer_frame, text="Supporting amount in wei (= 10^-18 Ether): ")
 supporting_amount_label.grid(row=5, column=0, sticky="w")
-#supporting_amount_label.grid_remove()
 supporting_amount_entry = Entry(nilometer_frame)
 supporting_amount_entry.config(width=50)
 supporting_amount_entry.grid(row=6, column=0, sticky="w")
 nilometer_proposal_button = Button(nilometer_frame, text="Submit New Proposal", command=twinpeaks.handle_nilometer_proposal)
 nilometer_proposal_button.grid(row=7,column=0, sticky="w")
 
-#supporting_amount_entry.grid_remove()
+# handle X-ing window
+root.protocol("WM_DELETE_WINDOW", on_close)
+# handle quit
+atexit.register(on_close)
 
 root.after(0,update,0)
 root.mainloop()
