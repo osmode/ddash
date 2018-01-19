@@ -30,6 +30,8 @@ NETWORK_OPTIONS = [
 	"Main Ethereum network"
 ]
 
+CONTRACT_OPTIONS = [ "Manifesto", "NFO Coin", "Nilometer" ]
+
 ACCOUNT_OPTIONS = {}
 account_option = None
 
@@ -72,6 +74,11 @@ class TwinPeaks:
 
 	def dropdown(self, value):
 		pass
+
+	def check_menu_item(self, mn, index):
+		for i,v in enumerate(CONTRACT_OPTIONS):
+			mn.entryconfigure(i, label=v)
+		mn.entryconfigure(index, label=u'\u2713 '+CONTRACT_OPTIONS[index])
 
 	def handle_nilometer_proposal(self):
 		print("Submitting new Nilometer proposal...")
@@ -533,6 +540,8 @@ def Nilometer():
 	twinpeaks.clear_screen()
 	twinpeaks.nilometer_context()
 
+	#contractmenu.entryconfigure(2, label=u'\u2713 Nilometer')
+	twinpeaks.check_menu_item(contractmenu, 2)
 
 def Manifesto():
 	if twinpeaks.network != "blackswan":
@@ -541,10 +550,15 @@ def Manifesto():
 
 	twinpeaks.clear_screen()
 	twinpeaks.manifesto_context()
+	#contractmenu.entryconfigure(0, label=u'\u2713 Manifesto')
+	twinpeaks.check_menu_item(contractmenu, 0)
 
 def NFOCoin():
 	twinpeaks.clear_screen()
 	twinpeaks.nfocoin_context()
+
+	#contractmenu.entryconfigure(1, label=u'\u2713 NFO Coin')
+	twinpeaks.check_menu_item(contractmenu, 1)
 
 def About():
 	text = "DDASH\nInitial work: Omar Metwally\nomar.metwally@gmail.com\n\nhttps://github.com/osmode/ddash"
@@ -562,9 +576,9 @@ root.grid_columnconfigure(0, weight=1)
 twinpeaks.clock()
 
 contractmenu = Menu(menubar)
-contractmenu.add_command(label="Manifesto", command=Manifesto)
-contractmenu.add_command(label="NFO Coin", command=NFOCoin)
-contractmenu.add_command(label="Nilometer",command=Nilometer)
+contractmenu.add_command(label=CONTRACT_OPTIONS[0], command=Manifesto )
+contractmenu.add_command(label=CONTRACT_OPTIONS[1], command=NFOCoin)
+contractmenu.add_command(label=CONTRACT_OPTIONS[2], command=Nilometer)
 contractmenu.add_separator()
 menubar.add_cascade(label="Contract", menu=contractmenu)
 
