@@ -32,8 +32,7 @@ NETWORK_OPTIONS = [
 
 CONTRACT_OPTIONS = [ "Manifesto", "NFO Coin", "Nilometer" ]
 
-ACCOUNT_OPTIONS = {}
-account_option = None
+ACCOUNT_OPTIONS = []
 
 PROPOSALS = []
 
@@ -141,7 +140,7 @@ class TwinPeaks:
 		else: vote = None
 
 		if vote:
-			index = PROPOSALS.index(l.get(ACTIVE)) 
+			index = PROPOSALS.index(proposal_listbox.get(ACTIVE)) 
 		
 		proposalID = index
 		print("proposalID: ",proposalID)
@@ -178,7 +177,6 @@ class TwinPeaks:
 		print("Attempting to unlock account...")
 		self.bci.web3.personal.newAccount(password)
 
-
 	'''
 	@class BCInterface @method handle_unlock_account
 	Interfaces with tkinter "Unlock Account" button
@@ -193,25 +191,37 @@ class TwinPeaks:
 		self.bci.unlock_account(password)
 		self.manifestointerface.unlock_account(password)
 
+	def handle_show_accounts(self):
+
+		if self.bci:
+			for a in self.bci.eth_accounts:
+				if a not in ACCOUNT_OPTIONS:
+					ACCOUNT_OPTIONS.append(a)
+					accountmenu.add_command(label=a,command=self.make_func(a))
+
+	def make_func(self,addr):
+		def _function():
+			index = ACCOUNT_OPTIONS.index(addr) 
+			i=2
+			while i < 2+len(ACCOUNT_OPTIONS):
+				accountmenu.entryconfigure(i, label=ACCOUNT_OPTIONS[i-2])
+				i+=1
+			accountmenu.entryconfigure(index+2, label=u'\u2713 '+ACCOUNT_OPTIONS[index])
+			self.bci.set_account(index)
+			if hasattr(self, 'nfointerface'):
+				self.nfointerface.set_account(index)
+			if hasattr(self, 'manifestointerface'):
+				self.manifestointerface.set_account(index)
+			if hasattr(self, 'nilometerinterface'):
+				self.nilometerinterface.set_account(index)
+
+		return _function
+
 	'''
 	@class BCInterface @method handle_account_dropdown
 	Handles changes to the dropdown menu with a list of Ethereum accounts.
 	Utilizes the ACCOUNT_OPTIONS dictionary to map accounts with account indices
 	'''
-	def handle_account_dropdown(self, value):
-		if len(self.bci.eth_accounts) > 0:
-			accounts = self.bci.get_eth_accounts()
-			for index, acc in enumerate(accounts):
-				ACCOUNT_OPTIONS[acc] = index
-
-		if value not in ACCOUNT_OPTIONS.keys():
-			print(value+" was not recognized as a valid Ethereum account.")
-			return 1
-		index = ACCOUNT_OPTIONS[value]
-		print("Last account index: ",index)
-		self.last_account_index = index
-		self.bci.set_account(index)
-
 	def launch(self):
 
 		self.ready = True
@@ -231,7 +241,6 @@ class TwinPeaks:
 				self.bci = BCInterface(mainnet=False)
 				self.fsi = FSInterface()
 				self.nfointerface = NFOInterface(mainnet=False)
-				print("NFO Interface created")
 				self.contract_name='blackswan'
 				self.contract_address=blackswan_contract_address
 				self.nfointerface.load_contract(mainnet=False,contract_name='nfocoin',contract_address=blackswan_nfo_address) 
@@ -255,19 +264,11 @@ class TwinPeaks:
 				self.contract_address=blackswan_contract_address
 				self.nfointerface.load_contract(mainnet=True, contract_name="nfocoin", contract_address=mainnet_nfo_address)
 
-		ACCOUNT_OPTIONS = self.bci.eth_accounts
-		self.account_variable.set(ACCOUNT_OPTIONS[0])
 		messagebox.showinfo("Success", "You are connected to "+self.network+". Select a contract from the top menu bar.")
 		current_network_label.config(text="You are connected to "+self.network)
 		network_label.grid_remove()
 		network_option.grid_remove()
 		launch_button.grid_remove()
-
-		# ugly hack
-		global account_option
-		account_option = OptionMenu(account_frame, self.account_variable, *ACCOUNT_OPTIONS, command=self.handle_account_dropdown)
-		account_option.grid(row=7,column=1,pady=20)
-
 
 	def onProposalClick(self, event):
 		widget = event.widget
@@ -275,8 +276,6 @@ class TwinPeaks:
 		value = widget.get(selection[0])
 		row = proposalID = selection[0]
 		self.last_selected_proposalID = int(row)
-		#print("selection: ",selection[0])
-		#print("value: ",value)
 		
 		text = "Proposal voting period: 60 minutes.\nNumber of votes needed to pass: 10.\n\n"
 		p = twinpeaks.manifestointerface.get_proposal_by_row(row)
@@ -344,7 +343,7 @@ class TwinPeaks:
 
 		manifesto_address_label.grid()
 		manifesto_address_entry.grid()
-		l.grid()
+		proposal_listbox.grid()
 		new_proposal_label.grid()
 		new_proposal_text.grid() 
 		new_proposal_button.grid()
@@ -408,7 +407,7 @@ class TwinPeaks:
 		gif_label.grid_remove()
 		#proposals_scrollbar.grid_remove() 
 		#proposals_text.grid_remove()
-		l.grid_remove()
+		proposal_listbox.grid_remove()
 		manifesto_address_label.grid_remove()
 		manifesto_address_entry.grid_remove()
 		new_proposal_text.grid_remove()
@@ -438,7 +437,6 @@ class TwinPeaks:
 		new_account_button.grid_remove()
 		unlock_account_button.grid_remove()
 		network_label.grid_remove()
-		account_option.grid_remove()
 		network_option.grid_remove()
 		launch_button.grid_remove()
 		manifesto_frame.grid_remove()
@@ -459,6 +457,8 @@ class TwinPeaks:
 	def clock(self):
 
 		time = datetime.datetime.now().strftime("Time: %H:%M:%S")
+		twinpeaks.handle_show_accounts()
+
 		if hasattr(self,'manifestointerface'):
 			if len(self.manifestointerface.eth_accounts)==0:
 				address_entry.delete(0, END)
@@ -479,7 +479,7 @@ class TwinPeaks:
 				manifesto_address_entry.insert(0, blackswan_manifesto_address)
 
 			if self.manifestointerface.last_contract_address != manifesto_address_entry.get():
-				l.delete(0, END)
+				proposal_listbox.delete(0, END)
 				new_proposal_label.configure(text="")
 				PROPOSALS.clear() 	
 				self.manifestointerface.last_contract_address = self.manifestointerface.tx['to']
@@ -497,7 +497,7 @@ class TwinPeaks:
 				text+="Number of votes: "+str(p[4])+"\n\n"
 
 				if p[0] not in PROPOSALS:
-					l.insert('end', p[0])
+					proposal_listbox.insert('end', p[0])
 					PROPOSALS.append(p[0])
 
 				i+=1
@@ -539,8 +539,6 @@ def Nilometer():
 
 	twinpeaks.clear_screen()
 	twinpeaks.nilometer_context()
-
-	#contractmenu.entryconfigure(2, label=u'\u2713 Nilometer')
 	twinpeaks.check_menu_item(contractmenu, 2)
 
 def Manifesto():
@@ -550,14 +548,11 @@ def Manifesto():
 
 	twinpeaks.clear_screen()
 	twinpeaks.manifesto_context()
-	#contractmenu.entryconfigure(0, label=u'\u2713 Manifesto')
 	twinpeaks.check_menu_item(contractmenu, 0)
 
 def NFOCoin():
 	twinpeaks.clear_screen()
 	twinpeaks.nfocoin_context()
-
-	#contractmenu.entryconfigure(1, label=u'\u2713 NFO Coin')
 	twinpeaks.check_menu_item(contractmenu, 1)
 
 def About():
@@ -582,10 +577,14 @@ contractmenu.add_command(label=CONTRACT_OPTIONS[2], command=Nilometer)
 contractmenu.add_separator()
 menubar.add_cascade(label="Contract", menu=contractmenu)
 
+accountmenu = Menu(menubar)
+accountmenu.add_command(label="New Account", command=twinpeaks.handle_new_account)
+accountmenu.add_separator()
+menubar.add_cascade(label="Account", menu=accountmenu)
+
 helpmenu = Menu(menubar)
 menubar.add_cascade(label="Help", menu=helpmenu)
 helpmenu.add_command(label="About...", command=About)
-
 
 root.config(menu=menubar)
 
@@ -595,8 +594,6 @@ root.config(menu=menubar)
 gif_path = os.getcwd()+'/images/ss.gif'
 frames = [PhotoImage(file=gif_path,format="gif -index %i" %(i)) for i in range(36)]
 gif_label = Label(root) #, image=frames[0])
-
-
 
 def update(ind):
 
@@ -728,13 +725,13 @@ proposals_scrollbar = Scrollbar(manifesto_frame)
 proposals_scrollbar.grid(row=3, column=0)
 proposals_text = Text(manifesto_frame, wrap=WORD, yscrollcommand=proposals_scrollbar.set,height=6,borderwidth=1)
 
-l = Listbox(manifesto_frame, width=5, height=10)
-l.bind("<<ListboxSelect>>", twinpeaks.onProposalClick)
-l.grid(column=0,row=3,sticky=(N,W,E,S))
-s = Scrollbar(manifesto_frame, orient=VERTICAL)
-s.config(command=l.yview)
-s.grid(row=3, column=0, sticky=(N,E,S))
-l['yscrollcommand'] = s.set
+proposal_listbox = Listbox(manifesto_frame, width=5, height=10)
+proposal_listbox.bind("<<ListboxSelect>>", twinpeaks.onProposalClick)
+proposal_listbox.grid(column=0,row=3,sticky=(N,W,E,S))
+proposal_scrollbar = Scrollbar(manifesto_frame, orient=VERTICAL)
+proposal_scrollbar.config(command=proposal_listbox.yview)
+proposal_scrollbar.grid(row=3, column=0, sticky=(N,E,S))
+proposal_listbox['yscrollcommand'] = proposal_scrollbar.set
 
 more_info_label = Label(manifesto_frame, text="ProposalID: \nVotes: ")
 more_info_label.grid(row=4, column=0)
@@ -834,4 +831,5 @@ atexit.register(on_close)
 
 root.after(0,update,0)
 root.mainloop()
+
 

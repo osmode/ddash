@@ -169,7 +169,7 @@ class BCInterface:
 		return 0
 
 	def get_balance(self):
-		return self.web3.eth.getBalance(self.eth_accounts[0])
+		return self.web3.eth.getBalance(self.eth_accounts[self.account_index])
 
 	def get_address(self):
 		return self.eth_accounts[0]
