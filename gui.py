@@ -1,3 +1,14 @@
+'''
+--------------------------------------------
+gui.py
+--------------------------------------------
+Distributed Data Sharing Hyperledger (DDASH)
+Twin Peaks graphical user interface for
+--------------------------------------------
+Omar Metwally, MD (omar.metwally@gmail.com)
+https://github.com/osmode/ddash
+--------------------------------------------
+'''
 from tkinter import simpledialog, messagebox
 from tkinter import *
 from tkinter.font import Font
@@ -8,7 +19,7 @@ import sys, datetime
 
 sys.path.insert(0, os.path.join(os.getcwd(),'ddash'))
 from bcinterface import *
-from fsinterface import *
+from fsinterface import * 
 from nfointerface import *
 from manifestointerface import *
 from nilometerinterface import *
@@ -21,64 +32,123 @@ import time, atexit
 BROADCAST=False
 LISTEN=False
 blackswan_contract_address="0x5ff2ce40e82e52d370fa9a0ddf49aeee32184756"
-recordmanager_contract_address="0xcc109bf72338909ead31a5bf46d8d8fa455ff09b"
-mainnet_nfo = "0x3100047369b54c34042b9dc138c02a0567d90a7a"
+#recordmanager_contract_address="0xcc109bf72338909ead31a5bf46d8d8fa455ff09b"
+mainnet_nfo_address = "0x3100047369b54c34042b9dc138c02a0567d90a7a"
 blackswan_nfo_address = "0x38a779dd481b5f812b76b039cb2077fb124677a7"
 
-NETWORK_OPTIONS = [
-	"Black Swan network",
-	"Main Ethereum network"
-]
-
+# available Ethereum networks
+NETWORK_OPTIONS = [ "Black Swan network", "Main Ethereum network" ]
+# list of available contracts to interface with
 CONTRACT_OPTIONS = [ "Manifesto", "NFO Coin", "Nilometer" ]
-
+# list of Ethereum accounts, popuated at runtime
 ACCOUNT_OPTIONS = []
-
+# list of proposals from the Manifesto.sol contract
 PROPOSALS = []
-
+# logo displayed in upper left corner
 intro = r"""ddash"""
 
-def get_value_from_index(input_phrase,index,convert_to='integer'):
-    input_phrase = input_phrase.split()
-    value =None
-
-    try:
-        if convert_to is 'string': value = str(input_phrase[index])
-        elif convert_to is 'integer': value = int(input_phrase[index])
-        else: value = int(input_phrase[index])
-
-    except:
-        print("ValueFromIndex Error.")
-
-    return value
-
+'''
+@class TwinPeaks
+Represents the ddash graphical user interface 
+Built on tkinter (Python 3)
+'''
 class TwinPeaks:
 	def __init__(self, master):
 		self.master = master
 		master.title("ddash")
+		# @variable self.network can be main net, blackswan, or another private net
 		self.network=None
+		# @variable self.context represents the current contract, or the home screen
 		self.context = "home"
-		self.last_account_index = 0 
-		self.last_nfo_tx_amount = 0
+		# @variable self.network_variable populates the Ethereum network
+		# dropdown on the home screen. Default is main net
 		self.network_variable = StringVar()
 		self.network_variable.set(NETWORK_OPTIONS[1])
 		self.account_variable = StringVar(self.master)
+		# @variable self.bci is initialized to a @class BCInterface object
+		# which interfaces with Ethereum contracts pythonically via web3
 		self.bci = None
+		# @variable self.fsi is initialized to a @class FSInterface object,
+		# which interfaces with the local file system
 		self.fsi = None
+		# @variable self.nfointerface is initialized to a @class NFOInterface object
+		# which interfaces with the NFO Coin Ethereum contract pythonically  via web3
 		self.nfointerface = None
+		# remember the last Ethereum account password entered
 		self.ethereum_acc_pass = None
-
 		self.ready = False
+		# in the Manifesto.sol context, used to tally votes
 		self.last_selected_proposalID = None
 
-	def dropdown(self, value):
-		pass
+	'''
+	@method handle_send_nfocoin [NFO Coin Context]
+	Transfer NFO Coin within a network (Intra-Network) or between
+	two networks (Inter-Network).
+	Called when the "Send" button is clicked
+	'''
+	def handle_send_nfocoin(self):
+		if not hasattr(self,'nfointerface'):
+			print("No nfointerface object.")
+			return
+		print("Attempting to unlock account...")
+		self.nfointerface.unlock_account(self.ethereum_acc_pass)
 
-	def check_menu_item(self, mn, index):
+		send_transaction_type = send_nfocoin_choice.get()
+		if not send_transaction_type:
+			print("No transaction type selected. Please select Intra-Network or Intra-Network NFO Coin transfer")
+			return
+		send_nfocoin_amount = int(send_nfocoin_amount_entry.get())
+		if not send_nfocoin_amount:
+			print("No NFO Coin amount specified.")
+			return
+		send_nfocoin_address = str(send_nfocoin_address_entry.get())
+		if not send_nfocoin_address:
+			print("No NFO Coin recipient address specified.")
+			return
+		timestamp=int(str(time.time()).split('.')[0])
+		# transfer value on the same network
+		if send_transaction_type == "intra":
+			print("Initiating Intra-Network NFO Coin transfer...")
+			print("Recipient: ",send_nfocoin_address)
+			print("NFO Coin amount: ",send_nfocoin_amount)
+			# transfer NFO Coin and return transaction hash
+			return self.nfointerface.transfer_token(send_nfocoin_address, send_nfocoin_amount)
+
+		# transfer value between 2 different networks
+		if send_transaction_type == "inter":
+			print("Initiating Inter-Network NFO Coin transfer...")
+			print("Recipient: ",send_nfocoin_address)
+			print("NFO Coin amount: ",send_nfocoin_amount)
+			# generate hash 
+			print("make_hash_parameters:")
+			print("From: ",self.nfointerface.tx['from'])
+			print("timestamp: ", timestamp)
+			send_nfocoin_tx_hash = self.nfointerface.contract.call().make_hash(int(0), send_nfocoin_amount, str(self.nfointerface.tx['from']), send_nfocoin_address, int(1000), timestamp)
+			# transfer NFO Coin and create record of transfer on blockchain
+			self.nfointerface.new_nfo_transaction(0, send_nfocoin_amount, self.nfointerface.tx['from'], send_nfocoin_address, send_nfocoin_tx_hash)
+			# write transaction to local file system
+			self.nfointerface.write_nfo_transaction_to_file(send_nfocoin_amount, send_nfocoin_address, send_nfocoin_tx_hash)
+			# transfer NFO Coin:w and return transaction hash
+			#return self.nfointerface.transfer_token(send_nfocoin_address, send_nfocoin_amount)
+			return send_nfocoin_tx_hash
+
+	'''
+	@method handle_selected_contract
+	Place checkmark next to contract name when it's seleced in menu bar	
+	@parameter mn is the Contract menubar
+	@parameter index corresponds to the index of the contract selected in 
+	global list CONTRACT_OPTIONS
+	'''
+	def handle_selected_contract(self, mn, index):
 		for i,v in enumerate(CONTRACT_OPTIONS):
 			mn.entryconfigure(i, label=v)
 		mn.entryconfigure(index, label=u'\u2713 '+CONTRACT_OPTIONS[index])
 
+	'''
+	@method handle_nilometer_proposal [Nilometer Context]
+	Called when a new proposal is submitted 
+	Returns the web3py transaction object
+	'''
 	def handle_nilometer_proposal(self):
 		print("Submitting new Nilometer proposal...")
 		minWaterLevel = water_level_entry.get()
@@ -88,6 +158,10 @@ class TwinPeaks:
 		tx = self.nilometerinterface.new_proposal(minWaterLevel, supportingAmount)
 		return tx
 
+	'''
+	@method handle_tally [NFO Coin Context]
+	Called when the tally votes button is clicked
+	'''
 	def handle_tally(self):
 		if not hasattr(self, 'last_selected_proposalID'):
 			print("No proposal selected.")
@@ -96,6 +170,10 @@ class TwinPeaks:
 		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
 		self.manifestointerface.tally_votes(self.last_selected_proposalID)
 
+	'''
+	@method handle_buy_nfocoin [NFO Coin Context]
+	Submits transaction to purchase NFO Coin against Ether
+	'''
 	def handle_buy_nfocoin(self):
 		eth_amt_in_wei = buy_nfocoin_entry.get()
 		if not eth_amt_in_wei:
@@ -105,6 +183,10 @@ class TwinPeaks:
 		self.nfointerface.unlock_account(self.ethereum_acc_pass)
 		self.nfointerface.buy_tokens(eth_amt_in_wei)
 
+	'''
+	@method handle_sell_nfocoin [NFO Coin Context]
+	Submits transaction to sell NFO Coin 
+	'''
 	def handle_sell_nfocoin(self):
 		nfocoin_amt = sell_nfocoin_entry.get()
 		if not nfocoin_amt:
@@ -114,6 +196,11 @@ class TwinPeaks:
 		self.nfointerface.unlock_account(self.ethereum_acc_pass)
 		self.nfointerface.sell_tokens(nfocoin_amt)
 
+	'''
+	@method handle_set_gas [NFO Coin Context and Manifesto Context]
+	Changes the gas amount set with all transactions
+	Called when "Change Gas Amount" button is clicked
+	'''
 	def handle_set_gas(self):
 		new_gas = gas_entry.get()
 		if new_gas:
@@ -124,15 +211,10 @@ class TwinPeaks:
 			if self.context == "nfocoin":
 				self.nfointerface.set_gas(new_gas)
 
-	def handle_execute_proposal(self):
-		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
-		proposalID = self.execute_proposal_entry.get()
-		print("Attemtping to execute proposalID ",proposalID)
-		self.manifestointerface.unlock_account(self.ethereum_acc_pass)
-
-		if proposalID:
-			self.manifestointerface.executeProposal(int(proposalID))
-
+	'''
+	@method handle_vote [Manifesto Context]
+	Called when a user votes yes/no on the selected proposal
+	'''
 	def handle_vote(self):
 		proposalID = vote_proposalID_entry.get()
 		if vote_choice.get() == "yes": vote = "yes"
@@ -152,10 +234,9 @@ class TwinPeaks:
 		if vote=='no':
 			self.manifestointerface.vote(int(proposalID),False)
 		
-
 	'''
-	@class TwinPeaks @method handle_new_proposal
-	Responds to button when clicked to submit new proposal
+	@method handle_new_proposal [Manifesto Context]
+	Called when the "Submit Proposal" button is clicked to create new proposal
 	'''
 	def handle_new_proposal(self):
 		description = new_proposal_text.get(1.0,END).strip()
@@ -190,22 +271,35 @@ class TwinPeaks:
 		self.ethereum_acc_pass = password
 		self.bci.unlock_account(password)
 		self.manifestointerface.unlock_account(password)
-
+	'''
+	@method handle_show_accounts 
+	Updates the Account menu bar with a current list of Ethereum accounts 
+	Called periodically with each clock() cycle
+	'''
 	def handle_show_accounts(self):
-
 		if self.bci:
 			for a in self.bci.eth_accounts:
 				if a not in ACCOUNT_OPTIONS:
 					ACCOUNT_OPTIONS.append(a)
-					accountmenu.add_command(label=a,command=self.make_func(a))
+					accountmenu.add_command(label=a,command=self.dynamic_account_handler(a))
 
-	def make_func(self,addr):
+	'''
+	@method dynamic_account_handler
+	Dynamically creates functions that are used as handlers when an Ethereum
+	account is selected from the Account menu bar
+	@parameter addr is an Ethereum address contained in the global list 
+	ACCOUNT_OPTIONS
+	'''
+	def dynamic_account_handler(self,addr):
 		def _function():
 			index = ACCOUNT_OPTIONS.index(addr) 
 			i=2
 			while i < 2+len(ACCOUNT_OPTIONS):
 				accountmenu.entryconfigure(i, label=ACCOUNT_OPTIONS[i-2])
 				i+=1
+			# when an account is selected, clear the Ethereum password from memory
+			self.ethereum_acc_pass = None
+			# place checkmark next to selected Ethereum address from Account menu bar
 			accountmenu.entryconfigure(index+2, label=u'\u2713 '+ACCOUNT_OPTIONS[index])
 			self.bci.set_account(index)
 			if hasattr(self, 'nfointerface'):
@@ -217,15 +311,18 @@ class TwinPeaks:
 
 		return _function
 
+
 	'''
-	@class BCInterface @method handle_account_dropdown
-	Handles changes to the dropdown menu with a list of Ethereum accounts.
-	Utilizes the ACCOUNT_OPTIONS dictionary to map accounts with account indices
+	@method launch
+	Loads the Ethereum network selected in the Home context
+	Called when the "Launch" button is clicked
+	@TODO (low priority) 
+		currently mining occurs using the zero-indexed Ethereum account
+		as the coinbase account; need to change this to allow easy changing of
+		the default coinbase account
 	'''
 	def launch(self):
-
 		self.ready = True
-
 		choice = self.network_variable.get()
 
 		if choice == NETWORK_OPTIONS[0]: #Black Swan network selected
@@ -241,7 +338,6 @@ class TwinPeaks:
 				self.bci = BCInterface(mainnet=False)
 				self.fsi = FSInterface()
 				self.nfointerface = NFOInterface(mainnet=False)
-				self.contract_name='blackswan'
 				self.contract_address=blackswan_contract_address
 				self.nfointerface.load_contract(mainnet=False,contract_name='nfocoin',contract_address=blackswan_nfo_address) 
 
@@ -260,7 +356,6 @@ class TwinPeaks:
 				self.bci = BCInterface(mainnet=True)
 				self.fsi = FSInterface()
 				self.nfointerface = NFOInterface(mainnet=True)
-				self.contract_name='blackswan'
 				self.contract_address=blackswan_contract_address
 				self.nfointerface.load_contract(mainnet=True, contract_name="nfocoin", contract_address=mainnet_nfo_address)
 
@@ -270,7 +365,12 @@ class TwinPeaks:
 		network_option.grid_remove()
 		launch_button.grid_remove()
 
-	def onProposalClick(self, event):
+	'''
+	@method handle_proposal_click [Manifesto Context]
+	Display description of the selected proposal
+	Called when a proposal is selected
+	'''
+	def handle_proposal_click(self, event):
 		widget = event.widget
 		selection = widget.curselection()
 		value = widget.get(selection[0])
@@ -296,6 +396,11 @@ class TwinPeaks:
 		new_proposal_label.configure(text=text)
 
 
+	'''
+	@method nilometer_context
+	Configures the GUI for the Nilometer Context to allow user to 
+	interface with the Nilometer.sol contract 
+	'''
 	def nilometer_context(self):
 		if not self.ready:
 			return
@@ -312,8 +417,6 @@ class TwinPeaks:
 		root.geometry('{}x{}'.format(950, 800))
 		self.nilometerinterface.unlock_account(self.ethereum_acc_pass)
 
-		#nilometer_address_label.grid()
-		#nilometer_address_entry.grid()
 		lake_nasser_label.grid()
 		current_network_label.grid()
 		current_network_label.config(text="Your are connected to "+self.network)
@@ -324,11 +427,15 @@ class TwinPeaks:
 		top_frame.grid()
 		nilometer_frame.grid()
 		network_frame.grid()
-
+	
+	'''
+	@method manifesto_context
+	Configures the GUI for the Manifesto Context to allow user to 
+	interface with the Manifesto.sol contract 
+	'''
 	def manifesto_context(self):
 		if not self.ready:
 			return
-
 		self.context = "manifesto"
 
 		if not self.ethereum_acc_pass:
@@ -362,13 +469,16 @@ class TwinPeaks:
 		manifesto_frame.grid()
 		network_frame.grid()
 			
+	'''
+	@method nfocoin_context
+	Configures the GUI for the NFO Coin Context to allow user to 
+	interface with the nfocoin.sol contract 
+	'''
 	def nfocoin_context(self):
 		if not self.ready:
 			return
 		self.context="nfocoin"
-		root.geometry('{}x{}'.format(800, 800))
-
-
+		root.geometry('{}x{}'.format(800, 750))
 		address_label.grid()
 		address_entry.grid()
 		balance_label.grid()
@@ -378,6 +488,11 @@ class TwinPeaks:
 		sell_nfocoin_label.grid()
 		sell_nfocoin_entry.grid()
 		sell_nfocoin_button.grid()
+		send_nfocoin_label.grid()
+		send_nfocoin_amount_entry.grid()
+		send_nfocoin_button.grid()
+		intranet_nfocoin_radio.grid()
+		internet_nfocoin_radio.grid()
 		gas_label.grid()
 		gas_entry.grid()
 		account_label.grid()
@@ -400,13 +515,15 @@ class TwinPeaks:
 			answer = simpledialog.askstring("DDASH","Enter your Ethereum account password: ")
 			self.ethereum_acc_pass = answer
 
+	'''
+	@method clear_screen
+	Clears all frames from the GUI. Called when changing contexts
+	'''
 	def clear_screen(self):
 		if not self.ready:
 			return
 
 		gif_label.grid_remove()
-		#proposals_scrollbar.grid_remove() 
-		#proposals_text.grid_remove()
 		proposal_listbox.grid_remove()
 		manifesto_address_label.grid_remove()
 		manifesto_address_entry.grid_remove()
@@ -418,9 +535,6 @@ class TwinPeaks:
 		vote_label.grid_remove()
 		vote_entry.grid_remove()
 		vote_button.grid_remove()
-		execute_proposal_label.grid_remove()
-		execute_proposal_entry.grid_remove()
-		execute_proposal_button.grid_remove() 
 		gas_label.grid_remove()
 		gas_entry.grid_remove()
 		set_gas_button.grid_remove()
@@ -454,6 +568,10 @@ class TwinPeaks:
 		nilometer_frame.grid_remove()
 
 	
+	'''
+	@method clock
+	Updates the display. Called periodically every X seconds
+	'''
 	def clock(self):
 
 		time = datetime.datetime.now().strftime("Time: %H:%M:%S")
@@ -513,8 +631,8 @@ class TwinPeaks:
 
 		if hasattr(self,'nfointerface'):
 			if self.bci:
-				balance_label.configure(text="Ether Balance:\n "+str(self.bci.get_balance()))
-				nfocoin_balance_label.configure(text="NFO Coin Balance:\n "+str(self.nfointerface.my_token_balance()))
+				balance_label.configure(text="Ether Balance: "+str(self.bci.get_balance()))
+				nfocoin_balance_label.configure(text="NFO Coin Balance: "+str(self.nfointerface.my_token_balance()))
 
 			if self.nfointerface:
 				if len(self.nfointerface.eth_accounts) >0:
@@ -530,7 +648,7 @@ class TwinPeaks:
 				if gas_entry.get():
 					self.nfointerface.set_gas(int(gas_entry.get()))
 
-		self.master.after(10000,self.clock)
+		self.master.after(5000,self.clock)
 
 def Nilometer():
 	if twinpeaks.network != "blackswan":
@@ -539,7 +657,7 @@ def Nilometer():
 
 	twinpeaks.clear_screen()
 	twinpeaks.nilometer_context()
-	twinpeaks.check_menu_item(contractmenu, 2)
+	twinpeaks.handle_selected_contract(contractmenu, 2)
 
 def Manifesto():
 	if twinpeaks.network != "blackswan":
@@ -548,12 +666,12 @@ def Manifesto():
 
 	twinpeaks.clear_screen()
 	twinpeaks.manifesto_context()
-	twinpeaks.check_menu_item(contractmenu, 0)
+	twinpeaks.handle_selected_contract(contractmenu, 0)
 
 def NFOCoin():
 	twinpeaks.clear_screen()
 	twinpeaks.nfocoin_context()
-	twinpeaks.check_menu_item(contractmenu, 1)
+	twinpeaks.handle_selected_contract(contractmenu, 1)
 
 def About():
 	text = "DDASH\nInitial work: Omar Metwally\nomar.metwally@gmail.com\n\nhttps://github.com/osmode/ddash"
@@ -570,6 +688,7 @@ root.grid_columnconfigure(0, weight=1)
 
 twinpeaks.clock()
 
+# Create menu bars at the top of the screen
 contractmenu = Menu(menubar)
 contractmenu.add_command(label=CONTRACT_OPTIONS[0], command=Manifesto )
 contractmenu.add_command(label=CONTRACT_OPTIONS[1], command=NFOCoin)
@@ -588,9 +707,7 @@ helpmenu.add_command(label="About...", command=About)
 
 root.config(menu=menubar)
 
-# the artwork
-
-# frames
+# shooting star gif
 gif_path = os.getcwd()+'/images/ss.gif'
 frames = [PhotoImage(file=gif_path,format="gif -index %i" %(i)) for i in range(36)]
 gif_label = Label(root) #, image=frames[0])
@@ -662,7 +779,7 @@ nfocoin_balance_label.grid_remove()
 
 ## transaction fraome
 buy_nfocoin_label = Label(transaction_frame,text="Buy NFO Coin with this amount of Ether in wei (1 wei = 1e-18 Ether): ")
-buy_nfocoin_label.grid(row=5,column=0, ipadx=10, ipady=10)
+buy_nfocoin_label.grid(row=5,column=0, sticky=W)
 buy_nfocoin_label.grid_remove()
 buy_nfocoin_entry = Entry(transaction_frame) 
 buy_nfocoin_entry.grid(row=6, column=0)
@@ -673,7 +790,7 @@ buy_nfocoin_button.grid(row=6,column=1,sticky="w")
 buy_nfocoin_button.grid_remove()
 
 sell_nfocoin_label = Label(transaction_frame,text="Sell this amount of NFO Coin (1000 NFO Coin = 1 Ether):")
-sell_nfocoin_label.grid(row=7,column=0, pady=40)
+sell_nfocoin_label.grid(row=7,column=0, pady=20, sticky=W)
 sell_nfocoin_label.grid_remove()
 sell_nfocoin_entry = Entry(transaction_frame) 
 sell_nfocoin_entry.grid(row=8, column=0)
@@ -682,6 +799,28 @@ sell_nfocoin_entry.grid_remove()
 sell_nfocoin_button = Button(transaction_frame, text="Sell", command=twinpeaks.handle_sell_nfocoin) 
 sell_nfocoin_button.grid(row=8,column=1,sticky="w")
 sell_nfocoin_button.grid_remove()
+
+send_nfocoin_label = Label(transaction_frame,text="Send NFO Coin", pady=20)
+send_nfocoin_label.grid(row=9, column=0, sticky=W)
+send_nfocoin_amount_entry = Entry(transaction_frame)
+send_nfocoin_amount_entry.grid(row=10, column=0)
+send_nfocoin_amount_entry.config(width=50)
+send_nfocoin_address_entry = Entry(transaction_frame)
+send_nfocoin_address_entry.grid(row=11,column=0)
+send_nfocoin_address_entry.config(width=50)
+send_nfocoin_button = Button(transaction_frame, text="Send", command=twinpeaks.handle_send_nfocoin)
+send_nfocoin_button.grid(row=10, column=2, sticky="NS")
+send_nfocoin_address_entry.delete(0, END)
+send_nfocoin_address_entry.insert(0, "Recipient Ethereum address (e.g. 0x...)")
+send_nfocoin_amount_entry.delete(0,END)
+send_nfocoin_amount_entry.insert(0, "Number of NFO Coin to send (1000 NFO Coin = 1 Ether)")
+
+
+send_nfocoin_choice = StringVar() 
+intranet_nfocoin_radio = Radiobutton(transaction_frame, indicatoron=0, text="Intra-Network", variable=send_nfocoin_choice, value='intra')
+internet_nfocoin_radio = Radiobutton(transaction_frame, indicatoron=1, text="Inter-Network", variable=send_nfocoin_choice, value='inter')
+intranet_nfocoin_radio.grid(row=10, column=1,sticky=W)
+internet_nfocoin_radio.grid(row=11,column=1,sticky=W)
 
 account_label = Label(account_frame, text="Account: ",padx=20,pady=40)
 account_label.grid(row=7,column=0)
@@ -697,7 +836,7 @@ unlock_account_button.grid_remove()
 network_label = Label(network_frame, text="Network: ", bg='white')
 network_label.grid(row=9 )
 
-network_option = OptionMenu(network_frame, twinpeaks.network_variable, *NETWORK_OPTIONS, command=twinpeaks.dropdown)
+network_option = OptionMenu(network_frame, twinpeaks.network_variable, *NETWORK_OPTIONS, command=None) 
 network_option.grid(row=9,column=1,pady=20)
 
 launch_button = Button(network_frame, text="Launch", command=twinpeaks.launch, bg='white')
@@ -726,7 +865,7 @@ proposals_scrollbar.grid(row=3, column=0)
 proposals_text = Text(manifesto_frame, wrap=WORD, yscrollcommand=proposals_scrollbar.set,height=6,borderwidth=1)
 
 proposal_listbox = Listbox(manifesto_frame, width=5, height=10)
-proposal_listbox.bind("<<ListboxSelect>>", twinpeaks.onProposalClick)
+proposal_listbox.bind("<<ListboxSelect>>", twinpeaks.handle_proposal_click)
 proposal_listbox.grid(column=0,row=3,sticky=(N,W,E,S))
 proposal_scrollbar = Scrollbar(manifesto_frame, orient=VERTICAL)
 proposal_scrollbar.config(command=proposal_listbox.yview)
@@ -781,16 +920,6 @@ vote_entry = Entry(manifesto_frame)
 vote_entry.grid(row=5,column=3)
 vote_entry.grid_remove()
 
-execute_proposal_label = Label(manifesto_frame, text="Execute proposalD:")
-execute_proposal_label.grid(row=6,column=0)
-execute_proposal_label.grid_remove()
-execute_proposal_entry = Entry(manifesto_frame)
-execute_proposal_entry.grid(row=6,column=1)
-execute_proposal_entry.grid_remove()
-execute_proposal_button = Button(manifesto_frame, text="Execute Proposal",command=twinpeaks.handle_execute_proposal)
-execute_proposal_button.grid(row=6,column=2)
-execute_proposal_button.grid_remove()
-
 current_network_label = Label(network_frame, text="")
 current_network_label.grid(row=8,column=1,sticky='sw')
 
@@ -831,5 +960,4 @@ atexit.register(on_close)
 
 root.after(0,update,0)
 root.mainloop()
-
 

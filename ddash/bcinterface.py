@@ -35,7 +35,7 @@ class BCInterface:
 
 		print("Initializing a DDASH Interface object.")
 
-		# log Ethereum accounts to ddash/swap/
+		# log Ethereum accounts to ddash/nfo/
 		self.write_ethereum_address(mainnet)
 
 	# contract_name is without the sol extension
@@ -176,16 +176,16 @@ class BCInterface:
 
 	def write_ethereum_address(self,mainnet=False):
 	
-		swap_path = os.path.dirname(os.path.realpath(__file__))+'/swap/eth_addresses.ds'
+		nfo_path = os.path.dirname(os.path.realpath(__file__))+'/nfo/eth_addresses.ds'
 		file_text=''
 
-		if os.path.isfile(swap_path):
-			with open(swap_path,'r') as myfile:
+		if os.path.isfile(nfo_path):
+			with open(nfo_path,'r') as myfile:
 				file_text+=myfile.read()
 		
 		if self.eth_accounts[0]:
 			if self.eth_accounts[0] not in file_text:
-				with open(swap_path,'a') as fileout:
+				with open(nfo_path,'a') as fileout:
 					if mainnet:
 						fileout.write('mn:'+self.eth_accounts[0]+'\n')
 					else:
@@ -193,13 +193,13 @@ class BCInterface:
 
 			
 	def get_ethereum_address(self):
-		swap_path = os.path.dirname(os.path.realpath(__file__))+'/swap/eth_addresses.ds'
+		nfo_path = os.path.dirname(os.path.realpath(__file__))+'/nfo/eth_addresses.ds'
 		file_text=''
 		mainnet_eth_address = None
 		privatenet_eth_address = None
 
-		if os.path.isfile(swap_path):
-			with open(swap_path,'r') as myfile:
+		if os.path.isfile(nfo_path):
+			with open(nfo_path,'r') as myfile:
 				file_text+=myfile.read()
 				x = file_text.split('pn:')
 				y = x[1].split('mn:')

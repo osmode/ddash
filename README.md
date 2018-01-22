@@ -1,4 +1,4 @@
-Distributed Data Sharing Hyperledger (DDASH)
+DDASH - Ethereum Operating System
 ======================================================
 [Github repository](https://github.com/osmode/ddash)
 
@@ -9,11 +9,13 @@ Distributed Data Sharing Hyperledger (DDASH)
 
 ## What is DDASH?
 ---
-DDASH is a protocol for information exchange across Ethereum networks. 
+DDASH is an Ethereum operating system built around information exchange
 
-* Interface between private Ethereum networks and the main Ethereum network
+* Transfer value and information among Ethereum networks
 
-* Automate deployment of private Ethereum networks (no need for manual enode entry)
+* Abstract creation of GUI interfaces for Ethereum contracts
+
+* Sysadmin for Ethereum networks  
 
 * Automate compilation and deployment of Ethereum contracts to any Ethereum blockchain 
 
@@ -24,14 +26,22 @@ DDASH is a protocol for information exchange across Ethereum networks.
 
 ### Our goal is to build open economies for information exchange within and among organizations.
 
+![DDASH - Ethereum operating system revolving around information exchange](https://s3-us-west-1.amazonaws.com/ddash/luxor.png)
+
 ## Manifesto 
 The Manifesto contract allows participants to create a manifesto through a transparent voting process. Anyone can submit and vote on proposals. To interface with your own custom voting contracts (on any Ethereum network), simply replace the default Manifesto.sol address with your contract's address.
 
 
 ![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/manifesto5.png)
 
+## Nilometer
+The Nile’s water levels have been a matter of life and death since antiquity. This Ethereum contract lets parties who depend on the Nile to literally put their money where their mouth is by bidding for a minimum Nile water level and sending a variable amount of Ether to support their bid
+
+![Nilometer](https://s3-us-west-1.amazonaws.com/ddash/nilometer.png)
+
+
 ## Why DDASH?
-DDASH combines the benefits of private Ethereum networks with the benefits of the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer Ether among the main Ethereum network and private Ethereum networks.
+DDASH combines the benefits of private Ethereum networks with the benefits of the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer value and information among the main Ethereum network and private Ethereum networks.
 
 ## NFO Coin
 NFO Coin is the utility token that powers DDASH, enabling the exchange of information and value across Ethereum networks. NFO Coin is based on the ERC20 standard. The NFO ABI and contract are located in the source directory and can be directly inspected at address 0x3100047369b54c34042B9DC138C02A0567D90A7a on the Ethereum main network.

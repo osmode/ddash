@@ -1,20 +1,28 @@
 '''
-:::  nfointerface.py								   :::
-:::  The NFO Protocol is outlined here: 
-:::  https://omarmetwally.blog/2017/12/05/converting-between-private-net-ether-and-real-ether-the-ddash-protocol/ 
-:::  nfocoin.sol is a contract that allows 2 different blockchains to sync
-:::  and transfer value. The contract is deployed on both blockchains, and
-:::  the synchronization process involves the local filesystem.
-:::  @class NFOInterface() interfaces with the Go-Ethereum client
-:::  and inherits from @class BCInterface
-:::  Author:  Omar Metwally, MD (omar.metwally@gmail.com)
+--------------------------------------------
+nfointerface.py
+--------------------------------------------
+Distributed Data Sharing Hyperledger (DDASH)
+NFO Coin Interface to interact with NFO Coin 
+contract. The NFO Coin Protocol is outlined 
+here:
+https://omarmetwally.blog/2017/12/05/converting-between-private-net-ether-and-real-ether-the-ddash-protocol/ 
+nfocoin.sol is a contract that allows 2 different blockchains to sync
+and transfer value. The contract is deployed on both blockchains, and
+the synchronization process involves the local filesystem.
+@class NFOInterface() interfaces with the Go-Ethereum client
+and inherits from @class BCInterface
+--------------------------------------------
+Omar Metwally, MD (omar.metwally@gmail.com)
+https://github.com/osmode/ddash
+--------------------------------------------
 '''
-
 import os, json
 from web3 import Web3, HTTPProvider, IPCProvider
 from random import randint
 from bcinterface import *
 from time import sleep
+from time import time
 
 mainnet_nfo_address = "0x3100047369b54c34042b9dc138c02a0567d90a7a"
 blackswan_nfo_address = "0x38a779dd481b5f812b76b039cb2077fb124677a7" 
@@ -66,6 +74,35 @@ class NFOInterface(BCInterface):
 		print("NFO transaction: ",str(row))
 		return self.contract.call().get_transaction_by_row(row)
 		
+	def write_nfo_transaction_to_file(self, send_nfocoin_amount, send_nfocoin_address, send_nfo_tx_hash):
+		nfo_path = os.path.dirname(os.path.realpath(__file__))+'/nfo/nfo_transactions.ds'
+		file_text=''
+		sender_address = self.tx['from']
+		if not (sender_address and send_nfocoin_address):
+			print("Please specify sender and recipient addresses.")
+			return 1
+
+		if os.path.isfile(nfo_path):
+			with open(nfo_path,'r') as myfile:
+				file_text+=myfile.read()
+		row = [0, send_nfocoin_amount, sender_address, send_nfocoin_address, 1000, int(str(time()).split('.')[0]), send_nfo_tx_hash]
+		# check if transaction has already exists in local file
+		if row[6] in file_text:
+			print("skipping nfo transaction with hash: "+row[6])
+			return 1
+	
+		print("Attempting to write send NFO Coin transaction to file:",row)
+		fileout = open(nfo_path,'a')
+		for i,v in enumerate(row):
+			if type(v) is int:
+				fileout.write(str(v)+'\t')
+			elif i ==6:
+				fileout.write( v )
+				fileout.write('\t')
+			else:
+				fileout.write(v+'\t')
+		fileout.write('\n')
+
 	def write_nfo_transactions_to_file(self):
 		nfo_path = os.path.dirname(os.path.realpath(__file__))+'/nfo/nfo_transactions.ds'
 
