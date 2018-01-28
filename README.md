@@ -34,12 +34,6 @@ The Manifesto contract allows participants to create a manifesto through a trans
 
 ![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/manifesto5.png)
 
-## Nilometer
-The Nile’s water levels have been a matter of life and death since antiquity. This Ethereum contract lets parties who depend on the Nile to literally put their money where their mouth is by bidding for a minimum Nile water level and sending a variable amount of Ether to support their bid
-
-![Nilometer](https://s3-us-west-1.amazonaws.com/ddash/nilometer.png)
-
-
 ## Why DDASH?
 DDASH combines the benefits of private Ethereum networks with the benefits of the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer value and information among the main Ethereum network and private Ethereum networks.
 
