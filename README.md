@@ -2,7 +2,7 @@ DDASH - Ethereum Operating System
 ======================================================
 [Github repository](https://github.com/osmode/ddash)
 
-[Project website](https://osmode.github.io/ddash/)
+[Whitepaper](https://arxiv.org/abs/1709.07390)
 ------------------------------------------------------
 
 ![DDASH gif](https://s3-us-west-1.amazonaws.com/ddash/home.png)
