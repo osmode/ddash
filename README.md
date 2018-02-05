@@ -16,7 +16,7 @@ DDASH is an Ethereum operating system for knowledge creation and sharing
 
 * Optionally allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
-[Whitepaper](https://arxiv.org/abs/1709.07390)
+## [Whitepaper](https://arxiv.org/abs/1709.07390)
 
 ## Mission Statement
 
