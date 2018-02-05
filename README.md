@@ -1,15 +1,10 @@
 DDASH - Ethereum Operating System
 ======================================================
-[Github repository](https://github.com/osmode/ddash)
-
-[Whitepaper](https://arxiv.org/abs/1709.07390)
-------------------------------------------------------
 
 ![DDASH gif](https://s3-us-west-1.amazonaws.com/ddash/home.png)
 
 ## What is DDASH?
----
-DDASH is an Ethereum operating system built around information exchange
+DDASH is an Ethereum operating system for knowledge creation and sharing
 
 * Transfer value and information among Ethereum networks
 
@@ -21,6 +16,7 @@ DDASH is an Ethereum operating system built around information exchange
 
 * Optionally allows DApps to interface with the Interplanetary File System ([IPFS](https://github.com/ipfs/ipfs)) to minimize on-chain storage 
 
+[Whitepaper](https://arxiv.org/abs/1709.07390)
 
 ## Mission Statement
 
