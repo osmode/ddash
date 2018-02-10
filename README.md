@@ -1,4 +1,4 @@
-#DDASH - Ethereum Operating System
+# DDASH - Ethereum Operating System
 [DDASH is now Simbel v1.0](https://github.com/osmode/simbel)
 
 ![Simbel](https://s3-us-west-1.amazonaws.com/ddash/simbel.png)
