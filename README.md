@@ -1,7 +1,9 @@
 # DDASH - Ethereum Operating System
-[DDASH is now Simbel v1.0](https://github.com/osmode/simbel)
+# [DDASH is now Simbel v1.0](https://github.com/osmode/simbel)
 
 ![Simbel](https://s3-us-west-1.amazonaws.com/ddash/simbel.png)
+
+***
 
 ## What is DDASH?
 DDASH is an Ethereum operating system for knowledge creation and sharing
