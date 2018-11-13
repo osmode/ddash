@@ -1,8 +1,6 @@
 # DDASH - Ethereum Operating System
 # [DDASH is now Simbel v1.0](https://github.com/osmode/simbel)
 
-![Simbel](https://s3-us-west-1.amazonaws.com/ddash/simbel.png)
-
 ***
 
 ## What is DDASH?
@@ -24,13 +22,10 @@ DDASH is an Ethereum operating system for knowledge creation and sharing
 
 ### Our goal is to build open economies for information exchange within and among organizations.
 
-![DDASH - Ethereum operating system revolving around information exchange](https://s3-us-west-1.amazonaws.com/ddash/luxor.png)
-
 ## Manifesto 
 The Manifesto contract allows participants to create a manifesto through a transparent voting process. Anyone can submit and vote on proposals. To interface with your own custom voting contracts (on any Ethereum network), simply replace the default Manifesto.sol address with your contract's address.
 
 
-![Manifesto Contract](https://s3-us-west-1.amazonaws.com/ddash/manifesto5.png)
 
 ## Why DDASH?
 DDASH combines the benefits of private Ethereum networks with the benefits of the Ethereum main network. DDASH allows Ethereum applications to run cheaply and securely on private Ethereum networks while enabling their integration with the main Ethereum network. The result is greatly reduced development and operational costs associated with private Ethereum networks, combined with the ability to transfer value and information among the main Ethereum network and private Ethereum networks.
@@ -98,11 +93,6 @@ The directory structure is important because DDASH and the DDASH Networking Util
 
 ```
 Save Ethereum contracts in the *source* directory with the .sol extension.
-
-## How to acquire NFO Coin
-Use the DDASH GUI to exchange Ether for NFO Coin. 
-![NFO Coin](https://s3-us-west-1.amazonaws.com/ddash/nfocoin3.png)
-
 
 ## The DDASH Command Line Interface
 DDASH also enables deployment of private Ethereum networks that can be joined without manually entering enode addresses via the DDASH Command Line Interface.
